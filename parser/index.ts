@@ -16,7 +16,11 @@ async function parseGotm() {
             return chapters.map(c => parseChapter(c, bookNumber))
         }).flat();
     
-    console.dir(chapters);
+    const outputPath = './output/gotm.json';
+    await Bun.write(outputPath, JSON.stringify(chapters))
+
+    console.log(`Parsed ${chapters.length} chapters, wrote to ${outputPath}`);
+
 }
 
 function removeSpecialCharacters(text: string): string {
