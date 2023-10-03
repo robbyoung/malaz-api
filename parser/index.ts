@@ -1,37 +1,69 @@
+import { Chapter, ChapterType } from "./types/chapter";
+import { toNumber } from "./util/toNumber";
+
 async function parseGotm() {
     const src = Bun.file("./text/gotm.txt");
     const rawText = await src.text();
 
     const sanitisedText = removeSpecialCharacters(rawText);
-    const books = splitByHeader(sanitisedText, ["## BOOK", "### Prologue", "### EPILOGUE"])
+    const chapters = splitByHeader(sanitisedText, ["## BOOK", "### Prologue", "### EPILOGUE"])
         .map(book => {
             const heading = book.match(/## ([^\n]*)/)![1];
-            const chapters = book.startsWith("## BOOK") ?
+            const bookNumber = parseBookNumber(heading);
+            const chapters =  book.startsWith("## BOOK") ?
                 splitByHeader(book, ["### CHAPTER"]) : [book];
 
-            return {
-                heading,
-                chapters: chapters.map(c => parseChapter(c)),
-                chapterCount: chapters.length,
-            }
-        });
+            return chapters.map(c => parseChapter(c, bookNumber))
+        }).flat();
     
-    console.dir(books);
+    console.dir(chapters);
 }
 
 function removeSpecialCharacters(text: string): string {
     return text.replaceAll(/(\r)|(\*)|(\\)/g, "");
 }
 
-function parseChapter(chapterText: string) {
+function parseChapter(chapterText: string, bookNumber: number | undefined): Chapter {
     const heading = chapterText.match(/### ([^\n]*)/)![1];
     const scenes = chapterText.split("\n\n\n");
 
+    const type = getChapterType(heading);
+
     return {
-        heading,
-        excerpt: scenes[1],
-        scenes: scenes.slice(2),
+        type,
+        bookNumber,
+        chapterNumber: type === ChapterType.Chapter ? toNumber(heading.match(/CHAPTER (.*)/)![1]) : undefined,
+        excerptText: scenes[1],
+        scenesText: scenes.slice(2),
     }
+}
+
+function parseBookNumber(heading: string): number | undefined {
+    const lower = heading.toLowerCase();
+
+    if (lower.includes("prologue")) {
+        return undefined;
+    }
+    
+    if (lower.includes("epilogue")) {
+        return undefined;
+    }
+
+    return toNumber(heading.match(/BOOK (.*)/)![1]);
+}
+
+function getChapterType(header: string): ChapterType {
+    const lower = header.toLowerCase();
+
+    if (lower.includes("prologue")) {
+        return ChapterType.Prologue;
+    }
+    
+    if (lower.includes("epilogue")) {
+        return ChapterType.Epilogue;
+    }
+
+    return ChapterType.Chapter;
 }
 
 function splitByHeader(text: string, headers: string[]): string[] {
