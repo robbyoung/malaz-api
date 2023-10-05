@@ -11,4 +11,11 @@ export class TextService {
 
         return chapter.scenesText[sceneNumber - 1];
     }
+
+    getContents() {
+        return chapters.map(chapter => ({
+            chapterNumber: chapter.chapterNumber,
+            sceneCount: chapter.scenesText.length,
+        }));
+    }
 }

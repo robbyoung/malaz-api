@@ -15,6 +15,12 @@ app.get('/scenes/:chapter/:scene', (req, res) => {
     }
 });
 
+app.get('/contents', (req, res) => {
+    const contents = new TextService().getContents();
+    
+    res.status(200).json({ contents });
+});
+
 app.listen(3000, () => {
     console.log('Listening on port 3000');
 });
