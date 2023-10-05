@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/pug": "^2.0.7",
+    "bunrest": "^1.3.6",
     "pug": "^3.0.2"
   }
 }

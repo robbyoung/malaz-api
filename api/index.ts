@@ -1,16 +1,20 @@
-import * as pug from 'pug';
+import server from 'bunrest';
 import { TextService } from './text/textService';
 
-console.log('Serving from http://localhost:3000');
+const app = server();
 
-Bun.serve({
-    fetch(req: Request) {
-        const text = new TextService().getSceneText(1, 3);
+app.get('/scenes/:chapter/:scene', (req, res) => {
+    const chapter = parseInt(req.params?.chapter);
+    const scene = parseInt(req.params?.scene);
+    const text = new TextService().getSceneText(chapter, scene);
 
-        if (!text) {
-            return new Response("Not found", {status: 404});
-        }
+    if (!text) {
+        res.status(404).json("Not found");
+    } else {
+        res.status(200).json(text);
+    }
+});
 
-        return new Response(text);
-    },
+app.listen(3000, () => {
+    console.log('Listening on port 3000');
 });
