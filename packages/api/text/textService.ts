@@ -1,5 +1,4 @@
 import { Chapter } from "../types/chapter";
-
 const chapters: Chapter[] = require('../../parser/output/gotm.json');
 
 export class TextService {

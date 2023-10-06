@@ -1,0 +1,8 @@
+{
+  "name": "malazapi",
+  "workspaces": [ "packages/api", "packages/parser" ],
+  "scripts": {
+    "parser": "cd ./packages/parser && bun run index.ts",
+    "api": "cd ./packages/api && bun run index.ts"
+  }
+}
