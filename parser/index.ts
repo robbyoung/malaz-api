@@ -29,7 +29,10 @@ function removeSpecialCharacters(text: string): string {
 
 function parseChapter(chapterText: string, bookNumber: number | undefined): Chapter {
     const heading = chapterText.match(/### ([^\n]*)/)![1];
-    const scenes = chapterText.split("\n\n\n");
+    const scenes = chapterText
+        .split("\n\n\n")
+        .filter(scene => scene.length > 0)
+        .map(toBase64);
 
     const type = getChapterType(heading);
 
@@ -83,6 +86,10 @@ function splitByHeader(text: string, headers: string[]): string[] {
         chunks.push(text.slice(index));
         text = text.slice(0, index);
     }
+}
+
+function toBase64(text: string) {
+    return btoa(encodeURIComponent(text));
 }
 
 parseGotm();
