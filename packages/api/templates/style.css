@@ -1,0 +1,8 @@
+p {
+    white-space: pre-wrap;
+}
+
+div.container {
+    width: 40rem;
+    padding: 2rem;
+}

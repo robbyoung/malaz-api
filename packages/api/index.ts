@@ -1,4 +1,5 @@
 import server from 'bunrest';
+import pug from 'pug';
 import { TextService } from './text/textService';
 
 const app = server();
@@ -11,14 +12,14 @@ app.get('/scenes/:chapter/:scene', (req, res) => {
     if (!text) {
         res.status(404).json("Not found");
     } else {
-        res.status(200).json(text);
+        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/index.pug', { text }));
     }
 });
 
 app.get('/contents', (req, res) => {
     const contents = new TextService().getContents();
     
-    res.status(200).json({ contents });
+    res.status(200).send({ contents });
 });
 
 app.listen(3000, () => {
