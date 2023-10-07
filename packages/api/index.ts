@@ -4,6 +4,16 @@ import { TextService } from './text/textService';
 
 const app = server();
 
+app.get('/', (_, res) => {
+    const text = new TextService().getSceneText(1, 1);
+
+    if (!text) {
+        res.status(404).json("Not found");
+    } else {
+        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/index.pug', { text }));
+    }
+});
+
 app.get('/scenes/:chapter/:scene', (req, res) => {
     const chapter = parseInt(req.params?.chapter);
     const scene = parseInt(req.params?.scene);
@@ -12,7 +22,7 @@ app.get('/scenes/:chapter/:scene', (req, res) => {
     if (!text) {
         res.status(404).json("Not found");
     } else {
-        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/index.pug', { text }));
+        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/_text.pug', { text, nextChapter: chapter, nextScene: scene + 1 }));
     }
 });
 
