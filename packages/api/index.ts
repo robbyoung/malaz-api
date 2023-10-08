@@ -22,7 +22,7 @@ app.get('/scenes/:chapter/:scene', (req, res) => {
     if (!text) {
         res.status(404).json("Not found");
     } else {
-        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/_text.pug', { text, nextChapter: chapter, nextScene: scene + 1 }));
+        res.status(200).setHeader('content-type', 'text/html').send(pug.renderFile('./templates/_text.pug', { text, chapter, scene, nextChapter: chapter, nextScene: scene + 1 }));
     }
 });
 
@@ -30,6 +30,12 @@ app.get('/contents', (req, res) => {
     const contents = new TextService().getContents();
     
     res.status(200).send({ contents });
+});
+
+app.get('/selection', (req, res) => {
+    console.dir(req.query);
+
+    res.status(204).send({});
 });
 
 app.listen(3000, () => {
