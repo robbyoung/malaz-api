@@ -12,4 +12,5 @@ html(lang="en")
         include style.css
     body
         div.container
-            button.card-icon(type="button" hx-get="/scenes/1/1" hx-target="this" hx-swap="outerHTML") Start
+            p#selection
+            button(type="button" hx-get="/sceneText/1_1" hx-target="this" hx-swap="outerHTML") Start
