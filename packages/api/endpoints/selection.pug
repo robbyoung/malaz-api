@@ -1,2 +1,9 @@
+div#selection
+    p #{selection}
 
-p#selection #{selection}
+    div#form-select
+        select(hx-get="/form" hx-target="#form" hx-swap="outerHTML")
+            each form in availableForms
+                option(value=form.id) #{form.name}
+
+div#form

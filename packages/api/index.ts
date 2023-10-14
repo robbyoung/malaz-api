@@ -15,7 +15,11 @@ app.get('/sceneText/:sceneId', (req, res) => {
 });
 
 app.get('/selection/:sceneId/:range', (req, res) => {
-    respondWithHtmx(res, getSelection(req.params as any))
+    respondWithHtmx(res, getSelection(req.params as any));
+});
+
+app.get('/forms', (req, res) => {
+    respondWithHtmx(res, undefined);
 });
 
 app.listen(3000, () => {

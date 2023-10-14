@@ -1,8 +1,10 @@
+import { HighlightForm, availableForms } from "../forms/forms";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 
 interface TemplateProps {
   selection: string;
+  availableForms: HighlightForm[];
 }
 
 interface Params {
@@ -21,6 +23,7 @@ export function getSelection(params: Params): string | undefined {
 
   const props: TemplateProps = {
     selection: text.slice(from, to),
+    availableForms,
   };
 
   return renderFile("./endpoints/selection.pug", props);
