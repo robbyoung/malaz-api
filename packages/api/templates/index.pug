@@ -11,6 +11,4 @@ html(lang="en")
     style
         include style.css
     body
-        div.container
-            p#selection
-            button(type="button" hx-get="/sceneText/1_1" hx-target="this" hx-swap="outerHTML") Start
+        div(hx-get="/contents" hx-trigger="load")

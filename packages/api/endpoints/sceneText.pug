@@ -1,4 +1,6 @@
-
-p(hx-get="/selection/" + sceneId, hx-target="#selection" hx-swap="outerHTML" hx-trigger="mouseup") #{text}
-
-button.card-icon(type="button" hx-get="/sceneText/" + nextSceneId, hx-target="this" hx-swap="outerHTML") More
+div.flex
+    div.container.text
+        p(hx-get="/selection/" + sceneId, hx-target="#selection" hx-swap="outerHTML" hx-trigger="mouseup") #{text}
+        button.card-icon(type="button" hx-get="/sceneText/" + nextSceneId, hx-target="this" hx-swap="outerHTML") More
+    div.container.forms
+        p#selection No selection

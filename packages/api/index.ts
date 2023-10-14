@@ -3,11 +3,16 @@ import pug from 'pug';
 import { BunResponse } from 'bunrest/src/server/response';
 import { getSceneText } from './endpoints/sceneText';
 import { getSelection } from './endpoints/selection';
+import { getContents } from './endpoints/contents';
 
 const app = server();
 
 app.get('/', (_, res) => {
    respondWithHtmx(res, pug.renderFile('./templates/index.pug'));
+});
+
+app.get('/contents', (_, res) => {
+    respondWithHtmx(res, getContents());
 });
 
 app.get('/sceneText/:sceneId', (req, res) => {
@@ -18,7 +23,7 @@ app.get('/selection/:sceneId/:range', (req, res) => {
     respondWithHtmx(res, getSelection(req.params as any));
 });
 
-app.get('/forms', (req, res) => {
+app.get('/forms', (_, res) => {
     respondWithHtmx(res, undefined);
 });
 

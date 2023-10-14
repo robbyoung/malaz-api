@@ -1,0 +1,8 @@
+div#contents
+    h2 #{contents.title}
+    each chapter in contents.chapters
+        div.chapter
+            h3 #{chapter.name}
+            each scene in chapter.scenes
+                div.scene
+                    a(hx-get="/sceneText/" + scene.id, hx-target="#contents") #{scene.name}
