@@ -1,9 +1,13 @@
 div#selection
-    p #{selection}
+    if selection
+        p #{selection}
 
-    div#form-select
-        select(hx-get="/form" hx-target="#form" hx-swap="outerHTML")
-            each form in availableForms
-                option(value=form.id) #{form.name}
+        div#form-select
+            select(name="formId" hx-get="/forms" hx-vars="sceneId:'" + sceneId + "',range:'" + range + "'" hx-target="#form" hx-swap="outerHTML")
+                option(disabled=true selected=true value="") Select a form
+                each form in availableForms
+                    option(value=form.id) #{form.name}
+    else
+        p No selection
 
-div#form
+    div#form

@@ -1,0 +1,12 @@
+div#form
+    form(hx-post="/forms" hx-target="#form")
+        each field in form.fields
+            div
+                label(for=field) #{field}
+                input(name=field)
+        input(name="formId" value=form.id type="hidden")
+        input(name="chapter" value=chapter type="hidden")
+        input(name="scene" value=scene type="hidden")
+        input(name="from" value=from type="hidden")
+        input(name="to" value=to type="hidden")
+        button.submit(type="submit") Submit

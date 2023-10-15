@@ -3,47 +3,50 @@ import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 
 interface TemplateProps {
-  sceneId: string;
-  range: string;
-  selection: string;
-  availableForms: HighlightForm[];
+  form: HighlightForm;
+  chapter: number;
+  scene: number;
+  from: number;
+  to: number;
 }
 
 interface Params {
+  formId?: string; 
   sceneId?: string;
   range?: string;
 }
 
-export function getSelection(params: Params): string | undefined {
-  const {chapter, scene, from, to} = parseParams(params);
+export function getForm(params: Params): string | undefined {
+  const {chapter, scene, from, to, formId} = parseParams(params);
+  const form = availableForms.find(f => f.id === formId);
 
-  const text = new TextService().getSceneText(chapter, scene);
-
-  if (!text) {
+  if (!form) {
     return undefined;
   }
 
   const props: TemplateProps = {
-    selection: text.slice(from, to),
-    availableForms,
-    sceneId: `${chapter}_${scene}`,
-    range: `${from}-${to}`
+    form,
+    chapter,
+    scene,
+    from,
+    to
   };
 
-  return renderFile("./endpoints/selection.pug", props);
+  return renderFile("./endpoints/form.pug", props);
 }
 
 function parseParams (params: Params) {
-  if (!params.sceneId || !params.range) {
+  if (!params.sceneId || !params.range || !params.formId) {
     throw new Error("param mismatch");
   }
 
   const splitId = params.sceneId.split("_");
   const splitRange = params.range.split("-").map(strint => parseInt(strint));
-  return { 
+  return {
+    formId: params.formId,
     chapter: parseInt(splitId[0]),
     scene: parseInt(splitId[1]),
     from: Math.min(...splitRange),
-    to: Math.max(...splitRange) 
+    to: Math.max(...splitRange)
   } 
 }
