@@ -1,8 +1,12 @@
-div#contents
-    h2 #{contents.title}
-    each chapter in contents.chapters
-        div.chapter
-            h3 #{chapter.name}
-            each scene in chapter.scenes
-                div.scene
-                    a(hx-get="/sceneText/" + scene.id, hx-target="#contents") #{scene.name}
+extends ../templates/page.pug
+
+block content
+    div#contents
+        h2 #{contents.title}
+        each chapter in contents.chapters
+            div.chapter
+                h3 #{chapter.name}
+                div.scenes
+                    each scene in chapter.scenes
+                        div.scene
+                            a(href="/scene/" + scene.id) #{scene.name}

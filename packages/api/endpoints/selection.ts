@@ -35,11 +35,11 @@ function parseParams (params: Params) {
   }
 
   const splitId = params.sceneId.split("_");
-  const splitRange = params.range.split("-");
+  const splitRange = params.range.split("-").map(strint => parseInt(strint));
   return { 
     chapter: parseInt(splitId[0]),
     scene: parseInt(splitId[1]),
-    from: parseInt(splitRange[0]),
-    to: parseInt(splitRange[1]) 
+    from: Math.min(...splitRange),
+    to: Math.max(...splitRange) 
   } 
 }

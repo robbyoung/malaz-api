@@ -27,3 +27,32 @@ div.container.text > p::selection {
 p {
     white-space: pre-wrap;
 }
+
+#contents h3 {
+    background-color: #323232;
+    color: #ffffff;
+    padding: 5px;
+}
+
+#contents .scenes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+#contents .scene {
+    background-color: #c64646;
+    color: #ffffff;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#contents .scene:hover {
+    background-color: #5a5151;
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
