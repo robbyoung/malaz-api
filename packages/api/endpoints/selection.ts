@@ -15,9 +15,9 @@ interface Params {
 }
 
 export function getSelection(params: Params): string | undefined {
-  const {chapter, scene, from, to} = parseParams(params);
+  const {sceneId, from, to} = parseParams(params);
 
-  const text = new TextService().getSceneText(chapter, scene);
+  const text = new TextService().getSceneText(sceneId);
 
   if (!text) {
     return undefined;
@@ -26,7 +26,7 @@ export function getSelection(params: Params): string | undefined {
   const props: TemplateProps = {
     selection: text.slice(from, to),
     availableForms,
-    sceneId: `${chapter}_${scene}`,
+    sceneId,
     range: `${from}-${to}`
   };
 
@@ -38,11 +38,9 @@ function parseParams (params: Params) {
     throw new Error("param mismatch");
   }
 
-  const splitId = params.sceneId.split("_");
   const splitRange = params.range.split("-").map(strint => parseInt(strint));
-  return { 
-    chapter: parseInt(splitId[0]),
-    scene: parseInt(splitId[1]),
+  return {
+    sceneId: params.sceneId,
     from: Math.min(...splitRange),
     to: Math.max(...splitRange) 
   } 

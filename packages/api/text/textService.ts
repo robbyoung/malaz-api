@@ -3,8 +3,23 @@ import { Contents } from "../types/contents";
 const chapters: Chapter[] = require('../../parser/output/gotm.json');
 
 export class TextService {
-    public getSceneText(chapterNumber: number, sceneNumber: number): string | undefined {
-        const chapter = chapters.find(c => c.chapterNumber === chapterNumber);
+    public getSceneText(sceneId: string): string | undefined {
+        const splitId = sceneId.split("_");
+        const sceneNumber = parseInt(splitId[1]);
+
+        let chapter: Chapter | undefined;
+        switch(splitId[0]) {
+            case "p":
+                chapter = chapters.find(c => c.type === ChapterType.Prologue);
+                break;
+            case "e":
+                chapter = chapters.find(c => c.type === ChapterType.Epilogue);
+                break;
+            default:
+                chapter = chapters.find(c => c.chapterNumber === parseInt(splitId[0]));
+                break;
+        }
+
         if (!chapter) {
             return undefined;
         }
@@ -51,14 +66,5 @@ export class TextService {
             default:
                 return `${chapter.chapterNumber}_${sceneNumber}`;
         }
-    }
-
-    private parseSceneId(sceneId: string) {
-        // todo prologue & epilogue
-        const splitId = sceneId.split("_");
-        const chapter = parseInt(splitId[0]);
-        const scene = parseInt(splitId[1]);
-
-        return { chapter, scene }
     }
 }

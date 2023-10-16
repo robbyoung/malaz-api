@@ -28,6 +28,10 @@ app.post('/forms', async (req, res) => {
     respondWithHtmx(res, await postSubmission(req.body as any));
 });
 
+app.get('/favicon.ico', (_, res) => {
+    res.status(404).send("Not found");
+});
+
 app.listen(3000, () => {
     console.log('Listening on port 3000');
 });

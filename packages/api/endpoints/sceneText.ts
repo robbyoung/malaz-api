@@ -4,7 +4,6 @@ import { renderFile } from "pug";
 interface TemplateProps {
   text: string;
   sceneId: string;
-  nextSceneId: string;
 }
 
 interface Params {
@@ -16,12 +15,7 @@ export function getSceneText(params: Params): string | undefined {
     return undefined;
   }
 
-  const splitId = params.sceneId.split("_");
-  const chapter = parseInt(splitId[0]);
-  const scene = parseInt(splitId[1]);
-
-  const text = new TextService().getSceneText(chapter, scene);
-
+  const text = new TextService().getSceneText(params.sceneId);
   if (!text) {
     return undefined;
   }
@@ -29,7 +23,6 @@ export function getSceneText(params: Params): string | undefined {
   const props: TemplateProps = {
     text,
     sceneId: params.sceneId,
-    nextSceneId: `${chapter}_${scene + 1}`,
   };
 
   return renderFile("./endpoints/sceneText.pug", props);

@@ -4,8 +4,7 @@ import { renderFile } from "pug";
 
 interface TemplateProps {
   form: HighlightForm;
-  chapter: number;
-  scene: number;
+  sceneId: string;
   from: number;
   to: number;
 }
@@ -17,7 +16,7 @@ interface Params {
 }
 
 export function getForm(params: Params): string | undefined {
-  const {chapter, scene, from, to, formId} = parseParams(params);
+  const {sceneId, from, to, formId} = parseParams(params);
   const form = availableForms.find(f => f.id === formId);
 
   if (!form) {
@@ -26,8 +25,7 @@ export function getForm(params: Params): string | undefined {
 
   const props: TemplateProps = {
     form,
-    chapter,
-    scene,
+    sceneId,
     from,
     to
   };
@@ -40,12 +38,10 @@ function parseParams (params: Params) {
     throw new Error("param mismatch");
   }
 
-  const splitId = params.sceneId.split("_");
   const splitRange = params.range.split("-").map(strint => parseInt(strint));
   return {
     formId: params.formId,
-    chapter: parseInt(splitId[0]),
-    scene: parseInt(splitId[1]),
+    sceneId: params.sceneId,
     from: Math.min(...splitRange),
     to: Math.max(...splitRange)
   } 
