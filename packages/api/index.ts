@@ -16,8 +16,8 @@ app.get('/scene/:sceneId', (req, res) => {
     respondWithHtmx(res, getSceneText(req.params as any));
 });
 
-app.get('/selection/:sceneId/:range', (req, res) => {
-    respondWithHtmx(res, getSelection(req.params as any));
+app.get('/selection', (req, res) => {
+    respondWithHtmx(res, getSelection(req.query as any));
 });
 
 app.get('/forms', (req, res) => {

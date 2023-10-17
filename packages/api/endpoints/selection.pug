@@ -3,7 +3,12 @@ div#selection
         p #{selection}
 
         div#form-select
-            select(name="formId" hx-get="/forms" hx-vars="sceneId:'" + sceneId + "',range:'" + range + "'" hx-target="#form" hx-swap="outerHTML")
+            select(
+                name="formId"
+                hx-get="/forms"
+                hx-vars=`sceneId:'${sceneId}',range:'${range}'`
+                hx-target="#form" hx-swap="outerHTML"
+            )
                 option(disabled=true selected=true value="") Select a form
                 each form in availableForms
                     option(value=form.id) #{form.name}
