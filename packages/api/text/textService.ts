@@ -45,11 +45,11 @@ export class TextService {
     private getChapterName(chapter: Chapter): string {
         switch (chapter.type) {
             case ChapterType.Prologue:
-                return "Prologue";
+                return "P";
             case ChapterType.Epilogue: 
-                return "Epilogue";
+                return "E";
             default:
-                return `Chapter ${chapter.chapterNumber}`;
+                return `${chapter.chapterNumber}`;
         }
     }
 

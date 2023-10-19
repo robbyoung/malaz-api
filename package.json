@@ -2,7 +2,8 @@
   "name": "malazapi",
   "scripts": {
     "parser": "cd ./packages/parser && bun run index.ts",
-    "api": "cd ./packages/api && bun run index.ts"
+    "api": "cd ./packages/api && bun run index.ts",
+    "tailwind": "cd ./packages/api && bun tailwindcss -o style.css"
   },
   "workspaces": ["packages/api", "packages/parser"]
 }
