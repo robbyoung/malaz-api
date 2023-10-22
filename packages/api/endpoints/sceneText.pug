@@ -1,14 +1,16 @@
 extends ../templates/page.pug
 
 block content
-    div.flex
-        div.container.text
+    div(class="flex")
+        div(class="w-3/5")
             p(
                 hx-get="/selection"
                 hx-vars=`sceneId:'${sceneId}',range:window.getSelection().baseOffset + '-' + window.getSelection().extentOffset`
                 hx-target="#selection"
                 hx-swap="outerHTML"
                 hx-trigger="mouseup"
+                class="selection:bg-red whitespace-pre-wrap p-10"
             ) #{text}
-        div.container.forms
-            p#selection No selection
+        div(class="fixed right-0 w-2/5 p-10")
+            div(class="rounded-md border-2 border-black bg-red p-10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]")
+                p#selection No selection
