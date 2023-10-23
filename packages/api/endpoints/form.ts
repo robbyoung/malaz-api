@@ -1,5 +1,4 @@
 import { HighlightForm, availableForms } from "../forms/forms";
-import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 
 interface TemplateProps {

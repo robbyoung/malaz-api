@@ -25,5 +25,21 @@ export const availableForms: HighlightForm[] = [
         fields: [
             "Character name"
         ],
+    },
+    {
+        id: 'hf4',
+        name: 'Descriptor',
+        fields: [
+            "Character name"
+        ],
+    },
+    {
+        id: 'hf5',
+        name: 'Location',
+        fields: [
+            "Continent",
+            "Region",
+            "Sublocation"
+        ],
     }
 ]

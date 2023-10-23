@@ -1,11 +1,16 @@
-div#form
-    form(hx-post="/forms" hx-target="#form")
+div#form(class="flex flex-wrap gap-4 my-4")
+    form(hx-post="/forms" hx-target="#selection")
         each field in form.fields
-            div
-                label(for=field) #{field}
-                input(name=field)
+            input(
+                name=field
+                placeholder=field
+                class="rounded-md border-2 border-black p-[10px] font-bold mb-2" 
+            )
         input(name="formId" value=form.id type="hidden")
         input(name="sceneId" value=sceneId type="hidden")
         input(name="from" value=from type="hidden")
         input(name="to" value=to type="hidden")
-        button.submit(type="submit") Submit
+        button.submit(
+            type="submit"
+            class="flex cursor-pointer items-center rounded-md border-2 border-black bg-grey px-10 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
+        ) Submit
