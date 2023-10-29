@@ -7,7 +7,7 @@ interface TemplateProps {
 }
 
 export function getContents(): string {
-    const contents = new TextService().getContents();
+    const contents = new TextService().getContents('dg');
     const props: TemplateProps = {
         contents,
     };

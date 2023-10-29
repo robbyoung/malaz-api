@@ -1,8 +1,8 @@
 import { Chapter, ChapterType } from "./types/chapter";
 import { toNumber } from "./util/toNumber";
 
-async function parseGotm() {
-    const src = Bun.file("./text/gotm.txt");
+async function parseBook(bookCode: string) {
+    const src = Bun.file(`./text/${bookCode}.txt`);
     const rawText = await src.text();
 
     const sanitisedText = removeSpecialCharacters(rawText);
@@ -16,7 +16,7 @@ async function parseGotm() {
             return chapters.map(c => parseChapter(c, bookNumber))
         }).flat();
     
-    const outputPath = './output/gotm.json';
+    const outputPath = `./output/${bookCode}.json`;
     await Bun.write(outputPath, JSON.stringify(chapters))
 
     console.log(`Parsed ${chapters.length} chapters, wrote to ${outputPath}`);
@@ -92,4 +92,5 @@ function toBase64(text: string) {
     return btoa(encodeURIComponent(text));
 }
 
-parseGotm();
+parseBook('gotm');
+parseBook('dg');
