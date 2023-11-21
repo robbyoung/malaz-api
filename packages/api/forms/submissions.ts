@@ -1,7 +1,10 @@
-const submissions: any[] = require('./submissions.json');
+import { MongoClient } from 'mongodb';
 
 export async function saveSubmission(formData: FormData) {
-    submissions.push(formData);
+    const url = "mongodb://localhost:27017/malazdb";
+    const client = await MongoClient.connect(url);
 
-    await Bun.write("./submissions.json", JSON.stringify(submissions));
+    await client.db().collection("submissions").insertOne(formData);
+
+    client.close();
 }

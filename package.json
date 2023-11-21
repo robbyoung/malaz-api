@@ -5,5 +5,8 @@
     "api": "cd ./packages/api && bun run index.ts",
     "tailwind": "cd ./packages/api && bun tailwindcss -o style.css"
   },
-  "workspaces": ["packages/api", "packages/parser"]
+  "workspaces": ["packages/api", "packages/parser"],
+  "dependencies": {
+    "mongodb": "^6.2.0"
+  }
 }
