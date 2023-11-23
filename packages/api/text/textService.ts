@@ -31,7 +31,7 @@ export class TextService {
             return undefined;
         }
 
-        return this.fromBase64(chapter.scenesText[sceneNumber - 1]);
+        return this.fromBase64(sceneNumber === 0 ? chapter.excerptText : chapter.scenesText[sceneNumber - 1]);
     }
 
     public getContents(bookCode: string = "gotm"): Contents {
@@ -39,13 +39,22 @@ export class TextService {
 
         return {
             title: "Contents",
-            chapters: chapters.map(chapter => {                
+            chapters: chapters.map(chapter => {   
+                let scenes = chapter.scenesText.map((_, index) => ({
+                    id: this.toSceneId(bookCode, chapter, index + 1),
+                    name: `Scene ${index + 1}`
+                }));
+
+                if (chapter.excerptText) {
+                    scenes = [{
+                        id: this.toSceneId(bookCode, chapter, 0),
+                        name: "Excerpt",
+                    }, ...scenes]
+                }
+                
                 return {
                     name: this.getChapterName(chapter),
-                    scenes: chapter.scenesText.map((_, index) => ({
-                        id: this.toSceneId(bookCode, chapter, index + 1),
-                        name: `Scene ${index + 1}`
-                    })),
+                    scenes,
                 };
             })
         }
