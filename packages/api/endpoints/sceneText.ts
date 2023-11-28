@@ -4,6 +4,8 @@ import { renderFile } from "pug";
 interface TemplateProps {
   text: string;
   sceneId: string;
+  nextSceneId?: string;
+  previousSceneId?: string;
 }
 
 interface Params {

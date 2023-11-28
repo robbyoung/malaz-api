@@ -97,6 +97,7 @@ export class TextService {
         }
         
         return {
+            bookCode,
             chapters,
             chapterCode: splitId[1],
             sceneNumber: parseInt(splitId[2]),

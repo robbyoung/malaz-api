@@ -1,4 +1,5 @@
-import { Chapter, ChapterType } from "./types/chapter";
+import { Scene, SceneType } from "./types/scene";
+import { generateIdentifier } from "./util/generateIdentifier";
 import { toNumber } from "./util/toNumber";
 
 async function parseBook(bookCode: string) {
@@ -6,20 +7,20 @@ async function parseBook(bookCode: string) {
     const rawText = await src.text();
 
     const sanitisedText = removeSpecialCharacters(rawText);
-    const chapters = splitByHeader(sanitisedText, ["## BOOK", "### Prologue", "### EPILOGUE"])
+    const scenes = splitByHeader(sanitisedText, ["## BOOK", "### Prologue", "### EPILOGUE"])
         .map(book => {
             const heading = book.match(/## ([^\n]*)/)![1];
             const bookNumber = parseBookNumber(heading);
             const chapters =  book.startsWith("## BOOK") ?
                 splitByHeader(book, ["### CHAPTER"]) : [book];
 
-            return chapters.map(c => parseChapter(c, bookNumber))
+            return chapters.map((c, i) => parseScenes(c, bookNumber)).flat();
         }).flat();
     
     const outputPath = `./output/${bookCode}.json`;
-    await Bun.write(outputPath, JSON.stringify(chapters))
+    await Bun.write(outputPath, JSON.stringify(scenes))
 
-    console.log(`Parsed ${chapters.length} chapters, wrote to ${outputPath}`);
+    console.log(`Parsed ${scenes.length} scenes, wrote to ${outputPath}`);
 
 }
 
@@ -27,22 +28,24 @@ function removeSpecialCharacters(text: string): string {
     return text.replaceAll(/(\r)|(\*)|(\\)/g, "");
 }
 
-function parseChapter(chapterText: string, bookNumber: number | undefined): Chapter {
-    const heading = chapterText.match(/### ([^\n]*)/)![1];
+function parseScenes(chapterText: string, bookNumber: number | undefined): Scene[] {
+    const chapterNumber = getChapterNumber(chapterText);
     const scenes = chapterText
         .split("\n\n\n")
-        .filter(scene => scene.length > 0)
-        .map(toBase64);
+        .filter(scene => scene.length > 0);
 
-    const type = getChapterType(heading);
+    return scenes.slice(1).map((sceneText, sceneNumber) =>{
+        const sceneType = sceneNumber === 0 ? SceneType.Excerpt : SceneType.Standard;
 
-    return {
-        type,
-        bookNumber,
-        chapterNumber: type === ChapterType.Chapter ? toNumber(heading.match(/CHAPTER (.*)/)![1]) : undefined,
-        excerptText: scenes[1],
-        scenesText: scenes.slice(2),
-    }
+        return {
+            id: generateIdentifier(),
+            sceneType,
+            bookNumber,
+            chapterNumber,
+            sceneNumber,
+            sceneText: toBase64(sceneText),
+        };
+    });
 }
 
 function parseBookNumber(heading: string): number | undefined {
@@ -59,18 +62,19 @@ function parseBookNumber(heading: string): number | undefined {
     return toNumber(heading.match(/BOOK (.*)/)![1]);
 }
 
-function getChapterType(header: string): ChapterType {
+function getChapterNumber(chapterText: string): number {
+    const header = chapterText.match(/### ([^\n]*)/)![1];
     const lower = header.toLowerCase();
 
     if (lower.includes("prologue")) {
-        return ChapterType.Prologue;
+        return 0;
     }
     
     if (lower.includes("epilogue")) {
-        return ChapterType.Epilogue;
+        return 1000;
     }
 
-    return ChapterType.Chapter;
+    return toNumber(header.match(/CHAPTER (.*)/)![1]);
 }
 
 function splitByHeader(text: string, headers: string[]): string[] {
