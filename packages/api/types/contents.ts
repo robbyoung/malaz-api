@@ -9,7 +9,7 @@ export interface Contents {
     chapters: ChapterContents[];
 }
 
-interface ChapterContents {
+export interface ChapterContents {
     name: string;
     scenes: SceneContents[]
 }
