@@ -22,9 +22,13 @@ export function getSceneText(params: Params): string | undefined {
     return undefined;
   }
 
+  const adjacentSceneIds = new TextService().getAdjacentSceneIds(params.sceneId);
+
   const props: TemplateProps = {
     text,
     sceneId: params.sceneId,
+    previousSceneId: adjacentSceneIds[0],
+    nextSceneId: adjacentSceneIds[1]
   };
 
   return renderFile("./endpoints/sceneText.pug", props);

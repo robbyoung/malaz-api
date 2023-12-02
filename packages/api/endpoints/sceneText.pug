@@ -3,6 +3,21 @@ extends ../page.pug
 block content
     div(class="flex")
         div(class="w-3/5")
+            div(class="flex justify-between p-10")
+                if previousSceneId
+                    a(
+                        href="/scene/" + previousSceneId
+                        class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 m-2 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
+                    ) Previous
+                else
+                    div
+                if nextSceneId
+                    a(
+                        href="/scene/" + nextSceneId
+                        class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 m-2 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
+                    ) Next
+                else
+                    div
             p(
                 hx-get="/selection"
                 hx-vars=`sceneId:'${sceneId}',range:window.getSelection().baseOffset + '-' + window.getSelection().extentOffset`

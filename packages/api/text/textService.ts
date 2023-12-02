@@ -45,6 +45,30 @@ export class TextService {
         }
     }
 
+    public getAdjacentSceneIds(sceneId: string): [string?, string?] {
+        const gotmIndex = gotm.findIndex(scene => scene.id === sceneId);
+        const dgIndex = dg.findIndex(scene => scene.id === sceneId);
+
+        if (gotmIndex === -1 && dgIndex === -1) {
+            return [undefined, undefined];
+        }
+
+        let previousScene: Scene | undefined;
+        let nextScene: Scene | undefined;
+        if (gotmIndex !== -1) {
+            previousScene = gotm[gotmIndex-1];
+            nextScene = gotm[gotmIndex+1];
+        } else {
+            previousScene = dg[dgIndex-1];
+            nextScene = dg[dgIndex+1];
+        }
+
+        return [
+            previousScene === undefined ? undefined : previousScene.id,
+            nextScene === undefined ? undefined : nextScene.id
+        ];
+    }
+
     private getChapterName(chapterNumber: number): string {
         switch (chapterNumber) {
             case 0:
