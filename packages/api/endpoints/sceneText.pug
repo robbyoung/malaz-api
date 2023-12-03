@@ -1,31 +1,19 @@
 extends ../page.pug
+include ../components/sceneNav.pug
 
 block content
     div(class="flex")
         div(class="w-3/5")
-            div(class="flex justify-between p-10")
-                if previousSceneId
-                    a(
-                        href="/scene/" + previousSceneId
-                        class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 m-2 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
-                    ) Previous
-                else
-                    div
-                if nextSceneId
-                    a(
-                        href="/scene/" + nextSceneId
-                        class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 m-2 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
-                    ) Next
-                else
-                    div
+            +sceneNav(previousSceneId, nextSceneId)
             p(
                 hx-get="/selection"
                 hx-vars=`sceneId:'${sceneId}',range:window.getSelection().baseOffset + '-' + window.getSelection().extentOffset`
                 hx-target="#selection"
                 hx-swap="outerHTML"
                 hx-trigger="mouseup"
-                class="selection:bg-red whitespace-pre-wrap p-10"
+                class="selection:bg-red whitespace-pre-wrap mx-10"
             ) #{text}
+            +sceneNav(previousSceneId, nextSceneId)
         div(class="fixed right-0 w-2/5 p-10")
             div(class="rounded-md border-2 border-black bg-red p-10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]")
                 p#selection No selection
