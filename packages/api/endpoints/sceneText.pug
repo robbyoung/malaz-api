@@ -3,8 +3,7 @@ include ../components/sceneNav.pug
 
 block content
     div(class="flex")
-        div(class="w-3/5")
-            +sceneNav(previousSceneId, nextSceneId)
+        div(class="w-3/5 py-6")
             p(
                 hx-get="/selection"
                 hx-vars=`sceneId:'${sceneId}',range:window.getSelection().baseOffset + '-' + window.getSelection().extentOffset`
@@ -13,7 +12,8 @@ block content
                 hx-trigger="mouseup"
                 class="selection:bg-red whitespace-pre-wrap mx-10"
             ) #{text}
-            +sceneNav(previousSceneId, nextSceneId)
         div(class="fixed right-0 w-2/5 p-10")
+            h1(class="text-3xl bg-white font-bold py-4") #{title}
             div(class="rounded-md border-2 border-black bg-red p-10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]")
                 p#selection No selection
+            +sceneNav(previousSceneId, nextSceneId)

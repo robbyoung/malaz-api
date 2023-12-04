@@ -3,6 +3,7 @@ import { renderFile } from "pug";
 
 interface TemplateProps {
   text: string;
+  title: string;
   sceneId: string;
   nextSceneId?: string;
   previousSceneId?: string;
@@ -17,8 +18,9 @@ export function getSceneText(params: Params): string | undefined {
     return undefined;
   }
 
+  const sceneName = new TextService().getSceneName(params.sceneId);
   const text = new TextService().getSceneText(params.sceneId);
-  if (!text) {
+  if (!text || !sceneName) {
     return undefined;
   }
 
@@ -26,6 +28,7 @@ export function getSceneText(params: Params): string | undefined {
 
   const props: TemplateProps = {
     text,
+    title: sceneName,
     sceneId: params.sceneId,
     previousSceneId: adjacentSceneIds[0],
     nextSceneId: adjacentSceneIds[1]

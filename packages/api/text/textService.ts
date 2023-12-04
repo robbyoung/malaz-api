@@ -1,4 +1,4 @@
-import { Scene } from "../types/scene";
+import { Scene, SceneType } from "../types/scene";
 import { ChapterContents, Contents } from "../types/contents";
 
 const gotm: Scene[] = require('../../parser/output/gotm.json');
@@ -24,6 +24,23 @@ export class TextService {
         return this.fromBase64(matchingScene.sceneText);
     }
 
+    public getSceneName(sceneId: string): string | undefined {
+        let matchingScene = gotm.find(scene => scene.id === sceneId);
+        if (!matchingScene) {
+            matchingScene = dg.find(scene => scene.id === sceneId);
+        }
+
+
+        if (!matchingScene) {
+            return undefined;
+        }
+
+        const chapterName = this.getChapterName(matchingScene.chapterNumber, false);
+        const sceneName = matchingScene.sceneType === SceneType.Excerpt ? "Excerpt" : `Scene ${matchingScene.sceneNumber}`;
+        return `${chapterName} — ${sceneName}`
+    }
+
+
     public getContents(bookCode: string = "gotm"): Contents {
         const scenes = booksByCode[bookCode];
         const chapterNumbers = [...new Set(scenes.map(s => s.chapterNumber))];
@@ -31,7 +48,7 @@ export class TextService {
             const scenesInChapter = scenes.filter(s => s.chapterNumber === chapterNumber);
 
             return {
-                name: this.getChapterName(chapterNumber),
+                name: this.getChapterName(chapterNumber, true),
                 scenes: scenesInChapter.map((s, i) => ({
                     id: s.id,
                     name: i === 0 ? 'Excerpt' : `Scene ${i}`
@@ -69,14 +86,14 @@ export class TextService {
         ];
     }
 
-    private getChapterName(chapterNumber: number): string {
+    private getChapterName(chapterNumber: number, abbreviate: boolean): string {
         switch (chapterNumber) {
             case 0:
-                return "P";
+                return abbreviate ? "P" : "Prologue";
             case 1000: 
-                return "E";
+                return abbreviate ? "E" : "Epilogue";
             default:
-                return `${chapterNumber}`;
+                return abbreviate ? `${chapterNumber}` : `Chapter ${chapterNumber}`;
         }
     }
 
