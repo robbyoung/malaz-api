@@ -2,18 +2,19 @@ extends ../page.pug
 include ../components/sceneNav.pug
 
 block content
-    div(class="flex")
-        div(class="w-3/5 py-6")
+    div#container
+        div#text-container
             p(
                 hx-get="/selection"
                 hx-vars=`sceneId:'${sceneId}',range:window.getSelection().baseOffset + '-' + window.getSelection().extentOffset`
                 hx-target="#selection"
                 hx-swap="outerHTML"
                 hx-trigger="mouseup"
-                class="selection:bg-red whitespace-pre-wrap mx-10"
+                class="text-wrap color-highlight padding-x padding-y"
             ) #{text}
-        div(class="fixed right-0 w-2/5 p-10")
-            h1(class="text-3xl bg-white font-bold py-4") #{title}
-            div(class="rounded-md border-2 border-black bg-red p-10 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]")
-                p#selection No selection
-            +sceneNav(previousSceneId, nextSceneId)
+        div#selection-container
+            div
+                h1(class="heading") #{title}
+                div(class="ochre shadowed")
+                    p#selection No selection
+                +sceneNav(previousSceneId, nextSceneId)

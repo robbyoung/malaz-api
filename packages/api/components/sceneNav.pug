@@ -1,16 +1,16 @@
 mixin sceneNav(previousSceneId, nextSceneId)
-    div(class="flex justify-between my-5")
+    div(id="scene-nav")
         if previousSceneId
             a(
                 href="/scene/" + previousSceneId
-                class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
+                class="button ochre" 
             ) Previous
         else
             div
         if nextSceneId
             a(
                 href="/scene/" + nextSceneId
-                class="flex cursor-pointer justify-center rounded-md border-2 border-black bg-red w-32 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none" 
+                class="button ochre" 
             ) Next
         else
             div

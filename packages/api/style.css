@@ -1,3 +1,120 @@
+:root {
+  --ochre: #cc7722;
+  --black: #000000;
+  --grey: #E3DFF2;
+}
+
+#scene-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+}
+
+/* flex cursor-pointer appearance-none items-center rounded-md border-2 border-black bg-grey p-2 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none
+*/
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  border: 2px solid var(--black);
+  font-weight: 700;
+  width: 8rem;
+
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+}
+
+.button:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px 0px var(--black)
+}
+
+.shadowed {
+  --tw-shadow: 4px 4px 0px 0px var(--black);
+  --tw-shadow-colored: 4px 4px 0px 0px var(--tw-shadow-color);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  padding: 2em;
+}
+
+.ochre {
+  background-color: var(--ochre);
+  color: var(--black);
+}
+
+.grey {
+  background-color: var(--grey);
+  color: var(--black);
+}
+
+.dropdown {
+  padding: 0.5em 0.75em 0.5em 0.75em;
+  border: 2px solid var(--black);
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.padding-y {
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+}
+
+.padding-x {
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+}
+
+.text-wrap {
+  white-space: pre-wrap;
+}
+
+.heading {
+  font-weight: 700;
+  font-size: 1.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+#container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+#text-container {
+  width: 60%;
+  max-width: calc(1440px * 0.6);
+}
+
+#text-container > p::selection {
+  background-color: var(--ochre);
+}
+
+#selection-container {
+  width: 40%;
+  max-width: calc(1440px * 0.4);
+}
+
+#selection-container > div {
+  position: fixed;
+  width: 40%;
+  max-width: calc(1440px * 0.4);
+}
+
+
 /*
 ! tailwindcss v3.3.5 | MIT License | https://tailwindcss.com
 */
@@ -216,23 +333,6 @@ Remove the inheritance of text transform in Edge and Firefox.
 button,
 select {
   text-transform: none;
-}
-
-/*
-1. Correct the inability to style clickable types in iOS and Safari.
-2. Remove default button styles.
-*/
-
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
-  -webkit-appearance: button;
-  /* 1 */
-  background-color: transparent;
-  /* 2 */
-  background-image: none;
-  /* 2 */
 }
 
 /*

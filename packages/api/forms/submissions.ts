@@ -5,6 +5,8 @@ export async function saveSubmission(formData: FormData) {
     const client = await MongoClient.connect(url);
 
     await client.db().collection("submissions").insertOne(formData);
+    
+    console.dir(formData);
 
     client.close();
 }
