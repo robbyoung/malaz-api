@@ -35,7 +35,7 @@ export class TextService {
             return undefined;
         }
 
-        const chapterName = this.getChapterName(matchingScene.chapterNumber, false);
+        const chapterName = this.getChapterName(matchingScene.chapterNumber);
         const sceneName = matchingScene.sceneType === SceneType.Excerpt ? "Excerpt" : `Scene ${matchingScene.sceneNumber}`;
         return `${chapterName} — ${sceneName}`
     }
@@ -48,7 +48,7 @@ export class TextService {
             const scenesInChapter = scenes.filter(s => s.chapterNumber === chapterNumber);
 
             return {
-                name: this.getChapterName(chapterNumber, true),
+                name: this.getChapterName(chapterNumber),
                 scenes: scenesInChapter.map((s, i) => ({
                     id: s.id,
                     name: i === 0 ? 'Excerpt' : `Scene ${i}`
@@ -86,14 +86,14 @@ export class TextService {
         ];
     }
 
-    private getChapterName(chapterNumber: number, abbreviate: boolean): string {
+    private getChapterName(chapterNumber: number): string {
         switch (chapterNumber) {
             case 0:
-                return abbreviate ? "P" : "Prologue";
+                return "Prologue";
             case 1000: 
-                return abbreviate ? "E" : "Epilogue";
+                return "Epilogue";
             default:
-                return abbreviate ? `${chapterNumber}` : `Chapter ${chapterNumber}`;
+                return `Chapter ${chapterNumber}`;
         }
     }
 

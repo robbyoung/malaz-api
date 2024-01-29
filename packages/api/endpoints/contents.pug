@@ -1,13 +1,13 @@
 extends ../page.pug
 
 block content
-    div#contents
-        h1(class="text-4xl bg-white border-b-4 border-black font-bold p-3") #{contents.title}
-        div(class="[&>*:nth-child(even)]:bg-grey [&>*:nth-child(odd)]:bg-blue")
+    div#container
+        div#contents-container
+            h1(class="heading") #{contents.title}
             each chapter in contents.chapters
-                div(class="flex border-b-4 border-black p-3")
-                    h3(class="flex font-bold items-center justify-items-right text-6xl p-5") #{chapter.name}
-                    div(class="flex flex-wrap")
+                div
+                    h3 #{chapter.name}
+                    div(class="scene-row")
                         each scene in chapter.scenes
                             a(
                                 href="/scene/" + scene.id
