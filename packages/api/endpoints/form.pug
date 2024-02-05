@@ -1,10 +1,10 @@
-div#form(class="flex flex-wrap gap-4 my-4")
+div#form(class="padding-y")
     form(hx-post="/forms" hx-target="#selection")
         each field in form.fields
             input(
                 name=field
                 placeholder=field
-                class="input"
+                class="input space-below"
             )
         input(name="formId" value=form.id type="hidden")
         input(name="sceneId" value=sceneId type="hidden")
@@ -12,5 +12,5 @@ div#form(class="flex flex-wrap gap-4 my-4")
         input(name="to" value=to type="hidden")
         button.submit(
             type="submit"
-            class="button grey space-above"
+            class="button grey"
         ) Submit

@@ -65,6 +65,7 @@ html {
   border: 2px solid var(--black);
   border-radius: 4px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .padding-y {
@@ -77,8 +78,8 @@ html {
   padding-right: 0.75em;
 }
 
-.space-above {
-  margin-top: 0.75em;
+.space-below {
+  margin-bottom: 0.75em;
 }
 
 .text-wrap {
@@ -135,4 +136,8 @@ html {
   flex-direction: row;
   justify-content: space-between;
   padding-top: 0.75rem;
+}
+
+select option:disabled {
+  display:none;
 }
