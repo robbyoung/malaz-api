@@ -10,28 +10,28 @@ export const availableForms: HighlightForm[] = [
         name: 'Dialogue',
         fields: [
             "Character name"
-        ],
+        ]
     },
     {
         id: 'hf2',
         name: 'Occurrence',
         fields: [
             "Character name"
-        ],
+        ]
     },
     {
         id: 'hf3',
         name: 'Mention',
         fields: [
             "Character name"
-        ],
+        ]
     },
     {
         id: 'hf4',
         name: 'Descriptor',
         fields: [
             "Character name"
-        ],
+        ]
     },
     {
         id: 'hf5',
@@ -40,6 +40,6 @@ export const availableForms: HighlightForm[] = [
             "Continent",
             "Region",
             "Sublocation"
-        ],
+        ]
     }
 ]

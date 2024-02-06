@@ -1,12 +1,29 @@
 import { MongoClient } from 'mongodb';
 
-export async function saveSubmission(formData: FormData) {
-    const url = "mongodb://localhost:27017/malazdb";
-    const client = await MongoClient.connect(url);
+const mongoUrl = "mongodb://localhost:27017/malazdb";
 
-    await client.db().collection("submissions").insertOne(formData);
-    
-    console.dir(formData);
+export interface Submission {
+    formId: string;
+    sceneId: string;
+    from: number;
+    to: number;
+}
+
+export async function saveSubmission(submission: Submission) {
+    const client = await MongoClient.connect(mongoUrl);
+
+    await client.db().collection("submissions").insertOne(submission);
 
     client.close();
+}
+
+export async function getSubmissionsForScene(sceneId: string): Promise<Submission[]> {
+    const client = await MongoClient.connect(mongoUrl);
+
+    const query = { sceneId };
+    const submissionsForScene = await client.db().collection("submissions").find<Submission>(query).toArray();
+
+    client.close();
+
+    return submissionsForScene;
 }

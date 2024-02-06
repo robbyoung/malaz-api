@@ -12,8 +12,8 @@ app.get('/', (_, res) => {
     respondWithHtmx(res, getContents());
 });
 
-app.get('/scene/:sceneId', (req, res) => {
-    respondWithHtmx(res, getSceneText(req.params as any));
+app.get('/scene/:sceneId', async (req, res) => {
+    respondWithHtmx(res, await getSceneText(req.params as any));
 });
 
 app.get('/selection', (req, res) => {

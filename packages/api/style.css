@@ -100,6 +100,11 @@ html {
   gap: 0.5em;
 }
 
+.annotation {
+  background-color: #99b3ff;
+  cursor: pointer;
+}
+
 #container {
   display: flex;
   flex-direction: row;
