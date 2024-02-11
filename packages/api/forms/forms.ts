@@ -6,13 +6,6 @@ export interface HighlightForm {
 
 export const availableForms: HighlightForm[] = [
     {
-        id: 'hf1',
-        name: 'Dialogue',
-        fields: [
-            "Character name"
-        ]
-    },
-    {
         id: 'hf2',
         name: 'Occurrence',
         fields: [
@@ -27,13 +20,6 @@ export const availableForms: HighlightForm[] = [
         ]
     },
     {
-        id: 'hf4',
-        name: 'Descriptor',
-        fields: [
-            "Character name"
-        ]
-    },
-    {
         id: 'hf5',
         name: 'Location',
         fields: [
@@ -41,5 +27,19 @@ export const availableForms: HighlightForm[] = [
             "Region",
             "Sublocation"
         ]
-    }
+    },
+    {
+        id: 'hf4',
+        name: 'Descriptor',
+        fields: [
+            "Character name"
+        ]
+    },
+    {
+        id: 'hf1',
+        name: 'Dialogue',
+        fields: [
+            "Character name"
+        ]
+    },
 ]

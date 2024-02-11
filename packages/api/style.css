@@ -101,8 +101,31 @@ html {
 }
 
 .annotation {
-  background-color: #99b3ff;
   cursor: pointer;
+}
+
+.annotation-hf1 {
+  background-color: #CE97FB;
+}
+
+.annotation-hf2 {
+  background-color: #F6A5EB;
+}
+
+.annotation-hf3 {
+  background-color: #FAA99D;
+}
+
+.annotation-hf4 {
+  background-color: #FCDF7E;
+}
+
+.annotation-hf5 {
+  background-color: #98FBE1;
+}
+
+.annotation-hf6 {
+  background-color: #67EBFA;
 }
 
 #container {

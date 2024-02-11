@@ -1,3 +1,4 @@
+import { availableForms } from "../forms/forms";
 import { Submission, getSubmissionsForScene } from "../forms/submissions";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
@@ -6,6 +7,7 @@ interface Chunk {
   text: string;
   selectFrom: number;
   class: string;
+  annotationId?: string;
 }
 
 interface TemplateProps {
@@ -46,21 +48,25 @@ export async function getSceneText(params: Params): Promise<string | undefined> 
 }
 
 function getChunks(text: string, annotations: Submission[]): Chunk[] {
-  const reversedAnnotations = [...annotations].sort((a, b) => b.from - a.from);
   const chunks: Chunk[] = [];
+  const indices = [0, ...new Set(annotations.map(a => [a.from, a.to]).flat().sort((a, b) => a - b)), text.length];
 
-  let currentIndex = 0;
-  while (reversedAnnotations.length > 0) {
-    const annotation = reversedAnnotations.pop();
-
-    if (annotation && annotation.from > currentIndex) {
-      chunks.push({ text: text.substring(currentIndex, annotation.from), class: '', selectFrom: currentIndex });
-      chunks.push({ text: text.substring(annotation.from, annotation.to), class: `annotation annotation-${annotation.formId}`, selectFrom: annotation.from });
-      currentIndex = annotation.to;
-    }
-  }
-
-  chunks.push({ text: text.substring(currentIndex), class: '', selectFrom: currentIndex });
+  for(let i = 0; i < indices.length - 1; i++) {
+    const currentIndex = indices[i];
+    const nextIndex = indices[i + 1];
+    const annotationsBetweenIndices = annotations.filter(a => a.to > currentIndex && a.from < nextIndex);
+    chunks.push(createChunk(text, currentIndex, nextIndex, annotationsBetweenIndices));
+  };
 
   return chunks;
+}
+
+function createChunk(text: string, fromIndex: number, toIndex: number, annotations: Submission[]): Chunk {
+  if (annotations.length === 0) {
+    return { text: text.substring(fromIndex, toIndex), class: '', selectFrom: fromIndex }
+  }
+
+  const formOrder = annotations.sort((a, b) => availableForms.findIndex(f => a.formId === f.id) - availableForms.findIndex(f => b.formId === f.id));
+  const annotation = formOrder[0];
+  return { text: text.substring(fromIndex, toIndex), class: `annotation annotation-${annotation.formId}`, selectFrom: fromIndex }
 }
