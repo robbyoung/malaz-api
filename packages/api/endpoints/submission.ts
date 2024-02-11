@@ -18,7 +18,7 @@ export async function postSubmission(rawFormData: any): Promise<string> {
     throw new Error("bad submission: to missing or invalid");
   }
 
-  await saveSubmission({formId, sceneId, from, to});
+  await saveSubmission(formId, sceneId, from, to);
 
   return renderFile("./endpoints/submission.pug");
 }

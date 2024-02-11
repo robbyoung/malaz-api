@@ -68,5 +68,5 @@ function createChunk(text: string, fromIndex: number, toIndex: number, annotatio
 
   const formOrder = annotations.sort((a, b) => availableForms.findIndex(f => a.formId === f.id) - availableForms.findIndex(f => b.formId === f.id));
   const annotation = formOrder[0];
-  return { text: text.substring(fromIndex, toIndex), class: `annotation annotation-${annotation.formId}`, selectFrom: fromIndex }
+  return { text: text.substring(fromIndex, toIndex), class: `annotation annotation-${annotation.formId}`, selectFrom: fromIndex, annotationId: annotation.id}
 }

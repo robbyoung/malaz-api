@@ -13,7 +13,10 @@ block content
                 class="text-wrap color-highlight padding-x padding-y"
             )
                 each chunk in chunks 
-                    span(select-from=chunk.selectFrom class=chunk.class) #{chunk.text}
+                    span(
+                        select-from=chunk.selectFrom
+                        class=chunk.class
+                    ) #{chunk.text}
         div#selection-container
             div
                 h1(class="heading") #{title}
