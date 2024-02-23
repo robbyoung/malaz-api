@@ -5,8 +5,8 @@ block content
     div#container
         div#text-container
             p(
-                hx-get="/selection"
-                hx-vars=`sceneId:'${sceneId}',range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
+                hx-get=`/scenes/${sceneId}/annotate`
+                hx-vars=`range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
                 hx-target="#selection"
                 hx-swap="outerHTML"
                 hx-trigger="mouseup"
@@ -19,7 +19,13 @@ block content
                     ) #{chunk.text}
         div#selection-container
             div
-                h1(class="heading") #{title}
+                h1(
+                    hx-get=`/scenes/${sceneId}/annotate`
+                    hx-target="#selection"
+                    hx-swap="outerHTML"
+                    hx-trigger="mouseup"
+                    class="heading clickable"
+                ) #{title}
                 div(class="ochre shadowed")
                     p#selection No selection
                 +sceneNav(previousSceneId, nextSceneId)

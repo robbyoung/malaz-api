@@ -1,11 +1,11 @@
-import { HighlightForm, availableForms } from "../forms/forms";
+import { AnnotationForm, allForms } from "../forms/forms";
 import { renderFile } from "pug";
 
 interface TemplateProps {
-  form: HighlightForm;
+  form: AnnotationForm;
   sceneId: string;
-  from: number;
-  to: number;
+  from?: number;
+  to?: number;
 }
 
 interface Params {
@@ -16,7 +16,7 @@ interface Params {
 
 export function getForm(params: Params): string | undefined {
   const {sceneId, from, to, formId} = parseParams(params);
-  const form = availableForms.find(f => f.id === formId);
+  const form = allForms.find(f => f.id === formId);
 
   if (!form) {
     return undefined;
@@ -33,8 +33,12 @@ export function getForm(params: Params): string | undefined {
 }
 
 function parseParams (params: Params) {
-  if (!params.sceneId || !params.range || !params.formId) {
+  if (!params.sceneId || !params.formId) {
     throw new Error("param mismatch");
+  }
+
+  if (!params.range) {
+    return { formId: params.formId, sceneId: params.sceneId }
   }
 
   const splitRange = params.range.split("-").map(strint => parseInt(strint));

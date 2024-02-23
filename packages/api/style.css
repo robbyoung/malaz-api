@@ -93,6 +93,10 @@ html {
   margin-bottom: 0.5rem;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .scene-row {
   display: flex;
   flex-direction: row;

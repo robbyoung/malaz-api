@@ -1,10 +1,10 @@
-export interface HighlightForm {
+export interface AnnotationForm {
     id: string;
     name: string;
     fields: string[];
 }
 
-export const availableForms: HighlightForm[] = [
+export const highlightForms: AnnotationForm[] = [
     {
         id: 'hf2',
         name: 'Occurrence',
@@ -43,3 +43,33 @@ export const availableForms: HighlightForm[] = [
         ]
     },
 ]
+
+export const sceneForms: AnnotationForm[] = [
+    {
+        id: 'sf1',
+        name: 'POV',
+        fields: [
+            "Character name"
+        ]
+    },
+    {
+        id: 'sf2',
+        name: 'Setting',
+        fields: [
+            "Continent",
+            "Region",
+            "City",
+            "Warren"
+        ]
+    },
+    {
+        id: 'sf3',
+        name: 'Arc',
+        fields: [
+            "Arc",
+            "Sub-Arc"
+        ]
+    }
+];
+
+export const allForms = [...highlightForms, ...sceneForms];

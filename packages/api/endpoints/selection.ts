@@ -1,12 +1,18 @@
-import { HighlightForm, availableForms } from "../forms/forms";
+import { AnnotationForm, highlightForms, sceneForms } from "../forms/forms";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 
-interface TemplateProps {
+interface SceneAnnotationTemplateProps {
+  sceneId: string;
+  sceneName: string;
+  availableForms: AnnotationForm[];
+}
+
+interface TextAnnotationTemplateProps {
   sceneId: string;
   range: string;
   selection: string;
-  availableForms: HighlightForm[];
+  availableForms: AnnotationForm[];
 }
 
 interface Params {
@@ -23,19 +29,33 @@ export function getSelection(params: Params): string | undefined {
     return undefined;
   }
 
-  const props: TemplateProps = {
-    selection: text.slice(from, to),
-    availableForms,
-    sceneId,
-    range: `${from}-${to}`
-  };
-
-  return renderFile("./endpoints/selection.pug", props);
+  if (from && to) {
+    const props: TextAnnotationTemplateProps = {
+      selection: text.slice(from, to),
+      availableForms: highlightForms,
+      sceneId,
+      range: `${from}-${to}`,
+    };
+  
+    return renderFile("./endpoints/selection.pug", props);
+  } else {
+    const props: SceneAnnotationTemplateProps = {
+      sceneId,
+      sceneName: new TextService().getSceneName(sceneId) ?? "Unknown",
+      availableForms: sceneForms,
+    };
+  
+    return renderFile("./endpoints/selection.pug", props);
+  }
 }
 
 function parseParams (params: Params) {
-  if (!params.sceneId || !params.range) {
-    throw new Error("param mismatch");
+  if (!params.sceneId) {
+    throw new Error("sceneId not specified");
+  }
+
+  if (!params.range) {
+    return { sceneId: params.sceneId };
   }
 
   const splitRange = params.range.split("-").map(strint => parseInt(strint));

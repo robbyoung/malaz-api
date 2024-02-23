@@ -8,8 +8,10 @@ div#form(class="padding-y")
             )
         input(name="formId" value=form.id type="hidden")
         input(name="sceneId" value=sceneId type="hidden")
-        input(name="from" value=from type="hidden")
-        input(name="to" value=to type="hidden")
+        if from
+            input(name="from" value=from type="hidden")
+        if to
+            input(name="to" value=to type="hidden")
         button.submit(
             type="submit"
             class="button grey"

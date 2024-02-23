@@ -1,4 +1,4 @@
-import { availableForms } from "../forms/forms";
+import { highlightForms } from "../forms/forms";
 import { Submission, getSubmissionsForScene } from "../forms/submissions";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
@@ -66,7 +66,7 @@ function createChunk(text: string, fromIndex: number, toIndex: number, annotatio
     return { text: text.substring(fromIndex, toIndex), class: '', selectFrom: fromIndex }
   }
 
-  const formOrder = annotations.sort((a, b) => availableForms.findIndex(f => a.formId === f.id) - availableForms.findIndex(f => b.formId === f.id));
+  const formOrder = annotations.sort((a, b) => highlightForms.findIndex(f => a.formId === f.id) - highlightForms.findIndex(f => b.formId === f.id));
   const annotation = formOrder[0];
   return { text: text.substring(fromIndex, toIndex), class: `annotation annotation-${annotation.formId}`, selectFrom: fromIndex, annotationId: annotation.id}
 }
