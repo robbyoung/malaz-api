@@ -16,8 +16,8 @@ app.get('/scene/:sceneId', async (req, res) => {
     respondWithHtmx(res, await getSceneText(req.params as any));
 });
 
-app.get('/scenes/:sceneId/annotate', (req, res) => {
-    respondWithHtmx(res, getSelection({sceneId: req.params?.sceneId, range: req.query?.range}));
+app.get('/scenes/:sceneId/annotate', async (req, res) => {
+    respondWithHtmx(res, await getSelection({sceneId: req.params?.sceneId, range: req.query?.range}));
 });
 
 app.get('/forms', (req, res) => {

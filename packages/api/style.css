@@ -173,3 +173,8 @@ html {
 select option:disabled {
   display:none;
 }
+
+.attribute {
+  font-weight: 700;
+  padding-right: 5px;
+}

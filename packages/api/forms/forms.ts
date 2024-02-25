@@ -49,7 +49,7 @@ export const sceneForms: AnnotationForm[] = [
         id: 'sf1',
         name: 'POV',
         fields: [
-            "Character name"
+            "POV Character"
         ]
     },
     {

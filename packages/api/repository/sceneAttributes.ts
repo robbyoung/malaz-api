@@ -3,11 +3,7 @@ import { MongoClient, WithId } from 'mongodb';
 const mongoUrl = "mongodb://localhost:27017/malazdb";
 const collectionName = "sceneAttributes";
 
-export interface SceneAttributes {
-    id: string;
-    sceneId: string;
-    attributes: {key: string, value: string}[];
-}
+export type SceneAttributes = {key: string, value: string}[];
 
 interface SceneAttributesDto {
     sceneId: string;
@@ -20,7 +16,9 @@ export async function saveSceneAttributes(sceneId: string, kvps: {key: string, v
     var existingAttributes = await getSceneAttributesInternal(client, sceneId);
     var attributes: SceneAttributesDto = existingAttributes === null ? { sceneId, attributes: {} } : existingAttributes;
     kvps.forEach(kvp => {
-        attributes.attributes[kvp.key] = kvp.value;
+        if (kvp.value !== "") {
+            attributes.attributes[kvp.key] = kvp.value;
+        }
     });
     
     if (existingAttributes === null) {
@@ -40,11 +38,7 @@ export async function getSceneAttributes(sceneId: string): Promise<SceneAttribut
 
     client.close();
     
-    return sceneAttributes.map(sa => ({
-        id: sa._id.toString(),
-        sceneId: sa.sceneId,
-        attributes: Object.keys(sa.attributes).map(key => ({ key, value: sa.attributes[key] }))
-    }))[0];
+    return sceneAttributes.map(sa => Object.keys(sa.attributes).map(key => ({ key, value: sa.attributes[key] })))[0] ?? [];
 }
 
 async function getSceneAttributesInternal(client: MongoClient, sceneId: string): Promise<WithId<SceneAttributesDto> | null> {

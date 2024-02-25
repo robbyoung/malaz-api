@@ -16,20 +16,5 @@ div#selection
                 option(value='placeholder' disabled selected) Select a form
                 each form in availableForms
                     option(value=`${form.id}` class="grey") #{form.name}
-    else if sceneName
-        p #{selection}
-
-        div#form(class="padding-y")
-            select(
-                name="formId"
-                hx-get="/forms"
-                hx-vars=`sceneId:'${sceneId}'`
-                hx-target="#form"
-                hx-swap="outerHTML"
-                class="dropdown grey"
-            )
-                option(value='placeholder' disabled selected) Select a form
-                each form in availableForms
-                    option(value=`${form.id}` class="grey") #{form.name}
     else
         p No selection

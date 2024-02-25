@@ -1,10 +1,11 @@
 import { AnnotationForm, highlightForms, sceneForms } from "../forms/forms";
+import { SceneAttributes, getSceneAttributes } from "../repository/sceneAttributes";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 
 interface SceneAnnotationTemplateProps {
   sceneId: string;
-  sceneName: string;
+  attributes: SceneAttributes;
   availableForms: AnnotationForm[];
 }
 
@@ -20,7 +21,7 @@ interface Params {
   range?: string;
 }
 
-export function getSelection(params: Params): string | undefined {
+export async function getSelection(params: Params): Promise<string | undefined> {
   const {sceneId, from, to} = parseParams(params);
 
   const text = new TextService().getSceneText(sceneId);
@@ -37,15 +38,15 @@ export function getSelection(params: Params): string | undefined {
       range: `${from}-${to}`,
     };
   
-    return renderFile("./endpoints/selection.pug", props);
+    return renderFile("./endpoints/selectionText.pug", props);
   } else {
     const props: SceneAnnotationTemplateProps = {
       sceneId,
-      sceneName: new TextService().getSceneName(sceneId) ?? "Unknown",
+      attributes: await getSceneAttributes(sceneId),
       availableForms: sceneForms,
     };
   
-    return renderFile("./endpoints/selection.pug", props);
+    return renderFile("./endpoints/selectionScene.pug", props);
   }
 }
 
