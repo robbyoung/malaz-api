@@ -18,7 +18,10 @@ app.get('/scene/:sceneId', async (req, res) => {
 });
 
 app.get('/scenes/:sceneId/annotate', async (req, res) => {
-    respondWithHtmx(res, await getSelection({sceneId: req.params?.sceneId, range: req.query?.range}));
+    respondWithHtmx(
+        res,
+        await getSelection({ sceneId: req.params?.sceneId, range: req.query?.range })
+    );
 });
 
 app.get('/forms', (req, res) => {
@@ -34,7 +37,7 @@ app.get('/annotations/:annotationId', async (req, res) => {
 });
 
 app.get('/favicon.ico', (_, res) => {
-    res.status(404).send("Not found");
+    res.status(404).send('Not found');
 });
 
 app.listen(3000, () => {
@@ -43,9 +46,9 @@ app.listen(3000, () => {
 
 function respondWithHtmx(res: BunResponse, htmx?: string) {
     if (!htmx) {
-        res.status(404).send("Not found");
-    } else if (htmx === "No content") {
-        res.status(204).send("No content");
+        res.status(404).send('Not found');
+    } else if (htmx === 'No content') {
+        res.status(204).send('No content');
     } else {
         res.status(200).setHeader('content-type', 'text/html').send(htmx);
     }

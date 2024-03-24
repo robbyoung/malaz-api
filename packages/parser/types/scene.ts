@@ -1,4 +1,4 @@
-import { Identifier } from "../util/generateIdentifier";
+import { Identifier } from '../util/generateIdentifier';
 
 export enum SceneType {
     Excerpt,

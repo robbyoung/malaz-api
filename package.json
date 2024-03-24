@@ -1,12 +1,15 @@
 {
-  "name": "malazapi",
-  "scripts": {
-    "parser": "cd ./packages/parser && bun run index.ts",
-    "api": "cd ./packages/api && bun run index.ts",
-    "tailwind": "cd ./packages/api && bun tailwindcss -o style.css"
-  },
-  "workspaces": ["packages/api", "packages/parser"],
-  "dependencies": {
-    "mongodb": "^6.2.0"
-  }
+    "name": "malazapi",
+    "scripts": {
+        "parser": "cd ./packages/parser && bun run index.ts",
+        "api": "cd ./packages/api && bun run index.ts",
+        "prettier": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
+    },
+    "workspaces": [
+        "packages/api",
+        "packages/parser"
+    ],
+    "dependencies": {
+        "mongodb": "^6.2.0"
+    }
 }

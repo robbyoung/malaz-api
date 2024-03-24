@@ -1,12 +1,12 @@
-export type Dictionary = { [id: string]: string; };
-export type KeyValuePairs = {key: string, value: string}[];
+export type Dictionary = { [id: string]: string };
+export type KeyValuePairs = { key: string; value: string }[];
 
 export function toKeyValuePairs(dictionary: Dictionary): KeyValuePairs {
     if (dictionary === undefined) {
         return [];
     }
 
-    return Object.keys(dictionary).map(key => ({ key, value: dictionary[key] }))
+    return Object.keys(dictionary).map((key) => ({ key, value: dictionary[key] }));
 }
 
 export function toDictionary(kvps: KeyValuePairs): Dictionary {
@@ -16,7 +16,7 @@ export function toDictionary(kvps: KeyValuePairs): Dictionary {
 
     const dictionary: Dictionary = {};
 
-    kvps.forEach(kvp => {
+    kvps.forEach((kvp) => {
         dictionary[kvp.key] = kvp.value;
     });
 

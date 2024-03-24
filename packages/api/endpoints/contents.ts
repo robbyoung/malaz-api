@@ -1,6 +1,6 @@
-import { TextService } from "../text/textService";
-import { renderFile } from "pug";
-import { Contents } from "../types/contents";
+import { TextService } from '../text/textService';
+import { renderFile } from 'pug';
+import { Contents } from '../types/contents';
 
 interface TemplateProps {
     contents: Contents;
@@ -12,5 +12,5 @@ export function getContents(): string {
         contents,
     };
 
-    return renderFile("./endpoints/contents.pug", props);
+    return renderFile('./endpoints/contents.pug', props);
 }

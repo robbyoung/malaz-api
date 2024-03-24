@@ -11,7 +11,7 @@ export interface Contents {
 
 export interface ChapterContents {
     name: string;
-    scenes: SceneContents[]
+    scenes: SceneContents[];
 }
 
 interface SceneContents {
