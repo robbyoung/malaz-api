@@ -1,4 +1,4 @@
-import { saveSubmission } from "../forms/submissions";
+import { saveSubmission } from "../repository/submissions";
 import { renderFile } from "pug";
 import { saveSceneAttributes } from "../repository/sceneAttributes";
 import { allForms } from "../forms/forms";

@@ -24,6 +24,10 @@ interface Params {
 export async function getSelection(params: Params): Promise<string | undefined> {
   const {sceneId, from, to} = parseParams(params);
 
+  if (from && to && from === to) {
+    return "No content";
+  }
+
   const text = new TextService().getSceneText(sceneId);
 
   if (!text) {

@@ -1,4 +1,4 @@
-import { MongoClient, WithId } from 'mongodb';
+import { MongoClient, ObjectId, WithId } from 'mongodb';
 import { Dictionary, toDictionary, KeyValuePairs, toKeyValuePairs } from '../util/dictionaries';
 
 const mongoUrl = "mongodb://localhost:27017/malazdb";
@@ -41,4 +41,23 @@ export async function getSubmissionsForScene(sceneId: string): Promise<Submissio
         fields: toKeyValuePairs(submission.fields),
         id: submission._id.toString(),
     }));
+}
+
+export async function getSubmissionById(submissionId: string): Promise<Submission | undefined> {
+    const client = await MongoClient.connect(mongoUrl);
+
+    const query = { _id: new ObjectId(submissionId) };
+    const submission = await client.db().collection("submissions").findOne<WithId<SubmissionDto>>(query);
+
+    client.close();
+
+    if (submission === null) {
+        return undefined;
+    }
+
+    return {
+        ...submission,
+        fields: toKeyValuePairs(submission.fields),
+        id: submission._id.toString(),
+    };
 }

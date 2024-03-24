@@ -1,5 +1,5 @@
 import { highlightForms } from "../forms/forms";
-import { Submission, getSubmissionsForScene } from "../forms/submissions";
+import { Submission, getSubmissionsForScene } from "../repository/submissions";
 import { TextService } from "../text/textService";
 import { renderFile } from "pug";
 

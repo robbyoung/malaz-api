@@ -105,7 +105,7 @@ html {
 }
 
 .annotation {
-  cursor: text;
+  cursor: pointer;
 }
 
 .annotation-hf1 {

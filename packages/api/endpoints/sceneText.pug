@@ -12,11 +12,21 @@ block content
                 hx-trigger="mouseup"
                 class="text-wrap color-highlight padding-x padding-y"
             )
-                each chunk in chunks 
-                    span(
-                        select-from=chunk.selectFrom
-                        class=chunk.class
-                    ) #{chunk.text}
+                each chunk in chunks
+                    if chunk.annotationId
+                        span(
+                            hx-get=`/annotations/${chunk.annotationId}`
+                            hx-target="#selection"
+                            hx-swap="outerHTML"
+                            hx-trigger="mouseup"
+                            select-from=chunk.selectFrom
+                            class=chunk.class
+                        ) #{chunk.text}
+                    else
+                        span(
+                            select-from=chunk.selectFrom
+                            class=chunk.class
+                        ) #{chunk.text}
         div#selection-container
             div
                 h1(

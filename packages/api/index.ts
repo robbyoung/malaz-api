@@ -5,6 +5,7 @@ import { getSelection } from './endpoints/selection';
 import { getContents } from './endpoints/contents';
 import { getForm } from './endpoints/form';
 import { postSubmission } from './endpoints/submission';
+import { getAnnotation } from './endpoints/annotation';
 
 const app = server();
 
@@ -28,6 +29,10 @@ app.post('/forms', async (req, res) => {
     respondWithHtmx(res, await postSubmission(req.body as any));
 });
 
+app.get('/annotations/:annotationId', async (req, res) => {
+    respondWithHtmx(res, await getAnnotation(req.params as any));
+});
+
 app.get('/favicon.ico', (_, res) => {
     res.status(404).send("Not found");
 });
@@ -39,6 +44,8 @@ app.listen(3000, () => {
 function respondWithHtmx(res: BunResponse, htmx?: string) {
     if (!htmx) {
         res.status(404).send("Not found");
+    } else if (htmx === "No content") {
+        res.status(204).send("No content");
     } else {
         res.status(200).setHeader('content-type', 'text/html').send(htmx);
     }
