@@ -1,4 +1,5 @@
 import { MongoClient, WithId } from 'mongodb';
+import { toKeyValuePairs } from '../util/dictionaries';
 
 const mongoUrl = "mongodb://localhost:27017/malazdb";
 const collectionName = "sceneAttributes";
@@ -38,7 +39,7 @@ export async function getSceneAttributes(sceneId: string): Promise<SceneAttribut
 
     client.close();
     
-    return sceneAttributes.map(sa => Object.keys(sa.attributes).map(key => ({ key, value: sa.attributes[key] })))[0] ?? [];
+    return sceneAttributes.map(sa => toKeyValuePairs(sa.attributes))[0] ?? [];
 }
 
 async function getSceneAttributesInternal(client: MongoClient, sceneId: string): Promise<WithId<SceneAttributesDto> | null> {
