@@ -1,17 +1,18 @@
-div#form(class="padding-y")
+div#form
     form(hx-post="/forms" hx-target="#selection")
-        each field in form.fields
-            input(
-                name=field
-                placeholder=field
-                class="input space-below"
-            )
+
         input(name="formId" value=form.id type="hidden")
         input(name="sceneId" value=sceneId type="hidden")
         if from
             input(name="from" value=from type="hidden")
         if to
             input(name="to" value=to type="hidden")
+        each field in form.fields
+            label #{field.name}
+            input(
+                name=field.name
+                class="input small-padding-y"
+            )
         button.submit(
             type="submit"
             class="button grey"

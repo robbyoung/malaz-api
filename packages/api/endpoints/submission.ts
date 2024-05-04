@@ -32,8 +32,8 @@ export async function postSubmission(rawFormData: any): Promise<string> {
     }
 
     const kvps = fields.map((field) => ({
-        key: field,
-        value: params.get(field) ?? '',
+        key: field.name,
+        value: params.get(field.name) ?? '',
     }));
 
     await saveSubmission(formId, sceneId, from, to, kvps);

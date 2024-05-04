@@ -1,34 +1,43 @@
 export interface AnnotationForm {
     id: string;
     name: string;
-    fields: string[];
+    fields: FormField[];
+}
+
+export interface FormField {
+    name: string;
+    required: boolean;
 }
 
 export const highlightForms: AnnotationForm[] = [
     {
         id: 'hf2',
         name: 'Occurrence',
-        fields: ['Character name'],
+        fields: [{ name: 'Character name', required: true }],
     },
     {
         id: 'hf3',
         name: 'Mention',
-        fields: ['Character name'],
+        fields: [{ name: 'Character name', required: true }],
     },
     {
         id: 'hf5',
         name: 'Location',
-        fields: ['Continent', 'Region', 'Sublocation'],
+        fields: [
+            { name: 'Continent', required: false },
+            { name: 'Region', required: false },
+            { name: 'Sublocation', required: false },
+        ],
     },
     {
         id: 'hf4',
         name: 'Descriptor',
-        fields: ['Character name'],
+        fields: [{ name: 'Character name', required: true }],
     },
     {
         id: 'hf1',
         name: 'Dialogue',
-        fields: ['Character name'],
+        fields: [{ name: 'Character name', required: true }],
     },
 ];
 
@@ -36,17 +45,25 @@ export const sceneForms: AnnotationForm[] = [
     {
         id: 'sf1',
         name: 'POV',
-        fields: ['POV Character'],
+        fields: [{ name: 'POV Character', required: true }],
     },
     {
         id: 'sf2',
         name: 'Setting',
-        fields: ['Continent', 'Region', 'City', 'Warren'],
+        fields: [
+            { name: 'Continent', required: false },
+            { name: 'Region', required: false },
+            { name: 'City', required: false },
+            { name: 'Warren', required: false },
+        ],
     },
     {
         id: 'sf3',
         name: 'Arc',
-        fields: ['Arc', 'Sub-Arc'],
+        fields: [
+            { name: 'Arc', required: true },
+            { name: 'Sub-Arc', required: false },
+        ],
     },
 ];
 

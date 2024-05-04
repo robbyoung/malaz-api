@@ -178,3 +178,12 @@ select option:disabled {
   font-weight: 700;
   padding-right: 5px;
 }
+
+form input {
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+form input:last-of-type {
+  margin-bottom: 0.75em;
+}
