@@ -1,9 +1,11 @@
 import { AnnotationForm, allForms } from '../forms/forms';
 import { renderFile } from 'pug';
+import { TextService } from '../text/textService';
 
 interface TemplateProps {
     form: AnnotationForm;
     sceneId: string;
+    text: string;
     from?: number;
     to?: number;
 }
@@ -22,8 +24,14 @@ export function getForm(params: Params): string | undefined {
         return undefined;
     }
 
+    const text = new TextService().getSceneText(sceneId)?.slice(from, to).trim();
+    if (!text) {
+        throw new Error('Text location invalid');
+    }
+
     const props: TemplateProps = {
         form,
+        text,
         sceneId,
         from,
         to,

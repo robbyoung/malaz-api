@@ -171,12 +171,16 @@ html {
 }
 
 select option:disabled {
-  display:none;
+  display: none;
 }
 
 .attribute {
   font-weight: 700;
   padding-right: 5px;
+}
+
+label {
+  font-weight: bold;
 }
 
 form input {

@@ -7,18 +7,19 @@ export interface AnnotationForm {
 export interface FormField {
     name: string;
     required: boolean;
+    populateFromText?: boolean;
 }
 
 export const highlightForms: AnnotationForm[] = [
     {
         id: 'hf2',
         name: 'Occurrence',
-        fields: [{ name: 'Character name', required: true }],
+        fields: [{ name: 'Character name', required: true, populateFromText: true }],
     },
     {
         id: 'hf3',
         name: 'Mention',
-        fields: [{ name: 'Character name', required: true }],
+        fields: [{ name: 'Character name', required: true, populateFromText: true }],
     },
     {
         id: 'hf5',
