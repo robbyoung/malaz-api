@@ -1,11 +1,20 @@
-import { saveSubmission } from '../repository/submissions';
+import { getSubmissionsForScene, saveSubmission } from '../repository/submissions';
 import { renderFile } from 'pug';
 import { saveSceneAttributes } from '../repository/sceneAttributes';
 import { allForms } from '../forms/forms';
+import { TextService } from '../text/textService';
+import { Chunk, ChunkService } from '../text/chunkService';
+
+interface TemplateProps {
+    chunks: Chunk[];
+    sceneId: string;
+}
 
 export async function postSubmission(rawFormData: any): Promise<string> {
+    let sceneId: string;
+
     try {
-        await processSubmission(rawFormData);
+        sceneId = await processSubmission(rawFormData);
     } catch (e) {
         if (e instanceof Error) {
             return renderFile('./components/error.pug', { message: e.message });
@@ -14,7 +23,20 @@ export async function postSubmission(rawFormData: any): Promise<string> {
         throw e;
     }
 
-    return renderFile('./endpoints/submission.pug');
+    const text = new TextService().getSceneText(sceneId);
+    if (!text) {
+        return renderFile('./components/error.pug', { message: 'Failed to update text' });
+    }
+
+    const annotations = await getSubmissionsForScene(sceneId);
+    const chunks = ChunkService.getChunks(text, annotations);
+
+    const props: TemplateProps = {
+        sceneId,
+        chunks,
+    };
+
+    return renderFile('./endpoints/submission.pug', props);
 }
 
 async function processSubmission(rawFormData: any) {
@@ -59,4 +81,6 @@ async function processSubmission(rawFormData: any) {
     });
 
     await saveSubmission(formId, sceneId, from, to, kvps);
+
+    return sceneId;
 }

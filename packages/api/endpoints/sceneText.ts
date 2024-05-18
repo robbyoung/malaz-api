@@ -1,14 +1,7 @@
-import { highlightForms } from '../forms/forms';
-import { Submission, getSubmissionsForScene } from '../repository/submissions';
+import { getSubmissionsForScene } from '../repository/submissions';
+import { Chunk, ChunkService } from '../text/chunkService';
 import { TextService } from '../text/textService';
 import { renderFile } from 'pug';
-
-interface Chunk {
-    text: string;
-    selectFrom: number;
-    class: string;
-    annotationId?: string;
-}
 
 interface TemplateProps {
     chunks: Chunk[];
@@ -37,7 +30,7 @@ export async function getSceneText(params: Params): Promise<string | undefined> 
     const annotations = await getSubmissionsForScene(params.sceneId);
 
     const props: TemplateProps = {
-        chunks: getChunks(text, annotations),
+        chunks: ChunkService.getChunks(text, annotations),
         title: sceneName,
         sceneId: params.sceneId,
         previousSceneId: adjacentSceneIds[0],
@@ -45,53 +38,4 @@ export async function getSceneText(params: Params): Promise<string | undefined> 
     };
 
     return renderFile('./endpoints/sceneText.pug', props);
-}
-
-function getChunks(text: string, annotations: Submission[]): Chunk[] {
-    const chunks: Chunk[] = [];
-    const indices = [
-        0,
-        ...new Set(
-            annotations
-                .map((a) => [a.from, a.to])
-                .flat()
-                .sort((a, b) => a - b)
-        ),
-        text.length,
-    ];
-
-    for (let i = 0; i < indices.length - 1; i++) {
-        const currentIndex = indices[i];
-        const nextIndex = indices[i + 1];
-        const annotationsBetweenIndices = annotations.filter(
-            (a) => a.to > currentIndex && a.from < nextIndex
-        );
-        chunks.push(createChunk(text, currentIndex, nextIndex, annotationsBetweenIndices));
-    }
-
-    return chunks;
-}
-
-function createChunk(
-    text: string,
-    fromIndex: number,
-    toIndex: number,
-    annotations: Submission[]
-): Chunk {
-    if (annotations.length === 0) {
-        return { text: text.substring(fromIndex, toIndex), class: '', selectFrom: fromIndex };
-    }
-
-    const formOrder = annotations.sort(
-        (a, b) =>
-            highlightForms.findIndex((f) => a.formId === f.id) -
-            highlightForms.findIndex((f) => b.formId === f.id)
-    );
-    const annotation = formOrder[0];
-    return {
-        text: text.substring(fromIndex, toIndex),
-        class: `annotation annotation-${annotation.formId}`,
-        selectFrom: fromIndex,
-        annotationId: annotation.id,
-    };
 }

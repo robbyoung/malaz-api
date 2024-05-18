@@ -1,0 +1,25 @@
+mixin sceneText(sceneId, chunks, oob)
+    div#text-container(hx-swap-oob=oob)
+        p(
+            hx-get=`/scenes/${sceneId}/annotate`
+            hx-vars=`range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
+            hx-target="#selection"
+            hx-swap="outerHTML"
+            hx-trigger="mouseup"
+            class="text-wrap color-highlight padding-x padding-y"
+        )
+            each chunk in chunks
+                if chunk.annotationId
+                    span(
+                        hx-get=`/annotations/${chunk.annotationId}`
+                        hx-target="#selection"
+                        hx-swap="outerHTML"
+                        hx-trigger="mouseup"
+                        select-from=chunk.selectFrom
+                        class=chunk.class
+                    ) #{chunk.text}
+                else
+                    span(
+                        select-from=chunk.selectFrom
+                        class=chunk.class
+                    ) #{chunk.text}
