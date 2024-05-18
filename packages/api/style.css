@@ -196,3 +196,7 @@ form input:last-of-type {
   background-color: #C70039;
   color: #FFFFFF;
 }
+
+.italics {
+  font-style: italic;
+}

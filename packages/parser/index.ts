@@ -26,7 +26,7 @@ async function parseBook(bookCode: string) {
 }
 
 function removeSpecialCharacters(text: string): string {
-    return text.replaceAll(/(\r)|(\*)|(\\)/g, '');
+    return text.replaceAll(/(\r)|(\\)/g, '');
 }
 
 function parseScenes(chapterText: string, bookNumber: number | undefined): Scene[] {

@@ -1,6 +1,8 @@
 import { highlightForms } from '../forms/forms';
 import { Submission } from '../repository/submissions';
 
+const nonBreakingSpace = String.fromCharCode(8203);
+
 export interface Chunk {
     text: string;
     selectFrom: number;
@@ -11,16 +13,20 @@ export interface Chunk {
 export abstract class ChunkService {
     public static getChunks(text: string, annotations: Submission[]): Chunk[] {
         const chunks: Chunk[] = [];
+        const italicsIndices = this.getItalicsIndices(text);
         const indices = [
             0,
             ...new Set(
                 annotations
                     .map((a) => [a.from, a.to])
+                    .concat(italicsIndices)
                     .flat()
                     .sort((a, b) => a - b)
             ),
             text.length,
         ];
+
+        text = text.replaceAll('*', nonBreakingSpace);
 
         for (let i = 0; i < indices.length - 1; i++) {
             const currentIndex = indices[i];
@@ -28,20 +34,54 @@ export abstract class ChunkService {
             const annotationsBetweenIndices = annotations.filter(
                 (a) => a.to > currentIndex && a.from < nextIndex
             );
-            chunks.push(this.createChunk(text, currentIndex, nextIndex, annotationsBetweenIndices));
+
+            const italicsIndex = italicsIndices.findLastIndex((i) => i < currentIndex);
+
+            chunks.push(
+                this.createChunk(
+                    text,
+                    currentIndex,
+                    nextIndex,
+                    annotationsBetweenIndices,
+                    italicsIndex % 2 == 1
+                )
+            );
         }
 
         return chunks;
+    }
+
+    private static getItalicsIndices(text: string): number[] {
+        let i = -1;
+        const indices: number[] = [];
+
+        while (true) {
+            i = text.indexOf('*', i + 1);
+            if (i === -1) {
+                break;
+            }
+
+            indices.push(i);
+        }
+
+        return indices;
     }
 
     private static createChunk(
         text: string,
         fromIndex: number,
         toIndex: number,
-        annotations: Submission[]
+        annotations: Submission[],
+        useItalics: boolean
     ): Chunk {
+        const baseClass = useItalics ? 'italics' : '';
+
         if (annotations.length === 0) {
-            return { text: text.substring(fromIndex, toIndex), class: '', selectFrom: fromIndex };
+            return {
+                text: text.substring(fromIndex, toIndex),
+                class: baseClass,
+                selectFrom: fromIndex,
+            };
         }
 
         const formOrder = annotations.sort(
@@ -52,7 +92,7 @@ export abstract class ChunkService {
         const annotation = formOrder[0];
         return {
             text: text.substring(fromIndex, toIndex),
-            class: `annotation annotation-${annotation.formId}`,
+            class: `annotation annotation-${annotation.formId} ${baseClass}`,
             selectFrom: fromIndex,
             annotationId: annotation.id,
         };
