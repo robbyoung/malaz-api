@@ -20,11 +20,11 @@ export function getForm(params: Params): string | undefined {
     const { sceneId, from, to, formId } = parseParams(params);
     const form = allForms.find((f) => f.id === formId);
 
-    if (!form) {
+    if (!form || from === undefined || to === undefined) {
         return undefined;
     }
 
-    const text = new TextService().getSceneText(sceneId)?.slice(from, to).trim();
+    const text = new TextService().getTextSelection(sceneId, from, to)?.trim();
     if (!text) {
         throw new Error('Text location invalid');
     }

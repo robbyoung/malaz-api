@@ -28,15 +28,14 @@ export async function getSelection(params: Params): Promise<string | undefined> 
         return 'No content';
     }
 
-    const text = new TextService().getSceneText(sceneId);
-
-    if (!text) {
-        return undefined;
-    }
-
     if (from && to) {
+        const selection = new TextService().getTextSelection(sceneId, from, to);
+        if (!selection) {
+            return undefined;
+        }
+
         const props: TextAnnotationTemplateProps = {
-            selection: text.slice(from, to),
+            selection,
             availableForms: highlightForms,
             sceneId,
             range: `${from}-${to}`,

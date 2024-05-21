@@ -35,7 +35,7 @@ export abstract class ChunkService {
                 (a) => a.to > currentIndex && a.from < nextIndex
             );
 
-            const italicsIndex = italicsIndices.findLastIndex((i) => i < currentIndex);
+            const italicsIndex = italicsIndices.findLastIndex((i) => i <= currentIndex);
 
             chunks.push(
                 this.createChunk(
@@ -43,7 +43,7 @@ export abstract class ChunkService {
                     currentIndex,
                     nextIndex,
                     annotationsBetweenIndices,
-                    italicsIndex % 2 == 1
+                    italicsIndex % 2 == 0
                 )
             );
         }

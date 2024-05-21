@@ -23,6 +23,10 @@ export class TextService {
         return this.fromBase64(matchingScene.sceneText);
     }
 
+    public getTextSelection(sceneId: string, from: number, to: number): string | undefined {
+        return this.getSceneText(sceneId)?.slice(from, to).replaceAll('*', '');
+    }
+
     public getSceneName(sceneId: string): string | undefined {
         let matchingScene = gotm.find((scene) => scene.id === sceneId);
         if (!matchingScene) {
