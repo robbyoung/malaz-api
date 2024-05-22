@@ -6,6 +6,7 @@ import { getContents } from './endpoints/contents';
 import { getForm } from './endpoints/form';
 import { postSubmission } from './endpoints/submission';
 import { getAnnotation } from './endpoints/annotation';
+import { deleteAnnotation } from './endpoints/deleteAnnotation';
 
 const app = server();
 
@@ -34,6 +35,10 @@ app.post('/forms', async (req, res) => {
 
 app.get('/annotations/:annotationId', async (req, res) => {
     respondWithHtmx(res, await getAnnotation(req.params as any));
+});
+
+app.delete('/annotations/:annotationId', async (req, res) => {
+    respondWithHtmx(res, await deleteAnnotation(req.params as any));
 });
 
 app.get('/favicon.ico', (_, res) => {

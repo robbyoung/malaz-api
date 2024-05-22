@@ -6,6 +6,7 @@ import { allForms } from '../forms/forms';
 interface TemplateProps {
     title: string;
     fields: KeyValuePairs;
+    annotationId: string;
 }
 
 interface Params {
@@ -28,6 +29,7 @@ export async function getAnnotation(params: Params): Promise<string | undefined>
     const props: TemplateProps = {
         title,
         fields: annotation.fields,
+        annotationId: annotation.id,
     };
 
     return renderFile('./endpoints/annotation.pug', props);

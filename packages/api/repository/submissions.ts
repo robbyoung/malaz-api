@@ -77,3 +77,14 @@ export async function getSubmissionById(submissionId: string): Promise<Submissio
         id: submission._id.toString(),
     };
 }
+
+export async function deleteSubmissionById(submissionId: string): Promise<boolean> {
+    const client = await MongoClient.connect(mongoUrl);
+
+    const query = { _id: new ObjectId(submissionId) };
+    const result = await client.db().collection('submissions').deleteOne(query);
+
+    client.close();
+
+    return result.deletedCount > 0;
+}
