@@ -20,12 +20,12 @@ export async function getSceneText(params: Params): Promise<string | undefined> 
         return undefined;
     }
 
-    const sceneName = new TextService().getSceneName(params.sceneId);
-    const text = new TextService().getSceneText(params.sceneId);
+    const sceneName = TextService.getSceneName(params.sceneId);
+    const text = TextService.getSceneText(params.sceneId);
     if (!text || !sceneName) {
         return undefined;
     }
-    const adjacentSceneIds = new TextService().getAdjacentSceneIds(params.sceneId);
+    const adjacentSceneIds = TextService.getAdjacentSceneIds(params.sceneId);
 
     const annotations = await getSubmissionsForScene(params.sceneId);
 

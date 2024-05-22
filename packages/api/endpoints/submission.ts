@@ -23,7 +23,7 @@ export async function postSubmission(rawFormData: any): Promise<string> {
         throw e;
     }
 
-    const text = new TextService().getSceneText(sceneId);
+    const text = TextService.getSceneText(sceneId);
     if (!text) {
         return renderFile('./components/error.pug', { message: 'Failed to update text' });
     }

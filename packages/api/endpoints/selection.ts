@@ -29,7 +29,7 @@ export async function getSelection(params: Params): Promise<string | undefined> 
     }
 
     if (from && to) {
-        const selection = new TextService().getTextSelection(sceneId, from, to);
+        const selection = TextService.getTextSelection(sceneId, from, to);
         if (!selection) {
             return undefined;
         }

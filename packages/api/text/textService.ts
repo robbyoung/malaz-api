@@ -9,8 +9,8 @@ const booksByCode: { [bookCode: string]: Scene[] } = {
     dg: dg,
 };
 
-export class TextService {
-    public getSceneText(sceneId: string): string | undefined {
+export abstract class TextService {
+    public static getSceneText(sceneId: string): string | undefined {
         let matchingScene = gotm.find((scene) => scene.id === sceneId);
         if (!matchingScene) {
             matchingScene = dg.find((scene) => scene.id === sceneId);
@@ -23,11 +23,11 @@ export class TextService {
         return this.fromBase64(matchingScene.sceneText);
     }
 
-    public getTextSelection(sceneId: string, from: number, to: number): string | undefined {
+    public static getTextSelection(sceneId: string, from: number, to: number): string | undefined {
         return this.getSceneText(sceneId)?.slice(from, to).replaceAll('*', '');
     }
 
-    public getSceneName(sceneId: string): string | undefined {
+    public static getSceneName(sceneId: string): string | undefined {
         let matchingScene = gotm.find((scene) => scene.id === sceneId);
         if (!matchingScene) {
             matchingScene = dg.find((scene) => scene.id === sceneId);
@@ -45,7 +45,7 @@ export class TextService {
         return `${chapterName} — ${sceneName}`;
     }
 
-    public getContents(bookCode: string = 'gotm'): Contents {
+    public static getContents(bookCode: string = 'gotm'): Contents {
         const scenes = booksByCode[bookCode];
         const chapterNumbers = [...new Set(scenes.map((s) => s.chapterNumber))];
         const chapters: ChapterContents[] = chapterNumbers.map((chapterNumber) => {
@@ -66,7 +66,7 @@ export class TextService {
         };
     }
 
-    public getAdjacentSceneIds(sceneId: string): [string?, string?] {
+    public static getAdjacentSceneIds(sceneId: string): [string?, string?] {
         const gotmIndex = gotm.findIndex((scene) => scene.id === sceneId);
         const dgIndex = dg.findIndex((scene) => scene.id === sceneId);
 
@@ -90,7 +90,7 @@ export class TextService {
         ];
     }
 
-    private getChapterName(chapterNumber: number): string {
+    private static getChapterName(chapterNumber: number): string {
         switch (chapterNumber) {
             case 0:
                 return 'Prologue';
@@ -101,7 +101,7 @@ export class TextService {
         }
     }
 
-    private fromBase64(text: string) {
+    private static fromBase64(text: string) {
         return decodeURIComponent(atob(text));
     }
 }
