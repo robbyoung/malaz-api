@@ -187,6 +187,10 @@ label {
   font-weight: bold;
 }
 
+.radio label {
+  font-weight: normal;
+}
+
 form input {
   margin-top: 3px;
   margin-bottom: 5px;

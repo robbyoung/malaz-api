@@ -25,8 +25,8 @@ app.get('/scenes/:sceneId/annotate', async (req, res) => {
     );
 });
 
-app.get('/forms', (req, res) => {
-    respondWithHtmx(res, getForm(req.query as any));
+app.get('/forms', async (req, res) => {
+    respondWithHtmx(res, await getForm(req.query as any));
 });
 
 app.post('/forms', async (req, res) => {

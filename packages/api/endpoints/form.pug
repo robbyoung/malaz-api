@@ -9,11 +9,18 @@ div#form
             input(name="to" value=to type="hidden")
         each field in form.fields
             label #{field.name}
-            input(
-                name=field.name
-                class="input small-padding-y"
-                value=(field.populateFromText ? text : "")
-            )
+            if field.type == "CharacterInScene"
+                each character in charactersInScene
+                    div.radio
+                        - var id = btoa(Math.random());
+                        input(type="radio" name=field.name value=character id=id)
+                        label(for=id) #{character}
+            else
+                input(
+                    name=field.name
+                    class="input small-padding-y"
+                    value=(field.populateFromText ? text : "")
+                )
         button.submit(
             type="submit"
             class="button grey"
