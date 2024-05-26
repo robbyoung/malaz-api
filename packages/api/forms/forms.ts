@@ -32,7 +32,17 @@ export const highlightForms: AnnotationForm[] = [
     },
     {
         id: 'hf4',
-        name: 'Descriptor',
+        name: 'Character Descriptor',
+        fields: [{ name: 'Character name', required: true }],
+    },
+    {
+        id: 'hf7',
+        name: 'Location Descriptor',
+        fields: [{ name: 'Location name', required: true }],
+    },
+    {
+        id: 'hf6',
+        name: 'Character Background',
         fields: [{ name: 'Character name', required: true }],
     },
     {

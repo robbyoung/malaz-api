@@ -132,6 +132,10 @@ html {
   background-color: #67EBFA;
 }
 
+.annotation-hf7 {
+  background-color: #c3fc7e;
+}
+
 #container {
   display: flex;
   flex-direction: row;
