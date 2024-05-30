@@ -1,9 +1,11 @@
+import { highlightForms } from '../../forms/forms';
+import { Submission } from '../../repository/submissions';
 import {
     ChapterContents,
+    Chunk,
     Contents,
     IScenesApplication,
     IScenesRepository,
-    Scene,
     SceneType,
 } from '../types';
 
@@ -80,6 +82,52 @@ export class ScenesApplication implements IScenesApplication {
         return [previousSceneId, nextSceneId];
     }
 
+    public async getChunks(sceneId: string, annotations: Submission[]): Promise<Chunk[]> {
+        const nonBreakingSpace = String.fromCharCode(8203);
+        let text = await this.getSceneText(sceneId);
+        if (!text) {
+            return [];
+        }
+
+        const chunks: Chunk[] = [];
+        const italicsIndices = this.getItalicsIndices(text);
+        const indices = [
+            0,
+            ...new Set(
+                annotations
+                    .map((a) => [a.from, a.to])
+                    .concat(italicsIndices)
+                    .flat()
+                    .sort((a, b) => a - b)
+            ),
+            text.length,
+        ];
+
+        text = text.replaceAll('*', nonBreakingSpace);
+
+        for (let i = 0; i < indices.length - 1; i++) {
+            const currentIndex = indices[i];
+            const nextIndex = indices[i + 1];
+            const annotationsBetweenIndices = annotations.filter(
+                (a) => a.to > currentIndex && a.from < nextIndex
+            );
+
+            const italicsIndex = italicsIndices.findLastIndex((i) => i <= currentIndex);
+
+            chunks.push(
+                this.createChunk(
+                    text,
+                    currentIndex,
+                    nextIndex,
+                    annotationsBetweenIndices,
+                    italicsIndex % 2 == 0
+                )
+            );
+        }
+
+        return chunks;
+    }
+
     private getChapterName(chapterNumber: number): string {
         switch (chapterNumber) {
             case 0:
@@ -89,5 +137,52 @@ export class ScenesApplication implements IScenesApplication {
             default:
                 return `Chapter ${chapterNumber}`;
         }
+    }
+
+    private getItalicsIndices(text: string): number[] {
+        let i = -1;
+        const indices: number[] = [];
+
+        while (true) {
+            i = text.indexOf('*', i + 1);
+            if (i === -1) {
+                break;
+            }
+
+            indices.push(i);
+        }
+
+        return indices;
+    }
+
+    private createChunk(
+        text: string,
+        fromIndex: number,
+        toIndex: number,
+        annotations: Submission[],
+        useItalics: boolean
+    ): Chunk {
+        const baseClass = useItalics ? 'italics' : '';
+
+        if (annotations.length === 0) {
+            return {
+                text: text.substring(fromIndex, toIndex),
+                class: baseClass,
+                selectFrom: fromIndex,
+            };
+        }
+
+        const formOrder = annotations.sort(
+            (a, b) =>
+                highlightForms.findIndex((f) => a.formId === f.id) -
+                highlightForms.findIndex((f) => b.formId === f.id)
+        );
+        const annotation = formOrder[0];
+        return {
+            text: text.substring(fromIndex, toIndex),
+            class: `annotation annotation-${annotation.formId} ${baseClass}`,
+            selectFrom: fromIndex,
+            annotationId: annotation.id,
+        };
     }
 }
