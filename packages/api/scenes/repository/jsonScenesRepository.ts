@@ -1,4 +1,5 @@
-import { Scene, IScenesRepository } from '../types';
+import { IScenesRepository } from '..';
+import { Scene } from '../../types';
 
 const gotm: Scene[] = require('../../parser/output/gotm.json');
 const dg: Scene[] = require('../../parser/output/dg.json');

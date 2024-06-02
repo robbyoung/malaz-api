@@ -1,16 +1,8 @@
 import { MongoClient, ObjectId, WithId } from 'mongodb';
 import { Dictionary, toDictionary, KeyValuePairs, toKeyValuePairs } from '../util/dictionaries';
+import { Submission } from '../types';
 
 const mongoUrl = 'mongodb://localhost:27017/malazdb';
-
-export interface Submission {
-    id: string;
-    formId: string;
-    sceneId: string;
-    from: number;
-    to: number;
-    fields: KeyValuePairs;
-}
 
 interface SubmissionDto {
     formId: string;

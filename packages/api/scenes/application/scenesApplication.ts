@@ -1,13 +1,6 @@
+import { IScenesApplication, IScenesRepository } from '..';
 import { highlightForms } from '../../forms/forms';
-import { Submission } from '../../repository/submissions';
-import {
-    ChapterContents,
-    Chunk,
-    Contents,
-    IScenesApplication,
-    IScenesRepository,
-    SceneType,
-} from '../types';
+import { SceneType, Contents, ChapterContents, Submission, Chunk } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
     constructor(private repository: IScenesRepository) {}
