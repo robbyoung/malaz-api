@@ -16,9 +16,15 @@ export interface IAnnotationsRepository {
     saveSceneAttributes(sceneId: string, kvps: KeyValuePairs): Promise<void>;
 }
 
+export { MongoAnnotationsRepository } from './repository/mongoAnnotationsRepository';
+
 export interface IAnnotationsApplication {
     processSubmission(rawFormData: any): Promise<string>;
     getSubmissionsForScene(sceneId: string): Promise<Submission[]>;
+    getAnnotation(id: string): Promise<Submission | undefined>;
+    deleteAnnotation(id: string): Promise<void>;
 }
 
 export { AnnotationsApplication } from './application/annotationsApplication';
+
+export { AnnotationsApi } from './api/annotationsApi';

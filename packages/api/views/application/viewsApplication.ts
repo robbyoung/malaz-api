@@ -26,7 +26,7 @@ export class ViewsApplication implements IViewsApplication {
         return renderFile('./templates/contents.pug', { contents });
     }
 
-    renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk, message: string): string {
+    renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string {
         return renderFile('./templates/submission.pug', { sceneId, chunks, message });
     }
 
@@ -68,5 +68,9 @@ export class ViewsApplication implements IViewsApplication {
             selection,
             availableForms,
         });
+    }
+
+    renderErrorMessage(message: string): string {
+        return renderFile('./templates/components/error.pug', { message });
     }
 }

@@ -7,6 +7,49 @@ import { getForm } from './endpoints/form';
 import { postSubmission } from './endpoints/submission';
 import { getAnnotation } from './endpoints/annotation';
 import { deleteAnnotation } from './endpoints/deleteAnnotation';
+import {
+    FormsApplication,
+    IFormsApplication,
+    IFormsRepository,
+    JsonFormsRepository,
+} from './forms';
+import {
+    IScenesApplication,
+    IScenesRepository,
+    JsonScenesRepository,
+    ScenesApplication,
+} from './scenes';
+import {
+    AnnotationsApi,
+    AnnotationsApplication,
+    IAnnotationsApplication,
+    IAnnotationsRepository,
+    MongoAnnotationsRepository,
+} from './annotations';
+import { IViewsApplication, ViewsApplication } from './views';
+
+const viewsApplication: IViewsApplication = new ViewsApplication();
+
+const formsRepository: IFormsRepository = new JsonFormsRepository();
+const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
+
+const scenesRepository: IScenesRepository = new JsonScenesRepository();
+const scenesApplication: IScenesApplication = new ScenesApplication(
+    scenesRepository,
+    formsApplication
+);
+
+const annotationsRepository: IAnnotationsRepository = new MongoAnnotationsRepository();
+const annotationsApplication: IAnnotationsApplication = new AnnotationsApplication(
+    annotationsRepository,
+    formsApplication
+);
+const annotationsApi = new AnnotationsApi(
+    annotationsApplication,
+    scenesApplication,
+    formsApplication,
+    viewsApplication
+);
 
 const app = server();
 
@@ -30,15 +73,15 @@ app.get('/forms', async (req, res) => {
 });
 
 app.post('/forms', async (req, res) => {
-    respondWithHtmx(res, await postSubmission(req.body as any));
+    respondWithHtmx(res, await annotationsApi.post(req.body));
 });
 
-app.get('/annotations/:annotationId', async (req, res) => {
-    respondWithHtmx(res, await getAnnotation(req.params as any));
+app.get('/annotations/:id', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.get(req.params?.id));
 });
 
-app.delete('/annotations/:annotationId', async (req, res) => {
-    respondWithHtmx(res, await deleteAnnotation(req.params as any));
+app.delete('/annotations/:id', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.delete(req.params?.id));
 });
 
 app.get('/favicon.ico', (_, res) => {

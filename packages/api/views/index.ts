@@ -10,7 +10,7 @@ export interface IViewsApplication {
     ): string;
     renderAnnotation(title: string, fields: KeyValuePairs, annotationId: string): string;
     renderTableOfContents(contents: Contents): string;
-    renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk, message: string): string;
+    renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string;
     renderAnnotationForm(
         form: Form,
         sceneId: string,
@@ -30,6 +30,7 @@ export interface IViewsApplication {
         selection: string,
         availableForms: Form[]
     ): string;
+    renderErrorMessage(message: string): string;
 }
 
 export { ViewsApplication } from './application/viewsApplication';

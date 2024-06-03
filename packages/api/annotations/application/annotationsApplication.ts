@@ -59,4 +59,12 @@ export class AnnotationsApplication implements IAnnotationsApplication {
     getSubmissionsForScene(sceneId: string): Promise<Submission[]> {
         return this.repository.getSubmissionsForScene(sceneId);
     }
+
+    getAnnotation(id: string): Promise<Submission | undefined> {
+        return this.repository.getSubmissionById(id);
+    }
+
+    deleteAnnotation(id: string): Promise<void> {
+        return this.deleteAnnotation(id);
+    }
 }

@@ -5,6 +5,8 @@ export interface IScenesRepository {
     getScenes(bookId: string): Promise<Omit<Scene, 'sceneText'>[]>;
 }
 
+export { JsonScenesRepository } from './repository/jsonScenesRepository';
+
 export interface IScenesApplication {
     getSceneText(sceneId: string): Promise<string | undefined>;
     getTextSelection(sceneId: string, from: number, to: number): Promise<string | undefined>;
