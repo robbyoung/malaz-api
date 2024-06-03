@@ -1,7 +1,5 @@
-import { Form, highlightForms, sceneForms } from '../forms/forms';
-import { SceneAttributes, getSceneAttributes } from '../repository/sceneAttributes';
-import { TextService } from '../text/textService';
 import { renderFile } from 'pug';
+import { Form, SceneAttributes } from '../types';
 
 interface SceneAnnotationTemplateProps {
     sceneId: string;

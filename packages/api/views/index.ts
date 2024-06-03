@@ -1,6 +1,4 @@
-import { Form } from '../forms/forms';
-import { SceneAttributes } from '../repository/sceneAttributes';
-import { Chunk, Contents } from '../types';
+import { Chunk, Contents, Form, SceneAttributes } from '../types';
 import { KeyValuePairs } from '../util/dictionaries';
 
 export interface IViewsApplication {

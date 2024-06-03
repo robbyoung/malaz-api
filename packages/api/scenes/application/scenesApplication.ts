@@ -1,8 +1,12 @@
 import { IScenesApplication, IScenesRepository } from '..';
-import { SceneType, Contents, ChapterContents, Submission, Chunk } from '../../types';
+import { IFormsApplication } from '../../forms';
+import { SceneType, Contents, ChapterContents, Submission, Chunk, Form } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
-    constructor(private repository: IScenesRepository) {}
+    constructor(
+        private repository: IScenesRepository,
+        private forms: IFormsApplication
+    ) {}
 
     public async getSceneText(sceneId: string): Promise<string | undefined> {
         const scene = await this.repository.getSceneById(sceneId);
@@ -75,6 +79,8 @@ export class ScenesApplication implements IScenesApplication {
     }
 
     public async getChunks(sceneId: string, annotations: Submission[]): Promise<Chunk[]> {
+        const highlightForms = await this.forms.getForms(true, false);
+
         const nonBreakingSpace = String.fromCharCode(8203);
         let text = await this.getSceneText(sceneId);
         if (!text) {
@@ -112,7 +118,8 @@ export class ScenesApplication implements IScenesApplication {
                     currentIndex,
                     nextIndex,
                     annotationsBetweenIndices,
-                    italicsIndex % 2 == 0
+                    italicsIndex % 2 == 0,
+                    highlightForms
                 )
             );
         }
@@ -152,7 +159,8 @@ export class ScenesApplication implements IScenesApplication {
         fromIndex: number,
         toIndex: number,
         annotations: Submission[],
-        useItalics: boolean
+        useItalics: boolean,
+        highlightForms: Form[]
     ): Chunk {
         const baseClass = useItalics ? 'italics' : '';
 

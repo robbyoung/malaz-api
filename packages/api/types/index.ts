@@ -41,6 +41,8 @@ interface SceneContents {
     name: string;
 }
 
+export type SceneAttributes = { key: string; value: string }[];
+
 export interface Submission {
     id: string;
     formId: string;
