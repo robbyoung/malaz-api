@@ -1,6 +1,6 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { Submission } from '../../types';
+import { SceneAttributes, Submission } from '../../types';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
@@ -66,5 +66,24 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     deleteAnnotation(id: string): Promise<void> {
         return this.deleteAnnotation(id);
+    }
+
+    getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
+        return this.getSceneAttributes(sceneId);
+    }
+
+    async getCharactersInScene(sceneId: string): Promise<string[]> {
+        const occurrenceFormId = 'hf2';
+        const mentionFormId = 'hf3';
+
+        const annotations = await this.getSubmissionsForScene(sceneId);
+        const occurrences = annotations
+            .filter((a) => a.formId === occurrenceFormId)
+            .map((a) => a.fields[0].value);
+        const mentions = annotations
+            .filter((a) => a.formId === mentionFormId)
+            .map((a) => a.fields[0].value);
+
+        return [...occurrences, ...mentions];
     }
 }

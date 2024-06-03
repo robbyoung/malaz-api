@@ -23,6 +23,8 @@ export interface IAnnotationsApplication {
     getSubmissionsForScene(sceneId: string): Promise<Submission[]>;
     getAnnotation(id: string): Promise<Submission | undefined>;
     deleteAnnotation(id: string): Promise<void>;
+    getSceneAttributes(sceneId: string): Promise<SceneAttributes>;
+    getCharactersInScene(sceneId: string): Promise<string[]>;
 }
 
 export { AnnotationsApplication } from './application/annotationsApplication';

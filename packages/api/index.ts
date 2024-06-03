@@ -27,6 +27,7 @@ import {
     MongoAnnotationsRepository,
 } from './annotations';
 import { IViewsApplication, ViewsApplication } from './views';
+import { FormsApi } from './forms/api/formsApi';
 
 const viewsApplication: IViewsApplication = new ViewsApplication();
 
@@ -44,6 +45,14 @@ const annotationsApplication: IAnnotationsApplication = new AnnotationsApplicati
     annotationsRepository,
     formsApplication
 );
+
+const formsApi = new FormsApi(
+    formsApplication,
+    scenesApplication,
+    annotationsApplication,
+    viewsApplication
+);
+
 const annotationsApi = new AnnotationsApi(
     annotationsApplication,
     scenesApplication,
@@ -62,14 +71,14 @@ app.get('/scene/:sceneId', async (req, res) => {
 });
 
 app.get('/scenes/:sceneId/annotate', async (req, res) => {
-    respondWithHtmx(
-        res,
-        await getSelection({ sceneId: req.params?.sceneId, range: req.query?.range })
-    );
+    respondWithHtmx(res, await formsApi.getAll(req.params?.sceneId, req.query?.range));
 });
 
 app.get('/forms', async (req, res) => {
-    respondWithHtmx(res, await getForm(req.query as any));
+    respondWithHtmx(
+        res,
+        await formsApi.get(req.query?.formId, req.query?.sceneId, req.query?.range)
+    );
 });
 
 app.post('/forms', async (req, res) => {
