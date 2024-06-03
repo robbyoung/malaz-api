@@ -1,4 +1,4 @@
-import { AnnotationForm } from '../forms/forms';
+import { Form } from '../forms/forms';
 import { SceneAttributes } from '../repository/sceneAttributes';
 import { Chunk, Contents } from '../types';
 import { KeyValuePairs } from '../util/dictionaries';
@@ -14,7 +14,7 @@ export interface IViewsApplication {
     renderTableOfContents(contents: Contents): string;
     renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk, message: string): string;
     renderAnnotationForm(
-        form: AnnotationForm,
+        form: Form,
         sceneId: string,
         text: string,
         charactersInScene: string[],
@@ -24,13 +24,13 @@ export interface IViewsApplication {
     renderSceneAttributeForms(
         sceneId: string,
         attributes: SceneAttributes,
-        availableForms: AnnotationForm[]
+        availableForms: Form[]
     ): string;
     renderSelectionForms(
         sceneId: string,
         range: string,
         selection: string,
-        availableForms: AnnotationForm[]
+        availableForms: Form[]
     ): string;
 }
 

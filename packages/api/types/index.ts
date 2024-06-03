@@ -49,3 +49,21 @@ export interface Submission {
     to: number;
     fields: KeyValuePairs;
 }
+
+export interface Form {
+    id: string;
+    name: string;
+    fields: FormField[];
+}
+
+export interface FormField {
+    name: string;
+    required: boolean;
+    populateFromText?: boolean;
+    type: FormFieldType;
+}
+
+export enum FormFieldType {
+    FreeText = 'FreeText',
+    CharacterInScene = 'CharacterInScene',
+}

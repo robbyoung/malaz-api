@@ -1,5 +1,4 @@
 import { IScenesApplication, IScenesRepository } from '..';
-import { highlightForms } from '../../forms/forms';
 import { SceneType, Contents, ChapterContents, Submission, Chunk } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {

@@ -1,6 +1,6 @@
 import { renderFile } from 'pug';
 import { IViewsApplication } from '..';
-import { AnnotationForm } from '../../forms/forms';
+import { Form } from '../../forms/forms';
 import { SceneAttributes } from '../../repository/sceneAttributes';
 import { Chunk, Contents } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
@@ -33,7 +33,7 @@ export class ViewsApplication implements IViewsApplication {
     }
 
     renderAnnotationForm(
-        form: AnnotationForm,
+        form: Form,
         sceneId: string,
         text: string,
         charactersInScene: string[],
@@ -53,7 +53,7 @@ export class ViewsApplication implements IViewsApplication {
     renderSceneAttributeForms(
         sceneId: string,
         attributes: SceneAttributes,
-        availableForms: AnnotationForm[]
+        availableForms: Form[]
     ): string {
         return renderFile('./templates/selectionText.pug', { sceneId, attributes, availableForms });
     }
@@ -62,7 +62,7 @@ export class ViewsApplication implements IViewsApplication {
         sceneId: string,
         range: string,
         selection: string,
-        availableForms: AnnotationForm[]
+        availableForms: Form[]
     ): string {
         return renderFile('./templates/selectionScene.pug', {
             sceneId,

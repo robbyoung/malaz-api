@@ -1,4 +1,4 @@
-import { AnnotationForm, highlightForms, sceneForms } from '../forms/forms';
+import { Form, highlightForms, sceneForms } from '../forms/forms';
 import { SceneAttributes, getSceneAttributes } from '../repository/sceneAttributes';
 import { TextService } from '../text/textService';
 import { renderFile } from 'pug';
@@ -6,14 +6,14 @@ import { renderFile } from 'pug';
 interface SceneAnnotationTemplateProps {
     sceneId: string;
     attributes: SceneAttributes;
-    availableForms: AnnotationForm[];
+    availableForms: Form[];
 }
 
 interface TextAnnotationTemplateProps {
     sceneId: string;
     range: string;
     selection: string;
-    availableForms: AnnotationForm[];
+    availableForms: Form[];
 }
 
 interface Params {

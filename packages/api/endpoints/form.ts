@@ -1,10 +1,10 @@
-import { AnnotationForm, allForms, sceneForms } from '../forms/forms';
+import { Form, allForms, sceneForms } from '../forms/forms';
 import { renderFile } from 'pug';
 import { TextService } from '../text/textService';
 import { getSubmissionsForScene } from '../repository/submissions';
 
 interface TemplateProps {
-    form: AnnotationForm;
+    form: Form;
     sceneId: string;
     text: string;
     charactersInScene: string[];
