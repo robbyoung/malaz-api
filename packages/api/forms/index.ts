@@ -13,3 +13,5 @@ export interface IFormsApplication {
 }
 
 export { FormsApplication } from './application/formsApplication';
+
+export { FormsApi } from './api/formsApi';

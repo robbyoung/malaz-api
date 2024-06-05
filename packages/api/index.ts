@@ -1,13 +1,7 @@
 import server from 'bunrest';
 import { BunResponse } from 'bunrest/src/server/response';
-import { getSceneText } from './endpoints/sceneText';
-import { getSelection } from './endpoints/selection';
-import { getContents } from './endpoints/contents';
-import { getForm } from './endpoints/form';
-import { postSubmission } from './endpoints/submission';
-import { getAnnotation } from './endpoints/annotation';
-import { deleteAnnotation } from './endpoints/deleteAnnotation';
 import {
+    FormsApi,
     FormsApplication,
     IFormsApplication,
     IFormsRepository,
@@ -17,6 +11,7 @@ import {
     IScenesApplication,
     IScenesRepository,
     JsonScenesRepository,
+    ScenesApi,
     ScenesApplication,
 } from './scenes';
 import {
@@ -27,7 +22,6 @@ import {
     MongoAnnotationsRepository,
 } from './annotations';
 import { IViewsApplication, ViewsApplication } from './views';
-import { FormsApi } from './forms/api/formsApi';
 
 const viewsApplication: IViewsApplication = new ViewsApplication();
 
@@ -60,18 +54,20 @@ const annotationsApi = new AnnotationsApi(
     viewsApplication
 );
 
+const scenesApi = new ScenesApi(scenesApplication, annotationsApplication, viewsApplication);
+
 const app = server();
 
-app.get('/', (_, res) => {
-    respondWithHtmx(res, getContents());
+app.get('/', async (_, res) => {
+    respondWithHtmx(res, await scenesApi.getAll());
 });
 
-app.get('/scene/:sceneId', async (req, res) => {
-    respondWithHtmx(res, await getSceneText(req.params as any));
+app.get('/scene/:id', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.get(req.params?.id));
 });
 
-app.get('/scenes/:sceneId/annotate', async (req, res) => {
-    respondWithHtmx(res, await formsApi.getAll(req.params?.sceneId, req.query?.range));
+app.get('/scenes/:id/annotate', async (req, res) => {
+    respondWithHtmx(res, await formsApi.getAll(req.params?.id, req.query?.range));
 });
 
 app.get('/forms', async (req, res) => {
