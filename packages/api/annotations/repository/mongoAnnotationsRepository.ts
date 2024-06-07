@@ -28,7 +28,6 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         kvps: KeyValuePairs
     ) {
         const client = await MongoClient.connect(mongoUrl);
-
         await client
             .db()
             .collection<SubmissionDto>('submissions')

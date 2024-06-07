@@ -26,6 +26,7 @@ export class ScenesApi {
         return this.views.renderSceneText(
             chunks,
             sceneName,
+            sceneId,
             adjacentSceneIds[1],
             adjacentSceneIds[0]
         );

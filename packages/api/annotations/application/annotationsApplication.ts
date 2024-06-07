@@ -10,6 +10,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     // TODO this shouldn't need to return scene id
     async processSubmission(rawFormData: any): Promise<string> {
+        console.dir(rawFormData);
         const allForms = await this.forms.getForms(true, true);
         const params = new URLSearchParams(rawFormData);
         const formId = params.get('formId');
@@ -64,12 +65,12 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         return this.repository.getSubmissionById(id);
     }
 
-    deleteAnnotation(id: string): Promise<void> {
-        return this.deleteAnnotation(id);
+    async deleteAnnotation(id: string): Promise<void> {
+        await this.repository.deleteSubmissionById(id);
     }
 
     getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
-        return this.getSceneAttributes(sceneId);
+        return this.repository.getSceneAttributes(sceneId);
     }
 
     async getCharactersInScene(sceneId: string): Promise<string[]> {

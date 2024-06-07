@@ -5,6 +5,7 @@ export interface IViewsApplication {
     renderSceneText(
         chunks: Chunk[],
         title: string,
+        sceneId: string,
         nextSceneId?: string,
         previousSceneId?: string
     ): string;
@@ -14,8 +15,8 @@ export interface IViewsApplication {
     renderAnnotationForm(
         form: Form,
         sceneId: string,
-        text: string,
         charactersInScene: string[],
+        text?: string,
         from?: number,
         to?: number
     ): string;

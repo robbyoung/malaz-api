@@ -3,42 +3,46 @@ import { IViewsApplication } from '..';
 import { Chunk, Contents, Form, SceneAttributes } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
+const TEMPLATES_PATH = './views/templates';
+
 export class ViewsApplication implements IViewsApplication {
     renderSceneText(
         chunks: Chunk[],
         title: string,
+        sceneId: string,
         nextSceneId?: string | undefined,
         previousSceneId?: string | undefined
     ): string {
-        return renderFile('./templates/sceneText.pug', {
+        return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
             chunks,
             title,
+            sceneId,
             nextSceneId,
             previousSceneId,
         });
     }
 
     renderAnnotation(title: string, fields: KeyValuePairs, annotationId: string): string {
-        return renderFile('./templates/annotation.pug', { title, fields, annotationId });
+        return renderFile(`${TEMPLATES_PATH}/annotation.pug`, { title, fields, annotationId });
     }
 
     renderTableOfContents(contents: Contents): string {
-        return renderFile('./templates/contents.pug', { contents });
+        return renderFile(`${TEMPLATES_PATH}/contents.pug`, { contents });
     }
 
     renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string {
-        return renderFile('./templates/submission.pug', { sceneId, chunks, message });
+        return renderFile(`${TEMPLATES_PATH}/submission.pug`, { sceneId, chunks, message });
     }
 
     renderAnnotationForm(
         form: Form,
         sceneId: string,
-        text: string,
         charactersInScene: string[],
+        text?: string,
         from?: number | undefined,
         to?: number | undefined
     ): string {
-        return renderFile('./templates/form.pug', {
+        return renderFile(`${TEMPLATES_PATH}/form.pug`, {
             form,
             sceneId,
             text,
@@ -53,7 +57,11 @@ export class ViewsApplication implements IViewsApplication {
         attributes: SceneAttributes,
         availableForms: Form[]
     ): string {
-        return renderFile('./templates/selectionText.pug', { sceneId, attributes, availableForms });
+        return renderFile(`${TEMPLATES_PATH}/selectionScene.pug`, {
+            sceneId,
+            attributes,
+            availableForms,
+        });
     }
 
     renderSelectionForms(
@@ -62,7 +70,7 @@ export class ViewsApplication implements IViewsApplication {
         selection: string,
         availableForms: Form[]
     ): string {
-        return renderFile('./templates/selectionScene.pug', {
+        return renderFile(`${TEMPLATES_PATH}/selectionText.pug`, {
             sceneId,
             range,
             selection,
@@ -71,6 +79,6 @@ export class ViewsApplication implements IViewsApplication {
     }
 
     renderErrorMessage(message: string): string {
-        return renderFile('./templates/components/error.pug', { message });
+        return renderFile(`${TEMPLATES_PATH}/error.pug`, { message });
     }
 }

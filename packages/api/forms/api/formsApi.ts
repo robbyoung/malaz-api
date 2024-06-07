@@ -1,7 +1,7 @@
 import { IFormsApplication } from '..';
 import { IAnnotationsApplication } from '../../annotations';
 import { IScenesApplication } from '../../scenes';
-import { parseRange } from '../../util/range';
+import { parseOptionalRange, parseRange } from '../../util/range';
 import { IViewsApplication } from '../../views';
 
 export class FormsApi {
@@ -40,11 +40,11 @@ export class FormsApi {
         }
 
         const availableForms = await this.forms.getForms(true, false);
-        this.views.renderSelectionForms(sceneId, range, selection, availableForms);
+        return this.views.renderSelectionForms(sceneId, range, selection, availableForms);
     }
 
     async get(formId?: string, sceneId?: string, range?: string): Promise<string | undefined> {
-        const { to, from } = parseRange(range);
+        const { to, from } = parseOptionalRange(range);
 
         if (!formId || !sceneId) {
             throw new Error('invalid parameters');
@@ -56,15 +56,19 @@ export class FormsApi {
             return undefined;
         }
 
-        let text = await this.scenes.getTextSelection(sceneId, from, to);
-        if (!text) {
-            throw new Error('Text location invalid');
-        }
+        let text: string | undefined = undefined;
+        if (from && to) {
+            text = await this.scenes.getTextSelection(sceneId, from, to);
 
-        text = text.trim();
+            if (!text) {
+                throw new Error('Text location invalid');
+            }
+
+            text = text?.trim();
+        }
 
         const charactersInScene = await this.annotations.getCharactersInScene(sceneId);
 
-        return this.views.renderAnnotationForm(form, sceneId, text, charactersInScene);
+        return this.views.renderAnnotationForm(form, sceneId, charactersInScene, text, from, to);
     }
 }
