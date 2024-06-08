@@ -68,4 +68,5 @@ export interface FormField {
 export enum FormFieldType {
     FreeText = 'FreeText',
     CharacterInScene = 'CharacterInScene',
+    Boolean = 'Boolean',
 }

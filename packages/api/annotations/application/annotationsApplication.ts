@@ -1,6 +1,6 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { SceneAttributes, Submission } from '../../types';
+import { FormFieldType, SceneAttributes, Submission } from '../../types';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
@@ -39,15 +39,19 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         }
 
         const kvps = fields.map((field) => {
-            const value = params.get(field.name);
+            let value = params.get(field.name);
 
             if (!value && field.required) {
                 throw new Error(`bad submission: '${field.name}' is a required field`);
             }
 
+            if (field.type === FormFieldType.Boolean) {
+                value = `${value === 'on'}`;
+            }
+
             return {
                 key: field.name,
-                value: params.get(field.name) ?? '',
+                value: value ?? '',
             };
         });
 

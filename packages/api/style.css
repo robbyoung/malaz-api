@@ -189,6 +189,7 @@ select option:disabled {
 }
 
 label {
+  vertical-align: top;
   font-weight: bold;
 }
 
@@ -203,6 +204,21 @@ label {
 
 .radio input {
   cursor: pointer;
+}
+
+.checkbox {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 5px;
+  border: 2px solid var(--black);
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.checkbox:checked {
+  background: #333;
 }
 
 form input {
