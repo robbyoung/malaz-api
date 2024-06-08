@@ -34,6 +34,12 @@ html {
   box-shadow: 0px 0px 0px 0px var(--black)
 }
 
+.small {
+  width: unset;
+  padding: 0.75em 1em;
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+}
+
 .shadowed {
   box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
 
@@ -166,6 +172,13 @@ html {
   padding-top: 0.75rem;
 }
 
+#forms {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 select option:disabled {
   display: none;
 }
@@ -179,8 +192,17 @@ label {
   font-weight: bold;
 }
 
+.radio {
+  margin: 5px 0px;
+}
+
 .radio label {
+  cursor: pointer;
   font-weight: normal;
+}
+
+.radio input {
+  cursor: pointer;
 }
 
 form input {

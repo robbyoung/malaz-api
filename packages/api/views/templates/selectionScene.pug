@@ -8,7 +8,7 @@ div#selection
         each form in availableForms
             button(
                 type="button"
-                class="button grey"
+                class="button small grey"
                 hx-get=`/forms/${form.id}`
                 hx-vars=`sceneId:'${sceneId}',range:'${range}'`
                 hx-target="#forms"

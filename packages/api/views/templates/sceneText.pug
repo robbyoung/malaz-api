@@ -9,7 +9,7 @@ block content
             div
                 h1(
                     hx-get="/forms"
-                    hx-vars=`sceneId:${sceneId}`
+                    hx-vars=`sceneId:"${sceneId}"`
                     hx-target="#selection"
                     hx-swap="outerHTML"
                     hx-trigger="mouseup"
