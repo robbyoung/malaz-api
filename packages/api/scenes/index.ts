@@ -1,4 +1,4 @@
-import { Scene, Contents, Chunk, Submission } from '../types';
+import { Scene, Contents, Chunk, Annotation } from '../types';
 
 export interface IScenesRepository {
     getSceneById(id: string): Promise<Scene | undefined>;
@@ -13,7 +13,7 @@ export interface IScenesApplication {
     getSceneName(sceneId: string): Promise<string | undefined>;
     getContents(bookCode: string): Promise<Contents>;
     getAdjacentSceneIds(sceneId: string): Promise<[string?, string?]>;
-    getChunks(sceneId: string, annotations: Submission[]): Promise<Chunk[]>;
+    getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]>;
 }
 
 export { ScenesApplication } from './application/scenesApplication';

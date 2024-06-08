@@ -1,9 +1,9 @@
 import { MongoClient, ObjectId, WithId } from 'mongodb';
 import { IAnnotationsRepository } from '..';
-import { SceneAttributes, Submission } from '../../types';
+import { SceneAttributes, Annotation } from '../../types';
 import { Dictionary, KeyValuePairs, toDictionary, toKeyValuePairs } from '../../util/dictionaries';
 
-interface SubmissionDto {
+interface AnnotationDto {
     formId: string;
     sceneId: string;
     from: number;
@@ -18,9 +18,10 @@ interface SceneAttributesDto {
 
 const mongoUrl = 'mongodb://localhost:27017/malazdb';
 const sceneAttributesCollectionName = 'sceneAttributes';
+const annotationsCollectionName = 'annotations';
 
 export class MongoAnnotationsRepository implements IAnnotationsRepository {
-    async saveSubmission(
+    async saveAnnotation(
         formId: string,
         sceneId: string,
         from: number,
@@ -30,58 +31,58 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         const client = await MongoClient.connect(mongoUrl);
         await client
             .db()
-            .collection<SubmissionDto>('submissions')
+            .collection<AnnotationDto>(annotationsCollectionName)
             .insertOne({ formId, sceneId, from, to, fields: toDictionary(kvps) });
 
         client.close();
     }
 
-    async getSubmissionsForScene(sceneId: string): Promise<Submission[]> {
+    async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
         const client = await MongoClient.connect(mongoUrl);
 
         const query = { sceneId };
-        const submissionsForScene = await client
+        const annotationsForScene = await client
             .db()
-            .collection('submissions')
-            .find<WithId<SubmissionDto>>(query)
+            .collection(annotationsCollectionName)
+            .find<WithId<AnnotationDto>>(query)
             .toArray();
 
         client.close();
 
-        return submissionsForScene.map((submission) => ({
-            ...submission,
-            fields: toKeyValuePairs(submission.fields),
-            id: submission._id.toString(),
+        return annotationsForScene.map((annotation) => ({
+            ...annotation,
+            fields: toKeyValuePairs(annotation.fields),
+            id: annotation._id.toString(),
         }));
     }
 
-    async getSubmissionById(submissionId: string): Promise<Submission | undefined> {
+    async getAnnotation(annotationId: string): Promise<Annotation | undefined> {
         const client = await MongoClient.connect(mongoUrl);
 
-        const query = { _id: new ObjectId(submissionId) };
-        const submission = await client
+        const query = { _id: new ObjectId(annotationId) };
+        const annotation = await client
             .db()
-            .collection('submissions')
-            .findOne<WithId<SubmissionDto>>(query);
+            .collection(annotationsCollectionName)
+            .findOne<WithId<AnnotationDto>>(query);
 
         client.close();
 
-        if (submission === null) {
+        if (annotation === null) {
             return undefined;
         }
 
         return {
-            ...submission,
-            fields: toKeyValuePairs(submission.fields),
-            id: submission._id.toString(),
+            ...annotation,
+            fields: toKeyValuePairs(annotation.fields),
+            id: annotation._id.toString(),
         };
     }
 
-    async deleteSubmissionById(submissionId: string): Promise<boolean> {
+    async deleteAnnotation(annotationId: string): Promise<boolean> {
         const client = await MongoClient.connect(mongoUrl);
 
-        const query = { _id: new ObjectId(submissionId) };
-        const result = await client.db().collection('submissions').deleteOne(query);
+        const query = { _id: new ObjectId(annotationId) };
+        const result = await client.db().collection(annotationsCollectionName).deleteOne(query);
 
         client.close();
 

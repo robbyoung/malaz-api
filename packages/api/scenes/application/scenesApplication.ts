@@ -1,6 +1,6 @@
 import { IScenesApplication, IScenesRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { SceneType, Contents, ChapterContents, Submission, Chunk, Form } from '../../types';
+import { SceneType, Contents, ChapterContents, Annotation, Chunk, Form } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
     constructor(
@@ -78,7 +78,7 @@ export class ScenesApplication implements IScenesApplication {
         return [previousSceneId, nextSceneId];
     }
 
-    public async getChunks(sceneId: string, annotations: Submission[]): Promise<Chunk[]> {
+    public async getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]> {
         const highlightForms = await this.forms.getForms(true, false);
 
         const nonBreakingSpace = String.fromCharCode(8203);
@@ -158,7 +158,7 @@ export class ScenesApplication implements IScenesApplication {
         text: string,
         fromIndex: number,
         toIndex: number,
-        annotations: Submission[],
+        annotations: Annotation[],
         useItalics: boolean,
         highlightForms: Form[]
     ): Chunk {

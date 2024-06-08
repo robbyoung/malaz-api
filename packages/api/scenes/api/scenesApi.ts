@@ -20,7 +20,7 @@ export class ScenesApi {
         }
 
         const adjacentSceneIds = await this.scenes.getAdjacentSceneIds(sceneId);
-        const annotations = await this.annotations.getSubmissionsForScene(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneText(

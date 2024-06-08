@@ -31,7 +31,7 @@ export class AnnotationsApi {
         let sceneId: string;
 
         try {
-            sceneId = await this.annotations.processSubmission(rawFormData);
+            sceneId = await this.annotations.processAnnotation(rawFormData);
         } catch (e) {
             if (e instanceof Error) {
                 return this.views.renderErrorMessage(e.message);
@@ -45,7 +45,7 @@ export class AnnotationsApi {
             return this.views.renderErrorMessage('Failed to update text');
         }
 
-        const annotations = await this.annotations.getSubmissionsForScene(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation saved');
@@ -70,7 +70,7 @@ export class AnnotationsApi {
             throw new Error('Failed to update text with deleted annotation');
         }
 
-        const annotations = await this.annotations.getSubmissionsForScene(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');

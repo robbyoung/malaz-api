@@ -43,7 +43,7 @@ interface SceneContents {
 
 export type SceneAttributes = { key: string; value: string }[];
 
-export interface Submission {
+export interface Annotation {
     id: string;
     formId: string;
     sceneId: string;

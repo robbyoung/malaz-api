@@ -1,6 +1,6 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { FormFieldType, SceneAttributes, Submission } from '../../types';
+import { FormFieldType, SceneAttributes, Annotation } from '../../types';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
@@ -9,7 +9,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
     ) {}
 
     // TODO this shouldn't need to return scene id
-    async processSubmission(rawFormData: any): Promise<string> {
+    async processAnnotation(rawFormData: any): Promise<string> {
         const allForms = await this.forms.getForms(true, true);
         const params = new URLSearchParams(rawFormData);
         const formId = params.get('formId');
@@ -19,9 +19,9 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         const fields = allForms.find((f) => f.id === formId)?.fields;
 
         if (formId === null || fields === undefined) {
-            throw new Error('bad submission: formId missing or invalid');
+            throw new Error('bad annotation: formId missing or invalid');
         } else if (sceneId === null) {
-            throw new Error('bad submission: sceneId missing or invalid');
+            throw new Error('bad annotation: sceneId missing or invalid');
         }
 
         if (from === -1 && to === -1) {
@@ -33,16 +33,16 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         }
 
         if (from < 0) {
-            throw new Error('bad submission: from missing or invalid');
+            throw new Error('bad annotation: from missing or invalid');
         } else if (to < 0) {
-            throw new Error('bad submission: to missing or invalid');
+            throw new Error('bad annotation: to missing or invalid');
         }
 
         const kvps = fields.map((field) => {
             let value = params.get(field.name);
 
             if (!value && field.required) {
-                throw new Error(`bad submission: '${field.name}' is a required field`);
+                throw new Error(`bad annotation: '${field.name}' is a required field`);
             }
 
             if (field.type === FormFieldType.Boolean) {
@@ -55,21 +55,21 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             };
         });
 
-        await this.repository.saveSubmission(formId, sceneId, from, to, kvps);
+        await this.repository.saveAnnotation(formId, sceneId, from, to, kvps);
 
         return sceneId;
     }
 
-    getSubmissionsForScene(sceneId: string): Promise<Submission[]> {
-        return this.repository.getSubmissionsForScene(sceneId);
+    getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
+        return this.repository.getAnnotationsForScene(sceneId);
     }
 
-    getAnnotation(id: string): Promise<Submission | undefined> {
-        return this.repository.getSubmissionById(id);
+    getAnnotation(id: string): Promise<Annotation | undefined> {
+        return this.repository.getAnnotation(id);
     }
 
     async deleteAnnotation(id: string): Promise<void> {
-        await this.repository.deleteSubmissionById(id);
+        await this.repository.deleteAnnotation(id);
     }
 
     getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
@@ -80,7 +80,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         const occurrenceFormId = 'hf2';
         const mentionFormId = 'hf3';
 
-        const annotations = await this.getSubmissionsForScene(sceneId);
+        const annotations = await this.getAnnotationsForScene(sceneId);
         const occurrences = annotations
             .filter((a) => a.formId === occurrenceFormId)
             .map((a) => a.fields[0].value);

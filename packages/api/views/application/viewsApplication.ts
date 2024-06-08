@@ -31,7 +31,7 @@ export class ViewsApplication implements IViewsApplication {
     }
 
     renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string {
-        return renderFile(`${TEMPLATES_PATH}/submission.pug`, { sceneId, chunks, message });
+        return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, { sceneId, chunks, message });
     }
 
     renderAnnotationForm(
