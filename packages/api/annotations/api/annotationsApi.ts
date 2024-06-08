@@ -46,7 +46,7 @@ export class AnnotationsApi {
         }
 
         const annotations = await this.annotations.getSubmissionsForScene(sceneId);
-        const chunks = await this.scenes.getChunks(text, annotations);
+        const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation saved');
     }
@@ -71,7 +71,7 @@ export class AnnotationsApi {
         }
 
         const annotations = await this.annotations.getSubmissionsForScene(sceneId);
-        const chunks = await this.scenes.getChunks(text, annotations);
+        const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');
     }

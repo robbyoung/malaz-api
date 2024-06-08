@@ -10,7 +10,6 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     // TODO this shouldn't need to return scene id
     async processSubmission(rawFormData: any): Promise<string> {
-        console.dir(rawFormData);
         const allForms = await this.forms.getForms(true, true);
         const params = new URLSearchParams(rawFormData);
         const formId = params.get('formId');
