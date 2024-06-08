@@ -1,44 +1,89 @@
 import server from 'bunrest';
 import { BunResponse } from 'bunrest/src/server/response';
-import { getSceneText } from './endpoints/sceneText';
-import { getSelection } from './endpoints/selection';
-import { getContents } from './endpoints/contents';
-import { getForm } from './endpoints/form';
-import { postSubmission } from './endpoints/submission';
-import { getAnnotation } from './endpoints/annotation';
-import { deleteAnnotation } from './endpoints/deleteAnnotation';
+import {
+    FormsApi,
+    FormsApplication,
+    IFormsApplication,
+    IFormsRepository,
+    JsonFormsRepository,
+} from './forms';
+import {
+    IScenesApplication,
+    IScenesRepository,
+    JsonScenesRepository,
+    ScenesApi,
+    ScenesApplication,
+} from './scenes';
+import {
+    AnnotationsApi,
+    AnnotationsApplication,
+    IAnnotationsApplication,
+    IAnnotationsRepository,
+    MongoAnnotationsRepository,
+} from './annotations';
+import { IViewsApplication, ViewsApplication } from './views';
+
+const viewsApplication: IViewsApplication = new ViewsApplication();
+
+const formsRepository: IFormsRepository = new JsonFormsRepository();
+const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
+
+const scenesRepository: IScenesRepository = new JsonScenesRepository();
+const scenesApplication: IScenesApplication = new ScenesApplication(
+    scenesRepository,
+    formsApplication
+);
+
+const annotationsRepository: IAnnotationsRepository = new MongoAnnotationsRepository();
+const annotationsApplication: IAnnotationsApplication = new AnnotationsApplication(
+    annotationsRepository,
+    formsApplication
+);
+
+const formsApi = new FormsApi(
+    formsApplication,
+    scenesApplication,
+    annotationsApplication,
+    viewsApplication
+);
+
+const annotationsApi = new AnnotationsApi(
+    annotationsApplication,
+    scenesApplication,
+    formsApplication,
+    viewsApplication
+);
+
+const scenesApi = new ScenesApi(scenesApplication, annotationsApplication, viewsApplication);
 
 const app = server();
 
-app.get('/', (_, res) => {
-    respondWithHtmx(res, getContents());
+app.get('/', async (_, res) => {
+    respondWithHtmx(res, await scenesApi.getAll());
 });
 
-app.get('/scene/:sceneId', async (req, res) => {
-    respondWithHtmx(res, await getSceneText(req.params as any));
-});
-
-app.get('/scenes/:sceneId/annotate', async (req, res) => {
-    respondWithHtmx(
-        res,
-        await getSelection({ sceneId: req.params?.sceneId, range: req.query?.range })
-    );
+app.get('/scene/:id', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.get(req.params?.id));
 });
 
 app.get('/forms', async (req, res) => {
-    respondWithHtmx(res, await getForm(req.query as any));
+    respondWithHtmx(res, await formsApi.getAll(req.query?.sceneId, req.query?.range));
+});
+
+app.get('/forms/:id', async (req, res) => {
+    respondWithHtmx(res, await formsApi.get(req.params?.id, req.query?.sceneId, req.query?.range));
 });
 
 app.post('/forms', async (req, res) => {
-    respondWithHtmx(res, await postSubmission(req.body as any));
+    respondWithHtmx(res, await annotationsApi.post(req.body));
 });
 
-app.get('/annotations/:annotationId', async (req, res) => {
-    respondWithHtmx(res, await getAnnotation(req.params as any));
+app.get('/annotations/:id', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.get(req.params?.id));
 });
 
-app.delete('/annotations/:annotationId', async (req, res) => {
-    respondWithHtmx(res, await deleteAnnotation(req.params as any));
+app.delete('/annotations/:id', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.delete(req.params?.id));
 });
 
 app.get('/favicon.ico', (_, res) => {

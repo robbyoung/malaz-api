@@ -1,0 +1,17 @@
+div#selection
+    each kvp in attributes
+        p
+            span(class="attribute") #{kvp.key}:
+            span #{kvp.value}
+
+    div#forms
+        each form in availableForms
+            button(
+                type="button"
+                class="button small grey"
+                hx-get=`/forms/${form.id}`
+                hx-vars=`sceneId:'${sceneId}',range:'${range}'`
+                hx-target="#forms"
+                hx-swap="outerHTML"
+                hx-trigger="mouseup"
+            ) #{form.name}

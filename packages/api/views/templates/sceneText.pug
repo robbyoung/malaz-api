@@ -1,6 +1,6 @@
-extends ../page.pug
-include ../components/sceneNav.pug
-include ../components/sceneText.pug
+extends ../../page.pug
+include ./components/sceneNav.pug
+include ./components/sceneText.pug
 
 block content
     div#container
@@ -8,7 +8,8 @@ block content
         div#selection-container
             div
                 h1(
-                    hx-get=`/scenes/${sceneId}/annotate`
+                    hx-get="/forms"
+                    hx-vars=`sceneId:"${sceneId}"`
                     hx-target="#selection"
                     hx-swap="outerHTML"
                     hx-trigger="mouseup"

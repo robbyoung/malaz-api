@@ -1,0 +1,19 @@
+div#selection
+    if selection
+        p(
+            class="text-wrap"
+        ) #{selection}
+
+        div#forms
+            each form in availableForms
+                button(
+                    type="button"
+                    class=`button small annotation-${form.id}`
+                    hx-get=`/forms/${form.id}`
+                    hx-vars=`sceneId:'${sceneId}',range:'${range}'`
+                    hx-target="#forms"
+                    hx-swap="outerHTML"
+                    hx-trigger="mouseup"
+                ) #{form.name}
+    else
+        p No selection
