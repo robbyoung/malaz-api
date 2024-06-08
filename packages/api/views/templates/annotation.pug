@@ -4,11 +4,11 @@ div#selection
         p
             span(class="attribute") #{field.key}:
             span #{field.value}
-        button(
-            type="button"
-            class="button grey"
-            hx-delete=`/annotations/${annotationId}`
-            hx-target="#selection"
-            hx-swap="outerHTML"
-            hx-trigger="mouseup"
-        ) Delete
+    button(
+        type="button"
+        class="button grey"
+        hx-delete=`/annotations/${annotationId}`
+        hx-target="#selection"
+        hx-swap="outerHTML"
+        hx-trigger="mouseup"
+    ) Delete

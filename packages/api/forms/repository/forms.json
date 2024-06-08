@@ -29,7 +29,8 @@
         "fields": [
             { "name": "Continent", "required": false, "type": "FreeText" },
             { "name": "Region", "required": false, "type": "FreeText" },
-            { "name": "Sublocation", "required": false, "type": "FreeText" }
+            { "name": "City", "required": false, "type": "FreeText" },
+            { "name": "Warren", "required": false, "type": "FreeText" }
         ]
     },
     {
@@ -56,16 +57,6 @@
         "id": "sf1",
         "name": "POV",
         "fields": [{ "name": "POV Character", "required": true, "type": "CharacterInScene" }]
-    },
-    {
-        "id": "sf2",
-        "name": "Setting",
-        "fields": [
-            { "name": "Continent", "required": false, "type": "FreeText" },
-            { "name": "Region", "required": false, "type": "FreeText" },
-            { "name": "City", "required": false, "type": "FreeText" },
-            { "name": "Warren", "required": false, "type": "FreeText" }
-        ]
     },
     {
         "id": "sf3",
