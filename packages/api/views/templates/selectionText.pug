@@ -4,17 +4,16 @@ div#selection
             class="text-wrap"
         ) #{selection}
 
-        div#form
-            select(
-                name="formId"
-                hx-get="/forms"
-                hx-vars=`sceneId:'${sceneId}',range:'${range}'`
-                hx-target="#form"
-                hx-swap="outerHTML"
-                class="dropdown grey"
-            )
-                option(value='placeholder' disabled selected) Select a form
-                each form in availableForms
-                    option(value=`${form.id}` class="grey") #{form.name}
+        div#forms
+            each form in availableForms
+                button(
+                    type="button"
+                    class="button grey"
+                    hx-get=`/forms/${form.id}`
+                    hx-vars=`sceneId:'${sceneId}',range:'${range}'`
+                    hx-target="#forms"
+                    hx-swap="outerHTML"
+                    hx-trigger="mouseup"
+                ) #{form.name}
     else
         p No selection

@@ -66,15 +66,12 @@ app.get('/scene/:id', async (req, res) => {
     respondWithHtmx(res, await scenesApi.get(req.params?.id));
 });
 
-app.get('/scenes/:id/annotate', async (req, res) => {
-    respondWithHtmx(res, await formsApi.getAll(req.params?.id, req.query?.range));
+app.get('/forms', async (req, res) => {
+    respondWithHtmx(res, await formsApi.getAll(req.query?.sceneId, req.query?.range));
 });
 
-app.get('/forms', async (req, res) => {
-    respondWithHtmx(
-        res,
-        await formsApi.get(req.query?.formId, req.query?.sceneId, req.query?.range)
-    );
+app.get('/forms/:id', async (req, res) => {
+    respondWithHtmx(res, await formsApi.get(req.params?.id, req.query?.sceneId, req.query?.range));
 });
 
 app.post('/forms', async (req, res) => {

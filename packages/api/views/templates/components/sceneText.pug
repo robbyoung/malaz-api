@@ -1,8 +1,8 @@
 mixin sceneText(sceneId, chunks, oob)
     div#text-container(hx-swap-oob=oob)
         p(
-            hx-get=`/scenes/${sceneId}/annotate`
-            hx-vars=`range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
+            hx-get="/forms"
+            hx-vars=`sceneId:"${sceneId}",range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
             hx-target="#selection"
             hx-swap="outerHTML"
             hx-trigger="mouseup"

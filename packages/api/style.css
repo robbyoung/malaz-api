@@ -52,14 +52,6 @@ html {
   color: var(--black);
 }
 
-.dropdown {
-  padding: 0.5em 0.75em 0.5em 0.75em;
-  border: 2px solid var(--black);
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-}
-
 .input {
   padding: 0.5em 0.75em 0.5em 0.75em;
   border: 2px solid var(--black);
