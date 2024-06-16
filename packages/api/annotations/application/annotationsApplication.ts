@@ -10,7 +10,9 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     // TODO this shouldn't need to return scene id
     async processAnnotation(rawFormData: any): Promise<string> {
-        const allForms = await this.forms.getForms(true, true);
+        const annotationForms = await this.forms.getAnnotationForms();
+        const sceneForms = await this.forms.getSceneForms();
+        const allForms = [...annotationForms, ...sceneForms];
         const params = new URLSearchParams(rawFormData);
         const formId = params.get('formId');
         const sceneId = params.get('sceneId');

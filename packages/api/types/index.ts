@@ -55,6 +55,7 @@ export interface Annotation {
 export interface Form {
     id: string;
     name: string;
+    type: FormType;
     fields: FormField[];
 }
 
@@ -63,6 +64,11 @@ export interface FormField {
     required: boolean;
     populateFromText?: boolean;
     type: FormFieldType;
+}
+
+export enum FormType {
+    Annotation = 'Annotation',
+    Scene = 'Scene',
 }
 
 export enum FormFieldType {

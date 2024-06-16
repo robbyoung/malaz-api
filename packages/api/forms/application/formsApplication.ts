@@ -1,5 +1,5 @@
 import { IFormsApplication, IFormsRepository } from '..';
-import { Form } from '../../types';
+import { Form, FormType } from '../../types';
 
 export class FormsApplication implements IFormsApplication {
     constructor(private repository: IFormsRepository) {}
@@ -8,12 +8,11 @@ export class FormsApplication implements IFormsApplication {
         return this.repository.getFormById(id);
     }
 
-    async getForms(includeHighlightForms: boolean, includeSceneForms: boolean): Promise<Form[]> {
-        const forms = await this.repository.getForms();
-        return forms.filter(
-            (f) =>
-                (includeHighlightForms && f.id.startsWith('hf')) ||
-                (includeSceneForms && f.id.startsWith('sf'))
-        );
+    async getSceneForms(): Promise<Form[]> {
+        return this.repository.getForms(FormType.Scene);
+    }
+
+    async getAnnotationForms(): Promise<Form[]> {
+        return this.repository.getForms(FormType.Annotation);
     }
 }

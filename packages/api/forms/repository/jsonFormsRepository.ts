@@ -1,5 +1,5 @@
 import { IFormsRepository } from '..';
-import { Form } from '../../types';
+import { Form, FormType } from '../../types';
 
 const forms: Form[] = require('./forms.json');
 
@@ -9,7 +9,7 @@ export class JsonFormsRepository implements IFormsRepository {
         return Promise.resolve(matchingForm);
     }
 
-    async getForms(): Promise<Form[]> {
-        return Promise.resolve(forms);
+    async getForms(type: FormType): Promise<Form[]> {
+        return Promise.resolve(forms.filter((f) => f.type === type));
     }
 }

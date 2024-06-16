@@ -19,7 +19,7 @@ export class FormsApi {
 
         // If range isn't specified, return scene-level forms
         if (!range) {
-            const availableForms = await this.forms.getForms(false, true);
+            const availableForms = await this.forms.getSceneForms();
             const existingAttributes = await this.annotations.getSceneAttributes(sceneId);
             return this.views.renderSceneAttributeForms(
                 sceneId,
@@ -39,7 +39,7 @@ export class FormsApi {
             return undefined;
         }
 
-        const availableForms = await this.forms.getForms(true, false);
+        const availableForms = await this.forms.getAnnotationForms();
         return this.views.renderSelectionForms(sceneId, range, selection, availableForms);
     }
 

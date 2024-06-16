@@ -79,7 +79,7 @@ export class ScenesApplication implements IScenesApplication {
     }
 
     public async getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]> {
-        const highlightForms = await this.forms.getForms(true, false);
+        const annotationForms = await this.forms.getAnnotationForms();
 
         const nonBreakingSpace = String.fromCharCode(8203);
         let text = await this.getSceneText(sceneId);
@@ -119,7 +119,7 @@ export class ScenesApplication implements IScenesApplication {
                     nextIndex,
                     annotationsBetweenIndices,
                     italicsIndex % 2 == 0,
-                    highlightForms
+                    annotationForms
                 )
             );
         }
