@@ -30,7 +30,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             const kvps = Array.from(params.entries())
                 .filter((entry) => entry[0] !== 'sceneId' && entry[0] !== 'formId')
                 .map((entry) => ({ key: entry[0], value: entry[1] }));
-            await this.repository.saveSceneAttributes(sceneId, kvps);
+            await this.repository.saveAnnotation(formId, sceneId, kvps);
             return sceneId;
         }
 
@@ -57,13 +57,14 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             };
         });
 
-        await this.repository.saveAnnotation(formId, sceneId, from, to, kvps);
+        await this.repository.saveAnnotation(formId, sceneId, kvps, from, to);
 
         return sceneId;
     }
 
-    getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
-        return this.repository.getAnnotationsForScene(sceneId);
+    async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
+        const annotations = await this.repository.getAnnotationsForScene(sceneId);
+        return annotations.filter((a) => a.from !== -1 && a.to !== -1);
     }
 
     getAnnotation(id: string): Promise<Annotation | undefined> {
@@ -74,8 +75,12 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         await this.repository.deleteAnnotation(id);
     }
 
-    getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
-        return this.repository.getSceneAttributes(sceneId);
+    async getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
+        const annotations = await this.repository.getAnnotationsForScene(sceneId);
+        return annotations
+            .filter((a) => a.from === -1 && a.to === -1)
+            .map((a) => a.fields)
+            .flat();
     }
 
     async getCharactersInScene(sceneId: string): Promise<string[]> {

@@ -1,32 +1,26 @@
 import { MongoClient, ObjectId, WithId } from 'mongodb';
 import { IAnnotationsRepository } from '..';
-import { SceneAttributes, Annotation } from '../../types';
+import { Annotation } from '../../types';
 import { Dictionary, KeyValuePairs, toDictionary, toKeyValuePairs } from '../../util/dictionaries';
 
 interface AnnotationDto {
     formId: string;
     sceneId: string;
-    from: number;
-    to: number;
+    from?: number;
+    to?: number;
     fields: Dictionary;
 }
 
-interface SceneAttributesDto {
-    sceneId: string;
-    attributes: { [id: string]: string };
-}
-
 const mongoUrl = 'mongodb://localhost:27017/malazdb';
-const sceneAttributesCollectionName = 'sceneAttributes';
 const annotationsCollectionName = 'annotations';
 
 export class MongoAnnotationsRepository implements IAnnotationsRepository {
     async saveAnnotation(
         formId: string,
         sceneId: string,
-        from: number,
-        to: number,
-        kvps: KeyValuePairs
+        kvps: KeyValuePairs,
+        from?: number,
+        to?: number
     ) {
         const client = await MongoClient.connect(mongoUrl);
         await client
@@ -53,6 +47,8 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
             ...annotation,
             fields: toKeyValuePairs(annotation.fields),
             id: annotation._id.toString(),
+            from: annotation.from ?? -1,
+            to: annotation.to ?? -1,
         }));
     }
 
@@ -75,6 +71,8 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
             ...annotation,
             fields: toKeyValuePairs(annotation.fields),
             id: annotation._id.toString(),
+            from: annotation.from ?? -1,
+            to: annotation.to ?? -1,
         };
     }
 
@@ -87,55 +85,5 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         client.close();
 
         return result.deletedCount > 0;
-    }
-
-    async saveSceneAttributes(sceneId: string, kvps: KeyValuePairs) {
-        const client = await MongoClient.connect(mongoUrl);
-
-        var existingAttributes = await this.getSceneAttributesInternal(client, sceneId);
-        var attributes: SceneAttributesDto =
-            existingAttributes === null ? { sceneId, attributes: {} } : existingAttributes;
-        kvps.forEach((kvp) => {
-            if (kvp.value !== '') {
-                attributes.attributes[kvp.key] = kvp.value;
-            }
-        });
-
-        if (existingAttributes === null) {
-            await client.db().collection(sceneAttributesCollectionName).insertOne(attributes);
-        } else {
-            await client
-                .db()
-                .collection(sceneAttributesCollectionName)
-                .replaceOne({ _id: existingAttributes._id }, existingAttributes);
-        }
-
-        client.close();
-    }
-
-    async getSceneAttributes(sceneId: string): Promise<SceneAttributes> {
-        const client = await MongoClient.connect(mongoUrl);
-
-        const query = { sceneId };
-        const sceneAttributes = await client
-            .db()
-            .collection(sceneAttributesCollectionName)
-            .find<WithId<SceneAttributesDto>>(query)
-            .toArray();
-
-        client.close();
-
-        return sceneAttributes.map((sa) => toKeyValuePairs(sa.attributes))[0] ?? [];
-    }
-
-    async getSceneAttributesInternal(
-        client: MongoClient,
-        sceneId: string
-    ): Promise<WithId<SceneAttributesDto> | null> {
-        const query = { sceneId };
-        return client
-            .db()
-            .collection(sceneAttributesCollectionName)
-            .findOne<WithId<SceneAttributesDto>>(query);
     }
 }

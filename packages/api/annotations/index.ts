@@ -5,15 +5,13 @@ export interface IAnnotationsRepository {
     saveAnnotation(
         formId: string,
         sceneId: string,
-        from: number,
-        to: number,
-        kvps: KeyValuePairs
+        kvps: KeyValuePairs,
+        from?: number,
+        to?: number
     ): Promise<void>;
     getAnnotationsForScene(sceneId: string): Promise<Annotation[]>;
     getAnnotation(annotationId: string): Promise<Annotation | undefined>;
     deleteAnnotation(annotationId: string): Promise<boolean>;
-    getSceneAttributes(sceneId: string): Promise<SceneAttributes>;
-    saveSceneAttributes(sceneId: string, kvps: KeyValuePairs): Promise<void>;
 }
 
 export { MongoAnnotationsRepository } from './repository/mongoAnnotationsRepository';

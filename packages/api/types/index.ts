@@ -41,7 +41,7 @@ interface SceneContents {
     name: string;
 }
 
-export type SceneAttributes = { key: string; value: string }[];
+export type SceneAttributes = KeyValuePairs;
 
 export interface Annotation {
     id: string;
