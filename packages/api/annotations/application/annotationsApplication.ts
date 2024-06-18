@@ -97,4 +97,23 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
         return [...occurrences, ...mentions];
     }
+
+    async searchCharacters(searchTerm: string): Promise<string[]> {
+        const occurrenceFormId = 'hf2';
+        const mentionFormId = 'hf3';
+        const fieldName = 'Character Name';
+
+        const occurrenceMatches = await this.repository.searchAnnotations(
+            occurrenceFormId,
+            fieldName,
+            searchTerm
+        );
+        const mentionMatches = await this.repository.searchAnnotations(
+            mentionFormId,
+            fieldName,
+            searchTerm
+        );
+
+        return [...new Set(...occurrenceMatches, ...mentionMatches)].sort();
+    }
 }

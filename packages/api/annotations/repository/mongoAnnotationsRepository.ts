@@ -86,4 +86,35 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
 
         return result.deletedCount > 0;
     }
+
+    async searchAnnotations(
+        formId: string,
+        fieldName: string,
+        searchTerm: string
+    ): Promise<string[]> {
+        const client = await MongoClient.connect(mongoUrl);
+
+        const query = {
+            formId,
+            fields: {
+                "Character Name": { $regex: `^${searchTerm}*` },
+            }
+        };
+
+        const annotationsForScene = await client
+            .db()
+            .collection(annotationsCollectionName)
+            .find<WithId<AnnotationDto>>(query, {kvps: })
+            .toArray();
+
+        client.close();
+
+        return annotationsForScene.map((annotation) => ({
+            ...annotation,
+            fields: toKeyValuePairs(annotation.fields),
+            id: annotation._id.toString(),
+            from: annotation.from ?? -1,
+            to: annotation.to ?? -1,
+        }));
+    }
 }
