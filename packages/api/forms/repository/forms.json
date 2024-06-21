@@ -7,8 +7,8 @@
             {
                 "name": "Character name",
                 "required": true,
-                "populateFromText": true,
-                "type": "FreeText"
+                "type": "Search",
+                "searchEntity": "character"
             },
             {
                 "name": "POV",

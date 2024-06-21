@@ -78,6 +78,10 @@ app.post('/forms', async (req, res) => {
     respondWithHtmx(res, await annotationsApi.post(req.body));
 });
 
+app.get('/annotations/search', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.search(req.query?.entity, req.query?.search));
+});
+
 app.get('/annotations/:id', async (req, res) => {
     respondWithHtmx(res, await annotationsApi.get(req.params?.id));
 });

@@ -97,24 +97,18 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         const query = {
             formId,
             fields: {
-                "Character Name": { $regex: `^${searchTerm}*` },
-            }
+                [fieldName]: { $regex: `*${searchTerm}*` },
+            },
         };
 
-        const annotationsForScene = await client
+        const matches = await client
             .db()
             .collection(annotationsCollectionName)
-            .find<WithId<AnnotationDto>>(query, {kvps: })
+            .find<WithId<AnnotationDto>>(query)
             .toArray();
 
         client.close();
 
-        return annotationsForScene.map((annotation) => ({
-            ...annotation,
-            fields: toKeyValuePairs(annotation.fields),
-            id: annotation._id.toString(),
-            from: annotation.from ?? -1,
-            to: annotation.to ?? -1,
-        }));
+        return matches.map((annotation) => annotation.fields[fieldName]);
     }
 }

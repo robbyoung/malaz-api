@@ -64,6 +64,7 @@ export interface FormField {
     required: boolean;
     populateFromText?: boolean;
     type: FormFieldType;
+    searchEntity?: string;
 }
 
 export enum FormType {
@@ -75,4 +76,5 @@ export enum FormFieldType {
     FreeText = 'FreeText',
     CharacterInScene = 'CharacterInScene',
     Boolean = 'Boolean',
+    Search = 'Search',
 }

@@ -75,4 +75,14 @@ export class AnnotationsApi {
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');
     }
+
+    async search(entity?: string, searchTerm?: string) {
+        if (!entity || !searchTerm) {
+            throw new Error('Invalid params');
+        }
+
+        const results = await this.annotations.searchCharacters(searchTerm);
+
+        return this.views.renderSearchResults(results);
+    }
 }

@@ -81,4 +81,8 @@ export class ViewsApplication implements IViewsApplication {
     renderErrorMessage(message: string): string {
         return renderFile(`${TEMPLATES_PATH}/error.pug`, { message });
     }
+
+    renderSearchResults(results: string[]): string {
+        return renderFile(`${TEMPLATES_PATH}/searchResults.pug`, { results });
+    }
 }
