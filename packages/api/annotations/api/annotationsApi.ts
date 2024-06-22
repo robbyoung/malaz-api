@@ -1,6 +1,7 @@
 import { IAnnotationsApplication } from '..';
 import { IFormsApplication } from '../../forms';
 import { IScenesApplication } from '../../scenes';
+import { Dictionary } from '../../util/dictionaries';
 import { IViewsApplication } from '../../views';
 
 export class AnnotationsApi {
@@ -76,12 +77,12 @@ export class AnnotationsApi {
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');
     }
 
-    async search(entity?: string, searchTerm?: string) {
-        if (!entity || !searchTerm) {
-            throw new Error('Invalid params');
-        }
+    async search(query: Dictionary) {
+        let results: string[] = [];
 
-        const results = await this.annotations.searchCharacters(searchTerm);
+        if (query['Character name']) {
+            results = await this.annotations.searchCharacters(query['Character name']);
+        }
 
         return this.views.renderSearchResults(results);
     }

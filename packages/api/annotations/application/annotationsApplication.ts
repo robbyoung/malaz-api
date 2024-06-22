@@ -108,12 +108,13 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             fieldName,
             searchTerm
         );
+
         const mentionMatches = await this.repository.searchAnnotations(
             mentionFormId,
             fieldName,
             searchTerm
         );
 
-        return [...new Set(...occurrenceMatches, ...mentionMatches)].sort();
+        return [...new Set([...occurrenceMatches, ...mentionMatches])];
     }
 }

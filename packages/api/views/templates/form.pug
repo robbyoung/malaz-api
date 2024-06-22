@@ -19,14 +19,12 @@ div#form
                 input.checkbox(type="checkbox" name=field.name)
             else if field.type == "Search"
                 input#search-box(
-                    name="search"
-                    type="search"
+                    name=`${field.name}`
+                    class="input small-padding-y"
                     hx-get="/annotations/search"
-                    hx-vars=`entity:"${field.searchEntity}"`
-                    hx-trigger="input changed delay:500ms, search" 
+                    hx-trigger="input changed delay:500ms" 
                     hx-target="#search-results")
                 div#search-results
-                    input(name=`${field.name}` value=from type="hidden")
             else
                 input(
                     name=field.name

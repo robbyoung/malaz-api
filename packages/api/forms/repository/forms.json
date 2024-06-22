@@ -7,8 +7,7 @@
             {
                 "name": "Character name",
                 "required": true,
-                "type": "Search",
-                "searchEntity": "character"
+                "type": "Search"
             },
             {
                 "name": "POV",

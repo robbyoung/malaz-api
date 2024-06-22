@@ -64,7 +64,6 @@ export interface FormField {
     required: boolean;
     populateFromText?: boolean;
     type: FormFieldType;
-    searchEntity?: string;
 }
 
 export enum FormType {

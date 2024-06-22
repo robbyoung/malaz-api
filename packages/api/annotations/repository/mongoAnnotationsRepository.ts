@@ -93,12 +93,11 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         searchTerm: string
     ): Promise<string[]> {
         const client = await MongoClient.connect(mongoUrl);
-
         const query = {
             formId,
-            fields: {
-                [fieldName]: { $regex: `*${searchTerm}*` },
-            },
+            // fields: {
+            //     [fieldName]: { $regex: `*${searchTerm}*` },
+            // },
         };
 
         const matches = await client
@@ -108,6 +107,8 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
             .toArray();
 
         client.close();
+
+        console.dir(matches);
 
         return matches.map((annotation) => annotation.fields[fieldName]);
     }
