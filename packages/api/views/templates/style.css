@@ -238,3 +238,24 @@ form input:last-of-type {
 .italics {
   font-style: italic;
 }
+
+#search-results {
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 5px;
+}
+
+#search-results button {
+  background-color: var(--grey);
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#search-results p {
+  margin: 0px;
+}

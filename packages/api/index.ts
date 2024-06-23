@@ -22,6 +22,7 @@ import {
     MongoAnnotationsRepository,
 } from './annotations';
 import { IViewsApplication, ViewsApplication } from './views';
+import { Dictionary } from './util/dictionaries';
 
 const viewsApplication: IViewsApplication = new ViewsApplication();
 
@@ -76,6 +77,10 @@ app.get('/forms/:id', async (req, res) => {
 
 app.post('/forms', async (req, res) => {
     respondWithHtmx(res, await annotationsApi.post(req.body));
+});
+
+app.get('/annotations/search', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.search(req.query as Dictionary));
 });
 
 app.get('/annotations/:id', async (req, res) => {

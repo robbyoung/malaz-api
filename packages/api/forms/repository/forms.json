@@ -7,8 +7,7 @@
             {
                 "name": "Character name",
                 "required": true,
-                "populateFromText": true,
-                "type": "FreeText"
+                "type": "Search"
             },
             {
                 "name": "POV",
@@ -25,8 +24,7 @@
             {
                 "name": "Character name",
                 "required": true,
-                "populateFromText": true,
-                "type": "FreeText"
+                "type": "Search"
             }
         ]
     },

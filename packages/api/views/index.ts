@@ -32,6 +32,7 @@ export interface IViewsApplication {
         availableForms: Form[]
     ): string;
     renderErrorMessage(message: string): string;
+    renderSearchResults(results: string[]): string;
 }
 
 export { ViewsApplication } from './application/viewsApplication';

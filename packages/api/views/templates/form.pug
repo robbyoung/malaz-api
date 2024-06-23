@@ -17,6 +17,14 @@ div#form
                         label(for=id) #{character}
             else if field.type == "Boolean"
                 input.checkbox(type="checkbox" name=field.name)
+            else if field.type == "Search"
+                input#search-box(
+                    name=`${field.name}`
+                    class="input"
+                    hx-get="/annotations/search"
+                    hx-trigger="input changed delay:500ms" 
+                    hx-target="#search-results")
+                div#search-results
             else
                 input(
                     name=field.name

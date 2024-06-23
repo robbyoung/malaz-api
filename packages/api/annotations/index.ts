@@ -12,6 +12,7 @@ export interface IAnnotationsRepository {
     getAnnotationsForScene(sceneId: string): Promise<Annotation[]>;
     getAnnotation(annotationId: string): Promise<Annotation | undefined>;
     deleteAnnotation(annotationId: string): Promise<boolean>;
+    searchAnnotations(formId: string, fieldName: string, searchTerm: string): Promise<string[]>;
 }
 
 export { MongoAnnotationsRepository } from './repository/mongoAnnotationsRepository';
@@ -23,6 +24,7 @@ export interface IAnnotationsApplication {
     deleteAnnotation(id: string): Promise<void>;
     getSceneAttributes(sceneId: string): Promise<SceneAttributes>;
     getCharactersInScene(sceneId: string): Promise<string[]>;
+    searchCharacters(searchTerm: string): Promise<string[]>;
 }
 
 export { AnnotationsApplication } from './application/annotationsApplication';

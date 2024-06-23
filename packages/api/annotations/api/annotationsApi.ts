@@ -1,6 +1,7 @@
 import { IAnnotationsApplication } from '..';
 import { IFormsApplication } from '../../forms';
 import { IScenesApplication } from '../../scenes';
+import { Dictionary } from '../../util/dictionaries';
 import { IViewsApplication } from '../../views';
 
 export class AnnotationsApi {
@@ -74,5 +75,15 @@ export class AnnotationsApi {
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');
+    }
+
+    async search(query: Dictionary) {
+        let results: string[] = [];
+
+        if (query['Character name']) {
+            results = await this.annotations.searchCharacters(query['Character name']);
+        }
+
+        return this.views.renderSearchResults(results);
     }
 }
