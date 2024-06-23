@@ -101,7 +101,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
     async searchCharacters(searchTerm: string): Promise<string[]> {
         const occurrenceFormId = 'hf2';
         const mentionFormId = 'hf3';
-        const fieldName = 'Character Name';
+        const fieldName = 'Character name';
 
         const occurrenceMatches = await this.repository.searchAnnotations(
             occurrenceFormId,
