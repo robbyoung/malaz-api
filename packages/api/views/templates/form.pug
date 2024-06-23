@@ -20,7 +20,7 @@ div#form
             else if field.type == "Search"
                 input#search-box(
                     name=`${field.name}`
-                    class="input small-padding-y"
+                    class="input"
                     hx-get="/annotations/search"
                     hx-trigger="input changed delay:500ms" 
                     hx-target="#search-results")
