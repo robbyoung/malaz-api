@@ -34,7 +34,7 @@ export class ScenesApplication implements IScenesApplication {
         return `${chapterName} — ${sceneName}`;
     }
 
-    public async getContents(bookCode: string = 'gotm'): Promise<Contents> {
+    public async getContents(bookCode: string): Promise<Contents> {
         const scenes = await this.repository.getScenes(bookCode);
         const chapterNumbers = [...new Set(scenes.map((s) => s.chapterNumber))];
         const chapters: ChapterContents[] = chapterNumbers.map((chapterNumber) => {
@@ -50,7 +50,7 @@ export class ScenesApplication implements IScenesApplication {
         });
 
         return {
-            title: 'Contents',
+            title: this.getBookName(bookCode),
             chapters,
         };
     }
@@ -135,6 +135,17 @@ export class ScenesApplication implements IScenesApplication {
                 return 'Epilogue';
             default:
                 return `Chapter ${chapterNumber}`;
+        }
+    }
+
+    private getBookName(bookCode: string): string {
+        switch (bookCode) {
+            case 'gotm':
+                return 'Gardens of the Moon';
+            case 'dg':
+                return 'Deadhouse Gates';
+            default:
+                return 'Unknown';
         }
     }
 

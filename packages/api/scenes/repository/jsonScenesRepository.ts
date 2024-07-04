@@ -4,10 +4,7 @@ import { Scene } from '../../types';
 const gotm: Scene[] = require('../../../parser/output/gotm.json');
 const dg: Scene[] = require('../../../parser/output/dg.json');
 
-const booksById: { [id: string]: Scene[] } = {
-    gotm: gotm,
-    dg: dg,
-};
+const booksById: { [id: string]: Scene[] } = { gotm, dg };
 
 export class JsonScenesRepository implements IScenesRepository {
     public getSceneById(id: string): Promise<Scene | undefined> {

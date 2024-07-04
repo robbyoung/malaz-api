@@ -2,14 +2,14 @@ mixin sceneNav(previousSceneId, nextSceneId)
     div(id="scene-nav")
         if previousSceneId
             a(
-                href="/scene/" + previousSceneId
+                href="/scenes/" + previousSceneId
                 class="button ochre" 
             ) Previous
         else
             div
         if nextSceneId
             a(
-                href="/scene/" + nextSceneId
+                href="/scenes/" + nextSceneId
                 class="button ochre" 
             ) Next
         else

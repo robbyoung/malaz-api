@@ -63,7 +63,7 @@ app.get('/', async (_, res) => {
     respondWithHtmx(res, await scenesApi.getAll());
 });
 
-app.get('/scene/:id', async (req, res) => {
+app.get('/scenes/:id', async (req, res) => {
     respondWithHtmx(res, await scenesApi.get(req.params?.id));
 });
 

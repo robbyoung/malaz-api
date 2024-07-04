@@ -32,8 +32,8 @@ export class ScenesApi {
         );
     }
 
-    async getAll() {
-        const contents = await this.scenes.getContents('dg');
+    async getAll(bookId = 'gotm') {
+        const contents = await this.scenes.getContents(bookId);
 
         return this.views.renderTableOfContents(contents);
     }
