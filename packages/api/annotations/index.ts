@@ -5,6 +5,7 @@ export interface IAnnotationsRepository {
     saveAnnotation(
         formId: string,
         sceneId: string,
+        bookId: string,
         kvps: KeyValuePairs,
         from?: number,
         to?: number

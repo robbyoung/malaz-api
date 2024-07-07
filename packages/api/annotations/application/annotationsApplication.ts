@@ -26,11 +26,13 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             throw new Error('bad annotation: sceneId missing or invalid');
         }
 
+        const bookId = sceneId.substring(0, 3);
+
         if (from === -1 && to === -1) {
             const kvps = Array.from(params.entries())
                 .filter((entry) => entry[0] !== 'sceneId' && entry[0] !== 'formId')
                 .map((entry) => ({ key: entry[0], value: entry[1] }));
-            await this.repository.saveAnnotation(formId, sceneId, kvps);
+            await this.repository.saveAnnotation(formId, sceneId, bookId, kvps);
             return sceneId;
         }
 
@@ -57,7 +59,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             };
         });
 
-        await this.repository.saveAnnotation(formId, sceneId, kvps, from, to);
+        await this.repository.saveAnnotation(formId, sceneId, bookId, kvps, from, to);
 
         return sceneId;
     }

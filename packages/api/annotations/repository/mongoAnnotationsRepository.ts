@@ -8,6 +8,7 @@ interface AnnotationDto {
     sceneId: string;
     from?: number;
     to?: number;
+    bookId?: string;
     fields: Dictionary;
 }
 
@@ -18,6 +19,7 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
     async saveAnnotation(
         formId: string,
         sceneId: string,
+        bookId: string,
         kvps: KeyValuePairs,
         from?: number,
         to?: number
@@ -26,7 +28,7 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         await client
             .db()
             .collection<AnnotationDto>(annotationsCollectionName)
-            .insertOne({ formId, sceneId, from, to, fields: toDictionary(kvps) });
+            .insertOne({ formId, sceneId, from, to, bookId, fields: toDictionary(kvps) });
 
         client.close();
     }
