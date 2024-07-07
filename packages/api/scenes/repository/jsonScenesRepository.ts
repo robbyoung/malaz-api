@@ -1,16 +1,16 @@
 import { IScenesRepository } from '..';
 import { Scene } from '../../types';
 
-const gotm: Scene[] = require('../../../parser/output/gotm.json');
-const dg: Scene[] = require('../../../parser/output/dg.json');
+const gtm: Scene[] = require('../../../parser/output/GTM.json');
+const dhg: Scene[] = require('../../../parser/output/DHG.json');
 
-const booksById: { [id: string]: Scene[] } = { gotm, dg };
+const booksById: { [id: string]: Scene[] } = { GTM: gtm, DHG: dhg };
 
 export class JsonScenesRepository implements IScenesRepository {
     public getSceneById(id: string): Promise<Scene | undefined> {
-        let matchingScene = gotm.find((scene) => scene.id === id);
+        let matchingScene = gtm.find((scene) => scene.id === id);
         if (!matchingScene) {
-            matchingScene = dg.find((scene) => scene.id === id);
+            matchingScene = dhg.find((scene) => scene.id === id);
         }
 
         if (!matchingScene) {

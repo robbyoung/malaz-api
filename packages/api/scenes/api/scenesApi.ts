@@ -32,7 +32,7 @@ export class ScenesApi {
         );
     }
 
-    async getAll(bookId = 'gotm') {
+    async getAll(bookId = 'GTM') {
         const contents = await this.scenes.getContents(bookId);
 
         return this.views.renderTableOfContents(contents);

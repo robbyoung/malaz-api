@@ -56,23 +56,23 @@ export class ScenesApplication implements IScenesApplication {
     }
 
     public async getAdjacentSceneIds(sceneId: string): Promise<[string?, string?]> {
-        const gotm = await this.repository.getScenes('gotm');
-        const dg = await this.repository.getScenes('dg');
-        const gotmIndex = gotm.findIndex((scene) => scene.id === sceneId);
-        const dgIndex = dg.findIndex((scene) => scene.id === sceneId);
+        const gtm = await this.repository.getScenes('GTM');
+        const dhg = await this.repository.getScenes('DHG');
+        const gtmIndex = gtm.findIndex((scene) => scene.id === sceneId);
+        const dhgIndex = dhg.findIndex((scene) => scene.id === sceneId);
 
-        if (gotmIndex === -1 && dgIndex === -1) {
+        if (gtmIndex === -1 && dhgIndex === -1) {
             return [undefined, undefined];
         }
 
         let previousSceneId: string | undefined;
         let nextSceneId: string | undefined;
-        if (gotmIndex !== -1) {
-            previousSceneId = gotm[gotmIndex - 1]?.id;
-            nextSceneId = gotm[gotmIndex + 1]?.id;
+        if (gtmIndex !== -1) {
+            previousSceneId = gtm[gtmIndex - 1]?.id;
+            nextSceneId = gtm[gtmIndex + 1]?.id;
         } else {
-            previousSceneId = dg[dgIndex - 1]?.id;
-            nextSceneId = dg[dgIndex + 1]?.id;
+            previousSceneId = dhg[dhgIndex - 1]?.id;
+            nextSceneId = dhg[dhgIndex + 1]?.id;
         }
 
         return [previousSceneId, nextSceneId];
@@ -140,9 +140,9 @@ export class ScenesApplication implements IScenesApplication {
 
     private getBookName(bookCode: string): string {
         switch (bookCode) {
-            case 'gotm':
+            case 'GTM':
                 return 'Gardens of the Moon';
-            case 'dg':
+            case 'DHG':
                 return 'Deadhouse Gates';
             default:
                 return 'Unknown';

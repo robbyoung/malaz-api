@@ -1,5 +1,4 @@
 import { Scene, SceneType } from './types/scene';
-import { generateIdentifier } from './util/generateIdentifier';
 import { toNumber } from './util/toNumber';
 
 async function parseBook(bookCode: string) {
@@ -15,7 +14,7 @@ async function parseBook(bookCode: string) {
                 ? splitByHeader(book, ['### CHAPTER'])
                 : [book];
 
-            return chapters.map((c, i) => parseScenes(c, bookNumber)).flat();
+            return chapters.map((c, i) => parseScenes(c, bookNumber, bookCode)).flat();
         })
         .flat();
 
@@ -29,7 +28,11 @@ function removeSpecialCharacters(text: string): string {
     return text.replaceAll(/(\r)|(\\)/g, '');
 }
 
-function parseScenes(chapterText: string, bookNumber: number | undefined): Scene[] {
+function parseScenes(
+    chapterText: string,
+    bookNumber: number | undefined,
+    bookCode: string
+): Scene[] {
     const chapterNumber = getChapterNumber(chapterText);
     const scenes = chapterText.split('\n\n\n').filter((scene) => scene.length > 0);
 
@@ -37,7 +40,7 @@ function parseScenes(chapterText: string, bookNumber: number | undefined): Scene
         const sceneType = sceneNumber === 0 ? SceneType.Excerpt : SceneType.Standard;
 
         return {
-            id: generateIdentifier(),
+            id: getIdentifier(bookCode, chapterNumber, sceneNumber),
             sceneType,
             bookNumber,
             chapterNumber,
@@ -91,9 +94,29 @@ function splitByHeader(text: string, headers: string[]): string[] {
     }
 }
 
+function getIdentifier(bookCode: string, chapterNumber: number, sceneNumber: number) {
+    let chapterCode: string, sceneCode: string;
+
+    if (chapterNumber === 0) {
+        chapterCode = 'PR';
+    } else if (chapterNumber === 1000) {
+        chapterCode = 'EP';
+    } else {
+        chapterCode = chapterNumber > 9 ? `${chapterNumber}` : `0${chapterNumber}`;
+    }
+
+    if (sceneNumber === 0) {
+        sceneCode = 'EX';
+    } else {
+        sceneCode = sceneNumber > 9 ? `${sceneNumber}` : `0${sceneNumber}`;
+    }
+
+    return `${bookCode}${chapterCode}${sceneCode}`;
+}
+
 function toBase64(text: string) {
     return btoa(encodeURIComponent(text));
 }
 
-parseBook('gotm');
-parseBook('dg');
+parseBook('GTM');
+parseBook('DHG');
