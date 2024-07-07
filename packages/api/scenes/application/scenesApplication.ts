@@ -1,6 +1,6 @@
 import { IScenesApplication, IScenesRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { SceneType, Contents, ChapterContents, Annotation, Chunk, Form } from '../../types';
+import { SceneType, Contents, ChapterContents, Annotation, Chunk, Form, Book } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
     constructor(
@@ -49,8 +49,10 @@ export class ScenesApplication implements IScenesApplication {
             };
         });
 
+        const title = (await this.getBooks()).find((b) => b.id === bookCode)?.name ?? 'Unknown';
+
         return {
-            title: this.getBookName(bookCode),
+            title,
             chapters,
         };
     }
@@ -127,6 +129,13 @@ export class ScenesApplication implements IScenesApplication {
         return chunks;
     }
 
+    getBooks(): Promise<Book[]> {
+        return Promise.resolve([
+            { id: 'GTM', name: 'Gardens of the Moon' },
+            { id: 'DHG', name: 'Deadhouse Gates' },
+        ]);
+    }
+
     private getChapterName(chapterNumber: number): string {
         switch (chapterNumber) {
             case 0:
@@ -135,17 +144,6 @@ export class ScenesApplication implements IScenesApplication {
                 return 'Epilogue';
             default:
                 return `Chapter ${chapterNumber}`;
-        }
-    }
-
-    private getBookName(bookCode: string): string {
-        switch (bookCode) {
-            case 'GTM':
-                return 'Gardens of the Moon';
-            case 'DHG':
-                return 'Deadhouse Gates';
-            default:
-                return 'Unknown';
         }
     }
 

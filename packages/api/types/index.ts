@@ -13,6 +13,11 @@ export interface Scene {
     sceneText: string;
 }
 
+export interface Book {
+    name: string;
+    id: string;
+}
+
 export interface Chunk {
     text: string;
     selectFrom: number;

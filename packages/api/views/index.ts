@@ -1,4 +1,4 @@
-import { Chunk, Contents, Form, SceneAttributes } from '../types';
+import { Book, Chunk, Contents, Form, SceneAttributes } from '../types';
 import { KeyValuePairs } from '../util/dictionaries';
 
 export interface IViewsApplication {
@@ -10,7 +10,7 @@ export interface IViewsApplication {
         previousSceneId?: string
     ): string;
     renderAnnotation(title: string, fields: KeyValuePairs, annotationId: string): string;
-    renderTableOfContents(contents: Contents): string;
+    renderTableOfContents(contents: Contents, books: Book[]): string;
     renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string;
     renderAnnotationForm(
         form: Form,

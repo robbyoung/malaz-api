@@ -1,6 +1,6 @@
 import { renderFile } from 'pug';
 import { IViewsApplication } from '..';
-import { Chunk, Contents, Form, SceneAttributes } from '../../types';
+import { Book, Chunk, Contents, Form, SceneAttributes } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
 const TEMPLATES_PATH = './views/templates';
@@ -26,8 +26,8 @@ export class ViewsApplication implements IViewsApplication {
         return renderFile(`${TEMPLATES_PATH}/annotation.pug`, { title, fields, annotationId });
     }
 
-    renderTableOfContents(contents: Contents): string {
-        return renderFile(`${TEMPLATES_PATH}/contents.pug`, { contents });
+    renderTableOfContents(contents: Contents, books: Book[]): string {
+        return renderFile(`${TEMPLATES_PATH}/contents.pug`, { contents, books });
     }
 
     renderSceneTextUpdateWithMessage(sceneId: string, chunks: Chunk[], message: string): string {

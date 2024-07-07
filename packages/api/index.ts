@@ -60,7 +60,11 @@ const scenesApi = new ScenesApi(scenesApplication, annotationsApplication, views
 const app = server();
 
 app.get('/', async (_, res) => {
-    respondWithHtmx(res, await scenesApi.getAll());
+    respondWithHtmx(res, await scenesApi.getAll('GTM'));
+});
+
+app.get('/books/:id', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.getAll(req.params?.id));
 });
 
 app.get('/scenes/:id', async (req, res) => {

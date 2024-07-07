@@ -32,9 +32,10 @@ export class ScenesApi {
         );
     }
 
-    async getAll(bookId = 'GTM') {
+    async getAll(bookId: string) {
         const contents = await this.scenes.getContents(bookId);
+        const books = await this.scenes.getBooks();
 
-        return this.views.renderTableOfContents(contents);
+        return this.views.renderTableOfContents(contents, books);
     }
 }

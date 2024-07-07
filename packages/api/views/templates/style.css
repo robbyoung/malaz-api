@@ -259,3 +259,12 @@ form input:last-of-type {
 #search-results p {
   margin: 0px;
 }
+
+#book-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.book-link {
+  padding-right: 5px;
+}
