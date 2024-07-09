@@ -26,16 +26,17 @@ import { Dictionary } from './util/dictionaries';
 const formsRepository: IFormsRepository = new JsonFormsRepository();
 const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
 
-const scenesRepository: IScenesRepository = new JsonScenesRepository();
-const scenesApplication: IScenesApplication = new ScenesApplication(
-    scenesRepository,
-    formsApplication
-);
-
 const annotationsRepository: IAnnotationsRepository = new MongoAnnotationsRepository();
 const annotationsApplication: IAnnotationsApplication = new AnnotationsApplication(
     annotationsRepository,
     formsApplication
+);
+
+const scenesRepository: IScenesRepository = new JsonScenesRepository();
+const scenesApplication: IScenesApplication = new ScenesApplication(
+    scenesRepository,
+    formsApplication,
+    annotationsApplication
 );
 
 const formsApi = new FormsApi(formsApplication, scenesApplication, annotationsApplication);
@@ -46,7 +47,7 @@ const annotationsApi = new AnnotationsApi(
     formsApplication
 );
 
-const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
+const scenesApi = new ScenesApi(scenesApplication);
 
 const app = server();
 

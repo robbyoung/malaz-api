@@ -1,14 +1,10 @@
-import { IAnnotationsApplication } from '../../annotations';
 import { IScenesApplication } from '..';
 import { renderFile } from 'pug';
 
 const TEMPLATES_PATH = './templates';
 
 export class ScenesApi {
-    constructor(
-        private scenes: IScenesApplication,
-        private annotations: IAnnotationsApplication
-    ) {}
+    constructor(private scenes: IScenesApplication) {}
 
     async get(sceneId?: string): Promise<string | undefined> {
         if (!sceneId) {
@@ -21,8 +17,7 @@ export class ScenesApi {
         }
 
         const adjacentSceneIds = await this.scenes.getAdjacentSceneIds(sceneId);
-        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
-        const chunks = await this.scenes.getChunks(sceneId, annotations);
+        const chunks = await this.scenes.getChunks(sceneId);
 
         return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
             chunks,

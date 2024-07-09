@@ -51,8 +51,7 @@ export class AnnotationsApi {
             return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: 'Failed to update text' });
         }
 
-        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
-        const chunks = await this.scenes.getChunks(sceneId, annotations);
+        const chunks = await this.scenes.getChunks(sceneId);
 
         return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
             sceneId,
@@ -82,8 +81,7 @@ export class AnnotationsApi {
             throw new Error('Failed to update text with deleted annotation');
         }
 
-        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
-        const chunks = await this.scenes.getChunks(sceneId, annotations);
+        const chunks = await this.scenes.getChunks(sceneId);
 
         return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
             sceneId,
