@@ -1,15 +1,16 @@
+import { renderFile } from 'pug';
 import { IAnnotationsApplication } from '..';
 import { IFormsApplication } from '../../forms';
 import { IScenesApplication } from '../../scenes';
 import { Dictionary } from '../../util/dictionaries';
-import { IViewsApplication } from '../../views';
+
+const TEMPLATES_PATH = './templates';
 
 export class AnnotationsApi {
     constructor(
         private annotations: IAnnotationsApplication,
         private scenes: IScenesApplication,
-        private forms: IFormsApplication,
-        private views: IViewsApplication
+        private forms: IFormsApplication
     ) {}
 
     async get(annotationId?: string): Promise<string | undefined> {
@@ -25,7 +26,11 @@ export class AnnotationsApi {
         const matchingForm = await this.forms.getFormById(annotation.formId);
         const title = matchingForm?.name ?? 'Unknown';
 
-        return this.views.renderAnnotation(title, annotation.fields, annotation.id);
+        return renderFile(`${TEMPLATES_PATH}/annotation.pug`, {
+            title,
+            fields: annotation.fields,
+            annotationId,
+        });
     }
 
     async post(rawFormData: any) {
@@ -35,7 +40,7 @@ export class AnnotationsApi {
             sceneId = await this.annotations.processAnnotation(rawFormData);
         } catch (e) {
             if (e instanceof Error) {
-                return this.views.renderErrorMessage(e.message);
+                return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: e.message });
             }
 
             throw e;
@@ -43,13 +48,17 @@ export class AnnotationsApi {
 
         const text = await this.scenes.getSceneText(sceneId);
         if (!text) {
-            return this.views.renderErrorMessage('Failed to update text');
+            return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: 'Failed to update text' });
         }
 
         const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
-        return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation saved');
+        return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
+            sceneId,
+            chunks,
+            message: 'Annotation saved',
+        });
     }
 
     async delete(annotationId: string) {
@@ -59,7 +68,9 @@ export class AnnotationsApi {
 
         const annotation = await this.annotations.getAnnotation(annotationId);
         if (!annotation) {
-            return this.views.renderErrorMessage('Failed to delete annotation');
+            return renderFile(`${TEMPLATES_PATH}/error.pug`, {
+                message: 'Failed to delete annotation',
+            });
         }
 
         const sceneId = annotation.sceneId;
@@ -74,7 +85,11 @@ export class AnnotationsApi {
         const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
-        return this.views.renderSceneTextUpdateWithMessage(sceneId, chunks, 'Annotation deleted');
+        return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
+            sceneId,
+            chunks,
+            message: 'Annotation deleted',
+        });
     }
 
     async search(query: Dictionary) {
@@ -84,6 +99,6 @@ export class AnnotationsApi {
             results = await this.annotations.searchCharacters(query['Character name']);
         }
 
-        return this.views.renderSearchResults(results);
+        return renderFile(`${TEMPLATES_PATH}/searchResults.pug`, { results });
     }
 }

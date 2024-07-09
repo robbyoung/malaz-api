@@ -21,10 +21,7 @@ import {
     IAnnotationsRepository,
     MongoAnnotationsRepository,
 } from './annotations';
-import { IViewsApplication, ViewsApplication } from './views';
 import { Dictionary } from './util/dictionaries';
-
-const viewsApplication: IViewsApplication = new ViewsApplication();
 
 const formsRepository: IFormsRepository = new JsonFormsRepository();
 const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
@@ -41,21 +38,15 @@ const annotationsApplication: IAnnotationsApplication = new AnnotationsApplicati
     formsApplication
 );
 
-const formsApi = new FormsApi(
-    formsApplication,
-    scenesApplication,
-    annotationsApplication,
-    viewsApplication
-);
+const formsApi = new FormsApi(formsApplication, scenesApplication, annotationsApplication);
 
 const annotationsApi = new AnnotationsApi(
     annotationsApplication,
     scenesApplication,
-    formsApplication,
-    viewsApplication
+    formsApplication
 );
 
-const scenesApi = new ScenesApi(scenesApplication, annotationsApplication, viewsApplication);
+const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
 
 const app = server();
 

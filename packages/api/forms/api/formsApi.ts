@@ -1,15 +1,16 @@
+import { renderFile } from 'pug';
 import { IFormsApplication } from '..';
 import { IAnnotationsApplication } from '../../annotations';
 import { IScenesApplication } from '../../scenes';
 import { parseOptionalRange, parseRange } from '../../util/range';
-import { IViewsApplication } from '../../views';
+
+const TEMPLATES_PATH = './templates';
 
 export class FormsApi {
     constructor(
         private forms: IFormsApplication,
         private scenes: IScenesApplication,
-        private annotations: IAnnotationsApplication,
-        private views: IViewsApplication
+        private annotations: IAnnotationsApplication
     ) {}
 
     async getAll(sceneId?: string, range?: string): Promise<string | undefined> {
@@ -21,11 +22,11 @@ export class FormsApi {
         if (!range) {
             const availableForms = await this.forms.getSceneForms();
             const existingAttributes = await this.annotations.getSceneAttributes(sceneId);
-            return this.views.renderSceneAttributeForms(
+            return renderFile(`${TEMPLATES_PATH}/selectionScene.pug`, {
                 sceneId,
-                existingAttributes,
-                availableForms
-            );
+                attributes: existingAttributes,
+                availableForms,
+            });
         }
 
         // If range is zero-length, no selection was made (defer to /annotations)
@@ -40,7 +41,12 @@ export class FormsApi {
         }
 
         const availableForms = await this.forms.getAnnotationForms();
-        return this.views.renderSelectionForms(sceneId, range, selection, availableForms);
+        return renderFile(`${TEMPLATES_PATH}/selectionText.pug`, {
+            sceneId,
+            range,
+            selection,
+            availableForms,
+        });
     }
 
     async get(formId?: string, sceneId?: string, range?: string): Promise<string | undefined> {
@@ -69,6 +75,13 @@ export class FormsApi {
 
         const charactersInScene = await this.annotations.getCharactersInScene(sceneId);
 
-        return this.views.renderAnnotationForm(form, sceneId, charactersInScene, text, from, to);
+        return renderFile(`${TEMPLATES_PATH}/form.pug`, {
+            form,
+            sceneId,
+            text,
+            charactersInScene,
+            from,
+            to,
+        });
     }
 }

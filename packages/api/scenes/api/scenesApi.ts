@@ -1,12 +1,13 @@
 import { IAnnotationsApplication } from '../../annotations';
 import { IScenesApplication } from '..';
-import { IViewsApplication } from '../../views';
+import { renderFile } from 'pug';
+
+const TEMPLATES_PATH = './templates';
 
 export class ScenesApi {
     constructor(
         private scenes: IScenesApplication,
-        private annotations: IAnnotationsApplication,
-        private views: IViewsApplication
+        private annotations: IAnnotationsApplication
     ) {}
 
     async get(sceneId?: string): Promise<string | undefined> {
@@ -23,19 +24,19 @@ export class ScenesApi {
         const annotations = await this.annotations.getAnnotationsForScene(sceneId);
         const chunks = await this.scenes.getChunks(sceneId, annotations);
 
-        return this.views.renderSceneText(
+        return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
             chunks,
-            sceneName,
+            title: sceneName,
             sceneId,
-            adjacentSceneIds[1],
-            adjacentSceneIds[0]
-        );
+            previousSceneId: adjacentSceneIds[0],
+            nextSceneId: adjacentSceneIds[1],
+        });
     }
 
     async getAll(bookId: string) {
         const contents = await this.scenes.getContents(bookId);
         const books = await this.scenes.getBooks();
 
-        return this.views.renderTableOfContents(contents, books);
+        return renderFile(`${TEMPLATES_PATH}/contents.pug`, { contents, books });
     }
 }
