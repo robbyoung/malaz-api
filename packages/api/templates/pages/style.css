@@ -86,7 +86,7 @@ html {
 
 .heading {
   font-weight: 700;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
@@ -150,7 +150,7 @@ html {
   max-width: calc(1440px * 0.6);
 }
 
-#text-container > p::selection {
+#text-container span::selection {
   background-color: var(--ochre);
 }
 
@@ -170,6 +170,8 @@ html {
   flex-direction: row;
   justify-content: space-between;
   padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  height: 48px;
 }
 
 #forms {

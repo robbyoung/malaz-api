@@ -1,0 +1,20 @@
+extends ./page.pug
+
+block content
+    div#container
+        div#text-container(
+            hx-get=`/scenes/${sceneId}/text`
+            hx-trigger="load"
+            hx-target="this"
+            hx-swap="outerHTML"
+        )
+        div#selection-container
+            div
+                div#scene-nav(
+                    hx-get=`/scenes/${sceneId}/nav`
+                    hx-trigger="load"
+                    hx-target="this"
+                    hx-swap="outerHTML"
+                )
+                div(class="ochre shadowed")
+                    p#selection No selection

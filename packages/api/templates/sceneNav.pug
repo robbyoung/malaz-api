@@ -1,0 +1,25 @@
+div#scene-nav
+    if previousSceneId
+        a(
+            href="/scenes/" + previousSceneId
+            class="button ochre" 
+        ) Previous
+    else
+        div
+
+    h3(
+        hx-get="/forms"
+        hx-vars=`sceneId:"${sceneId}"`
+        hx-target="#selection"
+        hx-swap="outerHTML"
+        hx-trigger="mouseup"
+        class="heading clickable"
+    ) #{title}
+
+    if nextSceneId
+        a(
+            href="/scenes/" + nextSceneId
+            class="button ochre" 
+        ) Next
+    else
+        div

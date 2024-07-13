@@ -63,6 +63,14 @@ app.get('/scenes/:id', async (req, res) => {
     respondWithHtmx(res, await scenesApi.get(req.params?.id));
 });
 
+app.get('/scenes/:id/text', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.getText(req.params?.id));
+});
+
+app.get('/scenes/:id/nav', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.getNav(req.params?.id));
+});
+
 app.get('/forms', async (req, res) => {
     respondWithHtmx(res, await formsApi.getAll(req.query?.sceneId, req.query?.range));
 });

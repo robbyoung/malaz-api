@@ -1,20 +1,26 @@
-extends ./page.pug
-include ./components/sceneNav.pug
 include ./components/sceneText.pug
 
-block content
-    div#container
-        +sceneText(sceneId, chunks, false)
-        div#selection-container
-            div
-                h1(
-                    hx-get="/forms"
-                    hx-vars=`sceneId:"${sceneId}"`
+div#text-container(hx-swap-oob=oob)
+    p(
+        hx-get="/forms"
+        hx-vars=`sceneId:"${sceneId}",range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
+        hx-target="#selection"
+        hx-swap="outerHTML"
+        hx-trigger="mouseup"
+        class="text-wrap padding-x padding-y"
+    )
+        each chunk in chunks
+            if chunk.annotationId
+                span(
+                    hx-get=`/annotations/${chunk.annotationId}`
                     hx-target="#selection"
                     hx-swap="outerHTML"
                     hx-trigger="mouseup"
-                    class="heading clickable"
-                ) #{title}
-                div(class="ochre shadowed")
-                    p#selection No selection
-                +sceneNav(previousSceneId, nextSceneId)
+                    select-from=chunk.selectFrom
+                    class=chunk.class
+                ) #{chunk.text}
+            else
+                span(
+                    select-from=chunk.selectFrom
+                    class=chunk.class
+                ) #{chunk.text}

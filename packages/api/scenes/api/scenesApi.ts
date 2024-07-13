@@ -11,16 +11,37 @@ export class ScenesApi {
             throw new Error('invalid sceneId');
         }
 
+        return renderFile(`${TEMPLATES_PATH}/pages/scene.pug`, {
+            sceneId,
+        });
+    }
+
+    async getText(sceneId: string) {
+        if (!sceneId) {
+            throw new Error('invalid sceneId');
+        }
+
+        const chunks = await this.scenes.getChunks(sceneId);
+
+        return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
+            chunks,
+            sceneId,
+        });
+    }
+
+    async getNav(sceneId: string) {
+        if (!sceneId) {
+            throw new Error('invalid sceneId');
+        }
+
         const sceneName = await this.scenes.getSceneName(sceneId);
         if (!sceneName) {
             throw new Error('no scene data found');
         }
 
         const adjacentSceneIds = await this.scenes.getAdjacentSceneIds(sceneId);
-        const chunks = await this.scenes.getChunks(sceneId);
 
-        return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
-            chunks,
+        return renderFile(`${TEMPLATES_PATH}/sceneNav.pug`, {
             title: sceneName,
             sceneId,
             previousSceneId: adjacentSceneIds[0],
