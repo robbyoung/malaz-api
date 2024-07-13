@@ -22,6 +22,9 @@ import {
     MongoAnnotationsRepository,
 } from './annotations';
 import { Dictionary } from './util/dictionaries';
+import { renderFile } from 'pug';
+
+const PAGE_TEMPLATES_PATH = './templates/pages';
 
 const formsRepository: IFormsRepository = new JsonFormsRepository();
 const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
@@ -52,15 +55,31 @@ const scenesApi = new ScenesApi(scenesApplication);
 const app = server();
 
 app.get('/', async (_, res) => {
-    respondWithHtmx(res, await scenesApi.getAll('GTM'));
-});
-
-app.get('/books/:id', async (req, res) => {
-    respondWithHtmx(res, await scenesApi.getAll(req.params?.id));
+    res.redirect('/books/GTM', 301);
 });
 
 app.get('/scenes/:id', async (req, res) => {
-    respondWithHtmx(res, await scenesApi.get(req.params?.id));
+    const scenesPage = renderFile(`${PAGE_TEMPLATES_PATH}/scene.pug`, {
+        sceneId: req.params?.id,
+    });
+
+    respondWithHtmx(res, scenesPage);
+});
+
+app.get('/books/:id', async (req, res) => {
+    const contentsPage = renderFile(`${PAGE_TEMPLATES_PATH}/contents.pug`, {
+        bookId: req.params?.id,
+    });
+
+    respondWithHtmx(res, contentsPage);
+});
+
+app.get('/books/:id/contents', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.getContents(req.params?.id));
+});
+
+app.get('/books/:id/contents', async (req, res) => {
+    respondWithHtmx(res, await scenesApi.getContents(req.params?.id));
 });
 
 app.get('/scenes/:id/text', async (req, res) => {

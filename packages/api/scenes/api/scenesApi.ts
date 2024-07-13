@@ -6,16 +6,6 @@ const TEMPLATES_PATH = './templates';
 export class ScenesApi {
     constructor(private scenes: IScenesApplication) {}
 
-    async get(sceneId?: string): Promise<string | undefined> {
-        if (!sceneId) {
-            throw new Error('invalid sceneId');
-        }
-
-        return renderFile(`${TEMPLATES_PATH}/pages/scene.pug`, {
-            sceneId,
-        });
-    }
-
     async getText(sceneId: string) {
         if (!sceneId) {
             throw new Error('invalid sceneId');
@@ -49,7 +39,7 @@ export class ScenesApi {
         });
     }
 
-    async getAll(bookId: string) {
+    async getContents(bookId: string) {
         const contents = await this.scenes.getContents(bookId);
         const books = await this.scenes.getBooks();
 

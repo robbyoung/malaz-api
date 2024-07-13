@@ -1,19 +1,16 @@
-extends ./pages/page.pug
 
-block content
-    div#container
-        div#contents-container
-            h1(class="heading") #{contents.title}
-            div#book-row
-                each book in books
-                    if book.name !== contents.title
-                        a.book-link(href=`/books/${book.id}`) #{book.name}
-            each chapter in contents.chapters
-                div
-                    h3 #{chapter.name}
-                    div(class="scene-row")
-                        each scene in chapter.scenes
-                            a(
-                                href="/scenes/" + scene.id
-                                class="button grey" 
-                            ) #{scene.name}
+div#contents-container
+    h1(class="heading") #{contents.title}
+    div#book-row
+        each book in books
+            if book.name !== contents.title
+                a.book-link(href=`/books/${book.id}`) #{book.name}
+    each chapter in contents.chapters
+        div
+            h3 #{chapter.name}
+            div(class="scene-row")
+                each scene in chapter.scenes
+                    a(
+                        href="/scenes/" + scene.id
+                        class="button grey" 
+                    ) #{scene.name}

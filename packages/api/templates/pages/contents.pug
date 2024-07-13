@@ -1,0 +1,10 @@
+extends ./page.pug
+
+block content
+    div#container
+        div#contents-container(
+            hx-get=`/books/${bookId}/contents`
+            hx-trigger="load"
+            hx-target="this"
+            hx-swap="outerHTML"
+        )
