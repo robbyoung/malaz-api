@@ -13,23 +13,25 @@ export class FormsApi {
         private annotations: IAnnotationsApplication
     ) {}
 
-    async getAll(sceneId?: string, range?: string): Promise<string | undefined> {
+    async getSceneForms(sceneId?: string) {
         if (!sceneId) {
             throw new Error(`invalid scene id '${sceneId}'`);
         }
 
-        // If range isn't specified, return scene-level forms
-        if (!range) {
-            const availableForms = await this.forms.getSceneForms();
-            const existingAttributes = await this.annotations.getSceneAttributes(sceneId);
-            return renderFile(`${TEMPLATES_PATH}/selectionScene.pug`, {
-                sceneId,
-                attributes: existingAttributes,
-                availableForms,
-            });
+        const availableForms = await this.forms.getSceneForms();
+        const existingAttributes = await this.annotations.getSceneAttributes(sceneId);
+        return renderFile(`${TEMPLATES_PATH}/selectionScene.pug`, {
+            sceneId,
+            attributes: existingAttributes,
+            availableForms,
+        });
+    }
+
+    async getSelectionForms(sceneId?: string, range?: string) {
+        if (!sceneId) {
+            throw new Error(`invalid scene id '${sceneId}'`);
         }
 
-        // If range is zero-length, no selection was made (defer to /annotations)
         const { from, to } = parseRange(range);
         if (from === to) {
             return 'No content';

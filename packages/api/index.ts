@@ -90,8 +90,12 @@ app.get('/scenes/:id/nav', async (req, res) => {
     respondWithHtmx(res, await scenesApi.getNav(req.params?.id));
 });
 
-app.get('/forms', async (req, res) => {
-    respondWithHtmx(res, await formsApi.getAll(req.query?.sceneId, req.query?.range));
+app.get('/forms/scene', async (req, res) => {
+    respondWithHtmx(res, await formsApi.getSceneForms(req.query?.sceneId));
+});
+
+app.get('/forms/selection', async (req, res) => {
+    respondWithHtmx(res, await formsApi.getSelectionForms(req.query?.sceneId, req.query?.range));
 });
 
 app.get('/forms/:id', async (req, res) => {
@@ -103,7 +107,7 @@ app.post('/forms', async (req, res) => {
 });
 
 app.get('/annotations/search', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.search(req.query as Dictionary));
+    respondWithHtmx(res, await annotationsApi.getSearchResults(req.query as Dictionary));
 });
 
 app.get('/annotations/:id', async (req, res) => {

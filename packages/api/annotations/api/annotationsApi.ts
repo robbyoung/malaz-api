@@ -90,7 +90,7 @@ export class AnnotationsApi {
         });
     }
 
-    async search(query: Dictionary) {
+    async getSearchResults(query: Dictionary) {
         let results: string[] = [];
 
         if (query['Character name']) {

@@ -2,7 +2,7 @@ include ./components/sceneText.pug
 
 div#text-container(hx-swap-oob=oob)
     p(
-        hx-get="/forms"
+        hx-get="/forms/selection"
         hx-vars=`sceneId:"${sceneId}",range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
         hx-target="#selection"
         hx-swap="outerHTML"
