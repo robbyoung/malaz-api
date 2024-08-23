@@ -15,7 +15,7 @@ export interface IScenesApplication {
     getAdjacentSceneIds(sceneId: string): Promise<[string?, string?]>;
     getChunks(sceneId: string): Promise<Chunk[]>;
     getBooks(): Promise<Book[]>;
-    stripDialogue(sceneId: string, from: number, to: number): Range[];
+    stripDialogue(sceneId: string, from: number, to: number): Promise<Range[]>;
 }
 
 export { ScenesApplication } from './application/scenesApplication';

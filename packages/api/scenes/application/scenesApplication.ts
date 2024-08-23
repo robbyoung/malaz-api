@@ -1,7 +1,16 @@
 import { IScenesApplication, IScenesRepository } from '..';
 import { IAnnotationsApplication } from '../../annotations';
 import { IFormsApplication } from '../../forms';
-import { SceneType, Contents, ChapterContents, Annotation, Chunk, Form, Book } from '../../types';
+import {
+    SceneType,
+    Contents,
+    ChapterContents,
+    Annotation,
+    Chunk,
+    Form,
+    Book,
+    Range,
+} from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
     constructor(
@@ -198,11 +207,9 @@ export class ScenesApplication implements IScenesApplication {
         };
     }
 
-    public stripDialogue(
-        sceneId: string,
-        from: number,
-        to: number
-    ): { from: number; to: number }[] {
-        return [];
+    public async stripDialogue(sceneId: string, from: number, to: number): Promise<Range[]> {
+        const text = await this.getSceneText(sceneId);
+
+        return [{ from, to }];
     }
 }
