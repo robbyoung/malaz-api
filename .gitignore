@@ -2,3 +2,4 @@ node_modules/*
 
 packages/parser/text/*
 packages/parser/backup
+packages/*/node_modules

@@ -197,4 +197,12 @@ export class ScenesApplication implements IScenesApplication {
             annotationId: annotation.id,
         };
     }
+
+    public stripDialogue(
+        sceneId: string,
+        from: number,
+        to: number
+    ): { from: number; to: number }[] {
+        return [];
+    }
 }

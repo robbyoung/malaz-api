@@ -1,4 +1,4 @@
-import { Scene, Contents, Chunk, Annotation, Book } from '../types';
+import { Scene, Contents, Chunk, Annotation, Book, Range } from '../types';
 
 export interface IScenesRepository {
     getSceneById(id: string): Promise<Scene | undefined>;
@@ -15,6 +15,7 @@ export interface IScenesApplication {
     getAdjacentSceneIds(sceneId: string): Promise<[string?, string?]>;
     getChunks(sceneId: string): Promise<Chunk[]>;
     getBooks(): Promise<Book[]>;
+    stripDialogue(sceneId: string, from: number, to: number): Range[];
 }
 
 export { ScenesApplication } from './application/scenesApplication';
