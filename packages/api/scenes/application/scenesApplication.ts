@@ -1,13 +1,21 @@
 import { IScenesApplication, IScenesRepository } from '..';
 import { IAnnotationsApplication } from '../../annotations';
 import { IFormsApplication } from '../../forms';
-import { SceneType, Contents, ChapterContents, Annotation, Chunk, Form, Book } from '../../types';
+import {
+    SceneType,
+    Contents,
+    ChapterContents,
+    Annotation,
+    Chunk,
+    Form,
+    Book,
+    Range,
+} from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
     constructor(
         private repository: IScenesRepository,
-        private forms: IFormsApplication,
-        private annotations: IAnnotationsApplication
+        private forms: IFormsApplication
     ) {}
 
     public async getSceneText(sceneId: string): Promise<string | undefined> {
@@ -82,9 +90,8 @@ export class ScenesApplication implements IScenesApplication {
         return [previousSceneId, nextSceneId];
     }
 
-    public async getChunks(sceneId: string): Promise<Chunk[]> {
+    public async getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]> {
         const annotationForms = await this.forms.getAnnotationForms();
-        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
 
         const nonBreakingSpace = String.fromCharCode(8203);
         let text = await this.getSceneText(sceneId);
@@ -196,5 +203,35 @@ export class ScenesApplication implements IScenesApplication {
             selectFrom: fromIndex,
             annotationId: annotation.id,
         };
+    }
+
+    public async stripDialogue(sceneId: string, from: number, to: number): Promise<Range[]> {
+        const text = await this.getTextSelection(sceneId, from, to);
+
+        if (!text) {
+            return [];
+        }
+
+        // single quotes preceded by a space and ending with some kind of terminating character
+        const regex = /[ \n]'(.+?(?=[.,?!-]')[.,?!-])'/g;
+
+        const matches = text.matchAll(regex);
+        const dialogueRanges: Range[] = [];
+
+        for (let match of matches) {
+            const dialogueText = match[1];
+            if (dialogueText) {
+                const fromIndex = text.indexOf(dialogueText) + from;
+                const toIndex = fromIndex + dialogueText.length;
+
+                dialogueRanges.push({ from: fromIndex, to: toIndex });
+            }
+        }
+
+        if (dialogueRanges.length === 0) {
+            dialogueRanges.push({ from, to });
+        }
+
+        return dialogueRanges;
     }
 }

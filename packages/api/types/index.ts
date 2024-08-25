@@ -5,6 +5,11 @@ export enum SceneType {
     Standard,
 }
 
+export interface Range {
+    from: number;
+    to: number;
+}
+
 export interface Scene {
     id: string;
     chapterNumber: number;

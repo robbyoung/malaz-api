@@ -1,49 +1,35 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IFormsApplication } from '../../forms';
-import { FormFieldType, SceneAttributes, Annotation } from '../../types';
+import { IScenesApplication } from '../../scenes';
+import { FormFieldType, SceneAttributes, Annotation, Range } from '../../types';
+import { KeyValuePairs } from '../../util/dictionaries';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
         private repository: IAnnotationsRepository,
-        private forms: IFormsApplication
+        private forms: IFormsApplication,
+        private scenes: IScenesApplication
     ) {}
 
-    // TODO this shouldn't need to return scene id
-    async processAnnotation(rawFormData: any): Promise<string> {
+    async processAnnotation(
+        formId: string,
+        sceneId: string,
+        kvps: KeyValuePairs,
+        range?: Range
+    ): Promise<void> {
         const annotationForms = await this.forms.getAnnotationForms();
         const sceneForms = await this.forms.getSceneForms();
         const allForms = [...annotationForms, ...sceneForms];
-        const params = new URLSearchParams(rawFormData);
-        const formId = params.get('formId');
-        const sceneId = params.get('sceneId');
-        const from = parseInt(params.get('from') ?? '-1');
-        const to = parseInt(params.get('to') ?? '-1');
+        const dialogueFormId = 'hf1';
+
         const fields = allForms.find((f) => f.id === formId)?.fields;
 
-        if (formId === null || fields === undefined) {
-            throw new Error('bad annotation: formId missing or invalid');
-        } else if (sceneId === null) {
-            throw new Error('bad annotation: sceneId missing or invalid');
+        if (fields === undefined) {
+            throw new Error('bad annotation: formId invalid');
         }
 
-        const bookId = sceneId.substring(0, 3);
-
-        if (from === -1 && to === -1) {
-            const kvps = Array.from(params.entries())
-                .filter((entry) => entry[0] !== 'sceneId' && entry[0] !== 'formId')
-                .map((entry) => ({ key: entry[0], value: entry[1] }));
-            await this.repository.saveAnnotation(formId, sceneId, bookId, kvps);
-            return sceneId;
-        }
-
-        if (from < 0) {
-            throw new Error('bad annotation: from missing or invalid');
-        } else if (to < 0) {
-            throw new Error('bad annotation: to missing or invalid');
-        }
-
-        const kvps = fields.map((field) => {
-            let value = params.get(field.name);
+        const sanitisedKvps = fields.map((field) => {
+            let value = kvps.find((kvp) => kvp.key === field.name)?.value;
 
             if (!value && field.required) {
                 throw new Error(`bad annotation: '${field.name}' is a required field`);
@@ -59,9 +45,32 @@ export class AnnotationsApplication implements IAnnotationsApplication {
             };
         });
 
-        await this.repository.saveAnnotation(formId, sceneId, bookId, kvps, from, to);
+        const bookId = sceneId.substring(0, 3);
 
-        return sceneId;
+        if (range === undefined) {
+            await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps);
+        } else if (formId === dialogueFormId) {
+            const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
+            for (let dialogueRange of dialogueRanges) {
+                await this.repository.saveAnnotation(
+                    formId,
+                    sceneId,
+                    bookId,
+                    sanitisedKvps,
+                    dialogueRange.from,
+                    dialogueRange.to
+                );
+            }
+        } else {
+            await this.repository.saveAnnotation(
+                formId,
+                sceneId,
+                bookId,
+                sanitisedKvps,
+                range.from,
+                range.to
+            );
+        }
     }
 
     async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {

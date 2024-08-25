@@ -34,10 +34,31 @@ export class AnnotationsApi {
     }
 
     async post(rawFormData: any) {
-        let sceneId: string;
+        const params = new URLSearchParams(rawFormData);
+        const formId = params.get('formId');
+        const sceneId = params.get('sceneId');
+        const from = parseInt(params.get('from') ?? '-1');
+        const to = parseInt(params.get('to') ?? '-1');
+
+        if (formId === null) {
+            throw new Error('bad annotation: formId missing');
+        }
+
+        if (sceneId === null) {
+            throw new Error('bad annotation: sceneId missing');
+        }
+
+        if ((from === -1 && to !== -1) || (from !== -1 && to === -1)) {
+            throw new Error('bad annotation: from/to invalid');
+        }
+
+        const excludedFields = ['sceneId', 'formId', 'from', 'to'];
+        const kvps = Array.from(params.entries())
+            .filter((entry) => excludedFields.indexOf(entry[0]) === -1)
+            .map((entry) => ({ key: entry[0], value: entry[1] }));
 
         try {
-            sceneId = await this.annotations.processAnnotation(rawFormData);
+            await this.annotations.processAnnotation(formId, sceneId, kvps, { from, to });
         } catch (e) {
             if (e instanceof Error) {
                 return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: e.message });
@@ -51,7 +72,8 @@ export class AnnotationsApi {
             return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: 'Failed to update text' });
         }
 
-        const chunks = await this.scenes.getChunks(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
+        const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
             sceneId,
@@ -81,7 +103,8 @@ export class AnnotationsApi {
             throw new Error('Failed to update text with deleted annotation');
         }
 
-        const chunks = await this.scenes.getChunks(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
+        const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return renderFile(`${TEMPLATES_PATH}/updateWithMessage.pug`, {
             sceneId,
