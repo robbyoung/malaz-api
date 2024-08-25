@@ -1,4 +1,4 @@
-import { Annotation, SceneAttributes } from '../types';
+import { Annotation, Range, SceneAttributes } from '../types';
 import { KeyValuePairs } from '../util/dictionaries';
 
 export interface IAnnotationsRepository {
@@ -19,7 +19,12 @@ export interface IAnnotationsRepository {
 export { MongoAnnotationsRepository } from './repository/mongoAnnotationsRepository';
 
 export interface IAnnotationsApplication {
-    processAnnotation(rawFormData: any): Promise<string>;
+    processAnnotation(
+        formId: string,
+        sceneId: string,
+        kvps: KeyValuePairs,
+        range?: Range
+    ): Promise<void>;
     getAnnotationsForScene(sceneId: string): Promise<Annotation[]>;
     getAnnotation(id: string): Promise<Annotation | undefined>;
     deleteAnnotation(id: string): Promise<void>;
