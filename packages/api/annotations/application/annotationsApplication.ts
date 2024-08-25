@@ -49,7 +49,19 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
         if (range === undefined) {
             await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps);
-        } else if (formId !== dialogueFormId) {
+        } else if (formId === dialogueFormId) {
+            const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
+            for (let dialogueRange of dialogueRanges) {
+                await this.repository.saveAnnotation(
+                    formId,
+                    sceneId,
+                    bookId,
+                    sanitisedKvps,
+                    dialogueRange.from,
+                    dialogueRange.to
+                );
+            }
+        } else {
             await this.repository.saveAnnotation(
                 formId,
                 sceneId,

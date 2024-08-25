@@ -213,7 +213,7 @@ export class ScenesApplication implements IScenesApplication {
         }
 
         // single quotes preceded by a space and ending with some kind of terminating character
-        const regex = /[ ]'(.+?(?=[.,?!-]')[.,?!-])'/g;
+        const regex = /[ \n]'(.+?(?=[.,?!-]')[.,?!-])'/g;
 
         const matches = text.matchAll(regex);
         const dialogueRanges: Range[] = [];

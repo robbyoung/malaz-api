@@ -2,7 +2,6 @@ import { describe, expect, test } from 'bun:test';
 import { IScenesRepository, ScenesApplication } from '..';
 import { SceneType } from '../../types';
 import { IFormsApplication } from '../../forms';
-import { IAnnotationsApplication } from '../../annotations';
 
 function createMockRepository(sceneText: string): IScenesRepository {
     return {
@@ -53,8 +52,8 @@ describe('scenesApplication.stripDialogue()', () => {
     test('strips dialogue preceded by a newline correctly', async () => {
         await testDialogueStripping(
             `
-            'And what does that mean?'`,
-            ['And what does that mean?']
+'Unsanctioned. Defiant of the new laws---'`,
+            ['Unsanctioned. Defiant of the new laws---']
         );
     });
 
