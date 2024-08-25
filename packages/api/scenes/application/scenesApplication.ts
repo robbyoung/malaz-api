@@ -208,8 +208,32 @@ export class ScenesApplication implements IScenesApplication {
     }
 
     public async stripDialogue(sceneId: string, from: number, to: number): Promise<Range[]> {
-        const text = await this.getSceneText(sceneId);
+        const text = await this.getTextSelection(sceneId, from, to);
 
-        return [{ from, to }];
+        if (!text) {
+            return [];
+        }
+
+        // single quotes preceded by a space and ending with some kind of terminating character
+        const regex = /[ ]'(.+?(?=[.,?!-]')[.,?!-])'/g;
+
+        const matches = text.matchAll(regex);
+        const dialogueRanges: Range[] = [];
+
+        for (let match of matches) {
+            const dialogueText = match[1];
+            if (dialogueText) {
+                const fromIndex = text.indexOf(dialogueText) + from;
+                const toIndex = fromIndex + dialogueText.length;
+
+                dialogueRanges.push({ from: fromIndex, to: toIndex });
+            }
+        }
+
+        if (dialogueRanges.length === 0) {
+            dialogueRanges.push({ from, to });
+        }
+
+        return dialogueRanges;
     }
 }
