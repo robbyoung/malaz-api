@@ -15,8 +15,7 @@ import {
 export class ScenesApplication implements IScenesApplication {
     constructor(
         private repository: IScenesRepository,
-        private forms: IFormsApplication,
-        private annotations: IAnnotationsApplication
+        private forms: IFormsApplication
     ) {}
 
     public async getSceneText(sceneId: string): Promise<string | undefined> {
@@ -91,9 +90,8 @@ export class ScenesApplication implements IScenesApplication {
         return [previousSceneId, nextSceneId];
     }
 
-    public async getChunks(sceneId: string): Promise<Chunk[]> {
+    public async getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]> {
         const annotationForms = await this.forms.getAnnotationForms();
-        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
 
         const nonBreakingSpace = String.fromCharCode(8203);
         let text = await this.getSceneText(sceneId);

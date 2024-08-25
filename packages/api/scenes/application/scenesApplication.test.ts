@@ -28,8 +28,7 @@ describe('scenesApplication.stripDialogue()', () => {
 
         const application = new ScenesApplication(
             createMockRepository(paddedText),
-            {} as IFormsApplication,
-            {} as IAnnotationsApplication
+            {} as IFormsApplication
         );
 
         const ranges = await application.stripDialogue(
@@ -51,7 +50,7 @@ describe('scenesApplication.stripDialogue()', () => {
         await testDialogueStripping('And what does that mean?', ['And what does that mean?']);
     });
 
-    test('strips dialogue preceded by a newline', async () => {
+    test('strips dialogue preceded by a newline correctly', async () => {
         await testDialogueStripping(
             `
             'And what does that mean?'`,

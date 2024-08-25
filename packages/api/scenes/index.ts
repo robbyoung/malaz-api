@@ -13,7 +13,7 @@ export interface IScenesApplication {
     getSceneName(sceneId: string): Promise<string | undefined>;
     getContents(bookCode: string): Promise<Contents>;
     getAdjacentSceneIds(sceneId: string): Promise<[string?, string?]>;
-    getChunks(sceneId: string): Promise<Chunk[]>;
+    getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]>;
     getBooks(): Promise<Book[]>;
     stripDialogue(sceneId: string, from: number, to: number): Promise<Range[]>;
 }

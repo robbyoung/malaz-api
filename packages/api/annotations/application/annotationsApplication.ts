@@ -1,12 +1,14 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IFormsApplication } from '../../forms';
+import { IScenesApplication } from '../../scenes';
 import { FormFieldType, SceneAttributes, Annotation, Range } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
         private repository: IAnnotationsRepository,
-        private forms: IFormsApplication
+        private forms: IFormsApplication,
+        private scenes: IScenesApplication
     ) {}
 
     async processAnnotation(

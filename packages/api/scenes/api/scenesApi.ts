@@ -1,17 +1,22 @@
 import { IScenesApplication } from '..';
 import { renderFile } from 'pug';
+import { IAnnotationsApplication } from '../../annotations';
 
 const TEMPLATES_PATH = './templates';
 
 export class ScenesApi {
-    constructor(private scenes: IScenesApplication) {}
+    constructor(
+        private scenes: IScenesApplication,
+        private annotations: IAnnotationsApplication
+    ) {}
 
     async getText(sceneId: string) {
         if (!sceneId) {
             throw new Error('invalid sceneId');
         }
 
-        const chunks = await this.scenes.getChunks(sceneId);
+        const annotations = await this.annotations.getAnnotationsForScene(sceneId);
+        const chunks = await this.scenes.getChunks(sceneId, annotations);
 
         return renderFile(`${TEMPLATES_PATH}/sceneText.pug`, {
             chunks,
