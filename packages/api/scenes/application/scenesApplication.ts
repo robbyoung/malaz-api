@@ -1,6 +1,5 @@
 import { IScenesApplication, IScenesRepository } from '..';
-import { IAnnotationsApplication } from '../../annotations';
-import { IFormsApplication } from '../../forms';
+
 import {
     SceneType,
     Contents,
@@ -13,10 +12,7 @@ import {
 } from '../../types';
 
 export class ScenesApplication implements IScenesApplication {
-    constructor(
-        private repository: IScenesRepository,
-        private forms: IFormsApplication
-    ) {}
+    constructor(private repository: IScenesRepository) {}
 
     public async getSceneText(sceneId: string): Promise<string | undefined> {
         const scene = await this.repository.getSceneById(sceneId);
@@ -91,8 +87,6 @@ export class ScenesApplication implements IScenesApplication {
     }
 
     public async getChunks(sceneId: string, annotations: Annotation[]): Promise<Chunk[]> {
-        const annotationForms = await this.forms.getAnnotationForms();
-
         const nonBreakingSpace = String.fromCharCode(8203);
         let text = await this.getSceneText(sceneId);
         if (!text) {
@@ -130,8 +124,7 @@ export class ScenesApplication implements IScenesApplication {
                     currentIndex,
                     nextIndex,
                     annotationsBetweenIndices,
-                    italicsIndex % 2 == 0,
-                    annotationForms
+                    italicsIndex % 2 == 0
                 )
             );
         }
@@ -178,8 +171,7 @@ export class ScenesApplication implements IScenesApplication {
         fromIndex: number,
         toIndex: number,
         annotations: Annotation[],
-        useItalics: boolean,
-        highlightForms: Form[]
+        useItalics: boolean
     ): Chunk {
         const baseClass = useItalics ? 'italics' : '';
 
@@ -191,11 +183,7 @@ export class ScenesApplication implements IScenesApplication {
             };
         }
 
-        const formOrder = annotations.sort(
-            (a, b) =>
-                highlightForms.findIndex((f) => a.formId === f.id) -
-                highlightForms.findIndex((f) => b.formId === f.id)
-        );
+        const formOrder = annotations.sort((a, b) => a.priority - b.priority);
         const annotation = formOrder[0];
         return {
             text: text.substring(fromIndex, toIndex),
