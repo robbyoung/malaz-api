@@ -19,13 +19,14 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         const sceneForms = await this.getSceneForms();
         const allForms = [...annotationForms, ...sceneForms];
 
-        const fields = allForms.find((f) => f.id === formId)?.fields;
-
-        if (fields === undefined) {
+        const form = allForms.find((f) => f.id === formId);
+        if (form === undefined) {
             throw new Error('bad annotation: formId invalid');
         }
 
-        const sanitisedKvps = fields.map((field) => {
+        const formIndex = forms.indexOf(form);
+
+        const sanitisedKvps = form.fields.map((field) => {
             let value = kvps.find((kvp) => kvp.key === field.name)?.value;
 
             if (!value && field.required) {
@@ -45,7 +46,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         const bookId = sceneId.substring(0, 3);
 
         if (range === undefined) {
-            await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps);
+            await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps, formIndex);
         } else if (formId === 'dialogue') {
             const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
             for (let dialogueRange of dialogueRanges) {
@@ -64,6 +65,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
                 sceneId,
                 bookId,
                 sanitisedKvps,
+                formIndex,
                 range.from,
                 range.to
             );

@@ -7,6 +7,7 @@ export interface IAnnotationsRepository {
         sceneId: string,
         bookId: string,
         kvps: KeyValuePairs,
+        priority: number,
         from?: number,
         to?: number
     ): Promise<void>;

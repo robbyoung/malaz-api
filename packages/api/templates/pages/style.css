@@ -106,31 +106,31 @@ html {
   cursor: pointer;
 }
 
-.annotation-hf1 {
+.annotation-occurrence {
   background-color: #CE97FB;
 }
 
-.annotation-hf2 {
+.annotation-mention {
   background-color: #F6A5EB;
 }
 
-.annotation-hf3 {
+.annotation-location {
   background-color: #FAA99D;
 }
 
-.annotation-hf4 {
+.annotation-chardescriptor {
   background-color: #FCDF7E;
 }
 
-.annotation-hf5 {
+.annotation-locdescriptor {
   background-color: #98FBE1;
 }
 
-.annotation-hf6 {
+.annotation-charbackground {
   background-color: #67EBFA;
 }
 
-.annotation-hf7 {
+.annotation-dialogue {
   background-color: #c3fc7e;
 }
 

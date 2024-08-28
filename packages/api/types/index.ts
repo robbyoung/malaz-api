@@ -60,7 +60,6 @@ export interface Annotation {
     from: number;
     to: number;
     priority: number;
-    colour: string;
     fields: KeyValuePairs;
 }
 

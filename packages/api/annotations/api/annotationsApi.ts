@@ -60,7 +60,7 @@ export class AnnotationsApi {
             await this.annotations.processAnnotation(formId, sceneId, kvps, { from, to });
         } catch (e) {
             if (e instanceof Error) {
-                return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: e.message });
+                return renderFile(`${TEMPLATES_PATH}/components/error.pug`, { message: e.message });
             }
 
             throw e;
@@ -68,7 +68,9 @@ export class AnnotationsApi {
 
         const text = await this.scenes.getSceneText(sceneId);
         if (!text) {
-            return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: 'Failed to update text' });
+            return renderFile(`${TEMPLATES_PATH}/components/error.pug`, {
+                message: 'Failed to update text',
+            });
         }
 
         const annotations = await this.annotations.getAnnotationsForScene(sceneId);
