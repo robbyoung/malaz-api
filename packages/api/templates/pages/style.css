@@ -115,23 +115,23 @@ html {
 }
 
 .annotation-location {
-  background-color: #FAA99D;
+  background-color: #AAD9BB;
+}
+
+.annotation-locdescriptor {
+  background-color: #80BCBD;
 }
 
 .annotation-chardescriptor {
   background-color: #FCDF7E;
 }
 
-.annotation-locdescriptor {
-  background-color: #98FBE1;
-}
-
 .annotation-charbackground {
-  background-color: #67EBFA;
+  background-color: #FFDEB4;
 }
 
 .annotation-dialogue {
-  background-color: #c3fc7e;
+  background-color: #FFB4B4;
 }
 
 #container {
