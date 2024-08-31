@@ -16,6 +16,13 @@ import {
 } from './annotations';
 import { Dictionary } from './util/dictionaries';
 import { renderFile } from 'pug';
+import {
+    ISessionsApplication,
+    ISessionsRepository,
+    MongoSessionsRepository,
+    SessionsApplication,
+} from './sessions';
+import { getSessionIdFromRequest } from './util/getSessionFromRequest';
 
 const PAGE_TEMPLATES_PATH = './templates/pages';
 
@@ -28,6 +35,9 @@ const annotationsApplication: IAnnotationsApplication = new AnnotationsApplicati
     scenesApplication
 );
 
+const sessionsRepository: ISessionsRepository = new MongoSessionsRepository();
+const sessionsApplication: ISessionsApplication = new SessionsApplication(sessionsRepository);
+
 const annotationsApi = new AnnotationsApi(annotationsApplication, scenesApplication);
 
 const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
@@ -38,24 +48,22 @@ app.get('/', async (_, res) => {
     res.redirect('/books/GTM', 301);
 });
 
-app.get('/scenes/:id', async (req, res) => {
+app.get('/scenes/:id', (req, res) => {
     const scenesPage = renderFile(`${PAGE_TEMPLATES_PATH}/scene.pug`, {
         sceneId: req.params?.id,
+        sessionId: getSessionIdFromRequest(req),
     });
 
     respondWithHtmx(res, scenesPage);
 });
 
-app.get('/books/:id', async (req, res) => {
+app.get('/books/:id', (req, res) => {
     const contentsPage = renderFile(`${PAGE_TEMPLATES_PATH}/contents.pug`, {
         bookId: req.params?.id,
+        sessionId: getSessionIdFromRequest(req),
     });
 
     respondWithHtmx(res, contentsPage);
-});
-
-app.get('/books/:id/contents', async (req, res) => {
-    respondWithHtmx(res, await scenesApi.getContents(req.params?.id));
 });
 
 app.get('/books/:id/contents', async (req, res) => {

@@ -19,7 +19,6 @@ export interface ISessionsRepository {
 export { MongoSessionsRepository } from './repository/mongoSessionsRepository';
 
 export interface ISessionsApplication {
-    generateId(): string;
     getLastAnnotation(sessionId: string): Promise<HistoricAnnotation | undefined>;
     saveLastAnnotation(sessionId: string, formId: string, kvps: KeyValuePairs): Promise<void>;
 }
