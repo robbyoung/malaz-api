@@ -50,7 +50,6 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         } else if (formId === 'dialogue') {
             const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
             for (let dialogueRange of dialogueRanges) {
-                console.dir(dialogueRange);
                 await this.repository.saveAnnotation(
                     formId,
                     sceneId,
