@@ -6,6 +6,7 @@ import { Dictionary, KeyValuePairs, toDictionary, toKeyValuePairs } from '../../
 interface AnnotationDto {
     formId: string;
     sceneId: string;
+    priority: number;
     from?: number;
     to?: number;
     bookId?: string;
@@ -21,6 +22,7 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         sceneId: string,
         bookId: string,
         kvps: KeyValuePairs,
+        priority: number,
         from?: number,
         to?: number
     ) {
@@ -28,7 +30,15 @@ export class MongoAnnotationsRepository implements IAnnotationsRepository {
         await client
             .db()
             .collection<AnnotationDto>(annotationsCollectionName)
-            .insertOne({ formId, sceneId, from, to, bookId, fields: toDictionary(kvps) });
+            .insertOne({
+                formId,
+                sceneId,
+                from,
+                to,
+                priority,
+                bookId,
+                fields: toDictionary(kvps),
+            });
 
         client.close();
     }

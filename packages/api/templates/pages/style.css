@@ -106,32 +106,32 @@ html {
   cursor: pointer;
 }
 
-.annotation-hf1 {
+.annotation-occurrence {
   background-color: #CE97FB;
 }
 
-.annotation-hf2 {
+.annotation-mention {
   background-color: #F6A5EB;
 }
 
-.annotation-hf3 {
-  background-color: #FAA99D;
+.annotation-location {
+  background-color: #AAD9BB;
 }
 
-.annotation-hf4 {
+.annotation-locdescriptor {
+  background-color: #80BCBD;
+}
+
+.annotation-chardescriptor {
   background-color: #FCDF7E;
 }
 
-.annotation-hf5 {
-  background-color: #98FBE1;
+.annotation-charbackground {
+  background-color: #FFDEB4;
 }
 
-.annotation-hf6 {
-  background-color: #67EBFA;
-}
-
-.annotation-hf7 {
-  background-color: #c3fc7e;
+.annotation-dialogue {
+  background-color: #FFB4B4;
 }
 
 #container {

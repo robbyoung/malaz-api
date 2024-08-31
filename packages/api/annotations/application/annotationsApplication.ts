@@ -1,13 +1,11 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
-import { IFormsApplication } from '../../forms';
 import { IScenesApplication } from '../../scenes';
-import { FormFieldType, SceneAttributes, Annotation, Range } from '../../types';
+import { FormFieldType, SceneAttributes, Annotation, Range, FormType, Form } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
         private repository: IAnnotationsRepository,
-        private forms: IFormsApplication,
         private scenes: IScenesApplication
     ) {}
 
@@ -17,18 +15,18 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         kvps: KeyValuePairs,
         range?: Range
     ): Promise<void> {
-        const annotationForms = await this.forms.getAnnotationForms();
-        const sceneForms = await this.forms.getSceneForms();
+        const annotationForms = await this.getAnnotationForms();
+        const sceneForms = await this.getSceneForms();
         const allForms = [...annotationForms, ...sceneForms];
-        const dialogueFormId = 'hf1';
 
-        const fields = allForms.find((f) => f.id === formId)?.fields;
-
-        if (fields === undefined) {
+        const form = allForms.find((f) => f.id === formId);
+        if (form === undefined) {
             throw new Error('bad annotation: formId invalid');
         }
 
-        const sanitisedKvps = fields.map((field) => {
+        const formIndex = forms.indexOf(form);
+
+        const sanitisedKvps = form.fields.map((field) => {
             let value = kvps.find((kvp) => kvp.key === field.name)?.value;
 
             if (!value && field.required) {
@@ -48,15 +46,17 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         const bookId = sceneId.substring(0, 3);
 
         if (range === undefined) {
-            await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps);
-        } else if (formId === dialogueFormId) {
+            await this.repository.saveAnnotation(formId, sceneId, bookId, sanitisedKvps, formIndex);
+        } else if (formId === 'dialogue') {
             const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
             for (let dialogueRange of dialogueRanges) {
+                console.dir(dialogueRange);
                 await this.repository.saveAnnotation(
                     formId,
                     sceneId,
                     bookId,
                     sanitisedKvps,
+                    formIndex,
                     dialogueRange.from,
                     dialogueRange.to
                 );
@@ -67,6 +67,7 @@ export class AnnotationsApplication implements IAnnotationsApplication {
                 sceneId,
                 bookId,
                 sanitisedKvps,
+                formIndex,
                 range.from,
                 range.to
             );
@@ -95,8 +96,8 @@ export class AnnotationsApplication implements IAnnotationsApplication {
     }
 
     async getCharactersInScene(sceneId: string): Promise<string[]> {
-        const occurrenceFormId = 'hf2';
-        const mentionFormId = 'hf3';
+        const occurrenceFormId = 'occurrence';
+        const mentionFormId = 'mention';
 
         const annotations = await this.getAnnotationsForScene(sceneId);
         const occurrences = annotations
@@ -110,8 +111,8 @@ export class AnnotationsApplication implements IAnnotationsApplication {
     }
 
     async searchCharacters(searchTerm: string): Promise<string[]> {
-        const occurrenceFormId = 'hf2';
-        const mentionFormId = 'hf3';
+        const occurrenceFormId = 'occurrence';
+        const mentionFormId = 'mention';
         const fieldName = 'Character name';
 
         const occurrenceMatches = await this.repository.searchAnnotations(
@@ -128,4 +129,92 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
         return [...new Set([...occurrenceMatches, ...mentionMatches])];
     }
+
+    async getFormById(id: string): Promise<Form | undefined> {
+        return forms.find((form) => form.id === id);
+    }
+
+    async getSceneForms(): Promise<Form[]> {
+        return forms.filter((form) => form.type === FormType.Scene);
+    }
+
+    async getAnnotationForms(): Promise<Form[]> {
+        return forms.filter((form) => form.type === FormType.Annotation);
+    }
 }
+
+const forms: Form[] = [
+    {
+        id: 'occurrence',
+        name: 'Occurrence',
+        type: FormType.Annotation,
+        fields: [
+            {
+                name: 'Character name',
+                required: true,
+                type: FormFieldType.Search,
+            },
+            {
+                name: 'POV',
+                required: false,
+                type: FormFieldType.Boolean,
+            },
+        ],
+    },
+    {
+        id: 'mention',
+        name: 'Mention',
+        type: FormType.Annotation,
+        fields: [
+            {
+                name: 'Character name',
+                required: true,
+                type: FormFieldType.Search,
+            },
+        ],
+    },
+    {
+        id: 'location',
+        name: 'Location',
+        type: FormType.Annotation,
+        fields: [
+            { name: 'Continent', required: false, type: FormFieldType.FreeText },
+            { name: 'Region', required: false, type: FormFieldType.FreeText },
+            { name: 'City', required: false, type: FormFieldType.FreeText },
+            { name: 'Warren', required: false, type: FormFieldType.FreeText },
+        ],
+    },
+    {
+        id: 'chardescriptor',
+        name: 'Character Descriptor',
+        type: FormType.Annotation,
+        fields: [{ name: 'Character name', required: true, type: FormFieldType.FreeText }],
+    },
+    {
+        id: 'locdescriptor',
+        name: 'Location Descriptor',
+        type: FormType.Annotation,
+        fields: [{ name: 'Location name', required: true, type: FormFieldType.FreeText }],
+    },
+    {
+        id: 'charbackground',
+        name: 'Character Background',
+        type: FormType.Annotation,
+        fields: [{ name: 'Character name', required: true, type: FormFieldType.CharacterInScene }],
+    },
+    {
+        id: 'dialogue',
+        name: 'Dialogue',
+        type: FormType.Annotation,
+        fields: [{ name: 'Character name', required: true, type: FormFieldType.CharacterInScene }],
+    },
+    {
+        id: 'arc',
+        name: 'Arc',
+        type: FormType.Scene,
+        fields: [
+            { name: 'Arc', required: true, type: FormFieldType.FreeText },
+            { name: 'Sub-Arc', required: false, type: FormFieldType.FreeText },
+        ],
+    },
+];

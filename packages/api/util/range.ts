@@ -1,4 +1,6 @@
-export function parseRange(range?: string): { from: number; to: number } {
+import { Range } from '../types';
+
+export function parseRange(range?: string): Range {
     if (!range) {
         throw new Error(`invalid range '${range}'`);
     }

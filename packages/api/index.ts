@@ -1,13 +1,6 @@
 import server from 'bunrest';
 import { BunResponse } from 'bunrest/src/server/response';
 import {
-    FormsApi,
-    FormsApplication,
-    IFormsApplication,
-    IFormsRepository,
-    JsonFormsRepository,
-} from './forms';
-import {
     IScenesApplication,
     IScenesRepository,
     JsonScenesRepository,
@@ -26,29 +19,16 @@ import { renderFile } from 'pug';
 
 const PAGE_TEMPLATES_PATH = './templates/pages';
 
-const formsRepository: IFormsRepository = new JsonFormsRepository();
-const formsApplication: IFormsApplication = new FormsApplication(formsRepository);
-
 const scenesRepository: IScenesRepository = new JsonScenesRepository();
-const scenesApplication: IScenesApplication = new ScenesApplication(
-    scenesRepository,
-    formsApplication
-);
+const scenesApplication: IScenesApplication = new ScenesApplication(scenesRepository);
 
 const annotationsRepository: IAnnotationsRepository = new MongoAnnotationsRepository();
 const annotationsApplication: IAnnotationsApplication = new AnnotationsApplication(
     annotationsRepository,
-    formsApplication,
     scenesApplication
 );
 
-const formsApi = new FormsApi(formsApplication, scenesApplication, annotationsApplication);
-
-const annotationsApi = new AnnotationsApi(
-    annotationsApplication,
-    scenesApplication,
-    formsApplication
-);
+const annotationsApi = new AnnotationsApi(annotationsApplication, scenesApplication);
 
 const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
 
@@ -91,15 +71,21 @@ app.get('/scenes/:id/nav', async (req, res) => {
 });
 
 app.get('/forms/scene', async (req, res) => {
-    respondWithHtmx(res, await formsApi.getSceneForms(req.query?.sceneId));
+    respondWithHtmx(res, await annotationsApi.getSceneForms(req.query?.sceneId));
 });
 
 app.get('/forms/selection', async (req, res) => {
-    respondWithHtmx(res, await formsApi.getSelectionForms(req.query?.sceneId, req.query?.range));
+    respondWithHtmx(
+        res,
+        await annotationsApi.getSelectionForms(req.query?.sceneId, req.query?.range)
+    );
 });
 
 app.get('/forms/:id', async (req, res) => {
-    respondWithHtmx(res, await formsApi.get(req.params?.id, req.query?.sceneId, req.query?.range));
+    respondWithHtmx(
+        res,
+        await annotationsApi.getForm(req.params?.id, req.query?.sceneId, req.query?.range)
+    );
 });
 
 app.post('/forms', async (req, res) => {

@@ -59,6 +59,7 @@ export interface Annotation {
     sceneId: string;
     from: number;
     to: number;
+    priority: number;
     fields: KeyValuePairs;
 }
 

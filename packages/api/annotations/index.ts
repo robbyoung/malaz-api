@@ -1,4 +1,4 @@
-import { Annotation, Range, SceneAttributes } from '../types';
+import { Annotation, Form, Range, SceneAttributes } from '../types';
 import { KeyValuePairs } from '../util/dictionaries';
 
 export interface IAnnotationsRepository {
@@ -7,6 +7,7 @@ export interface IAnnotationsRepository {
         sceneId: string,
         bookId: string,
         kvps: KeyValuePairs,
+        priority: number,
         from?: number,
         to?: number
     ): Promise<void>;
@@ -31,6 +32,9 @@ export interface IAnnotationsApplication {
     getSceneAttributes(sceneId: string): Promise<SceneAttributes>;
     getCharactersInScene(sceneId: string): Promise<string[]>;
     searchCharacters(searchTerm: string): Promise<string[]>;
+    getFormById(id: string): Promise<Form | undefined>;
+    getSceneForms(): Promise<Form[]>;
+    getAnnotationForms(): Promise<Form[]>;
 }
 
 export { AnnotationsApplication } from './application/annotationsApplication';

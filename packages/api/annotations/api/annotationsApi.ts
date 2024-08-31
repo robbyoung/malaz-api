@@ -1,16 +1,15 @@
 import { renderFile } from 'pug';
 import { IAnnotationsApplication } from '..';
-import { IFormsApplication } from '../../forms';
 import { IScenesApplication } from '../../scenes';
 import { Dictionary } from '../../util/dictionaries';
+import { parseOptionalRange, parseRange } from '../../util/range';
 
 const TEMPLATES_PATH = './templates';
 
 export class AnnotationsApi {
     constructor(
         private annotations: IAnnotationsApplication,
-        private scenes: IScenesApplication,
-        private forms: IFormsApplication
+        private scenes: IScenesApplication
     ) {}
 
     async get(annotationId?: string): Promise<string | undefined> {
@@ -23,7 +22,7 @@ export class AnnotationsApi {
             return undefined;
         }
 
-        const matchingForm = await this.forms.getFormById(annotation.formId);
+        const matchingForm = await this.annotations.getFormById(annotation.formId);
         const title = matchingForm?.name ?? 'Unknown';
 
         return renderFile(`${TEMPLATES_PATH}/annotation.pug`, {
@@ -61,7 +60,7 @@ export class AnnotationsApi {
             await this.annotations.processAnnotation(formId, sceneId, kvps, { from, to });
         } catch (e) {
             if (e instanceof Error) {
-                return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: e.message });
+                return renderFile(`${TEMPLATES_PATH}/components/error.pug`, { message: e.message });
             }
 
             throw e;
@@ -69,7 +68,9 @@ export class AnnotationsApi {
 
         const text = await this.scenes.getSceneText(sceneId);
         if (!text) {
-            return renderFile(`${TEMPLATES_PATH}/error.pug`, { message: 'Failed to update text' });
+            return renderFile(`${TEMPLATES_PATH}/components/error.pug`, {
+                message: 'Failed to update text',
+            });
         }
 
         const annotations = await this.annotations.getAnnotationsForScene(sceneId);
@@ -121,5 +122,79 @@ export class AnnotationsApi {
         }
 
         return renderFile(`${TEMPLATES_PATH}/searchResults.pug`, { results });
+    }
+
+    async getForm(formId?: string, sceneId?: string, range?: string): Promise<string | undefined> {
+        const { to, from } = parseOptionalRange(range);
+
+        if (!formId || !sceneId) {
+            throw new Error('invalid parameters');
+        }
+
+        const form = await this.annotations.getFormById(formId);
+
+        if (!form) {
+            return undefined;
+        }
+
+        let text: string | undefined = undefined;
+        if (from && to) {
+            text = await this.scenes.getTextSelection(sceneId, from, to);
+
+            if (!text) {
+                throw new Error('Text location invalid');
+            }
+
+            text = text?.trim();
+        }
+
+        const charactersInScene = await this.annotations.getCharactersInScene(sceneId);
+
+        return renderFile(`${TEMPLATES_PATH}/form.pug`, {
+            form,
+            sceneId,
+            text,
+            charactersInScene,
+            from,
+            to,
+        });
+    }
+
+    async getSceneForms(sceneId?: string) {
+        if (!sceneId) {
+            throw new Error(`invalid scene id '${sceneId}'`);
+        }
+
+        const availableForms = await this.annotations.getSceneForms();
+        const existingAttributes = await this.annotations.getSceneAttributes(sceneId);
+        return renderFile(`${TEMPLATES_PATH}/selectionScene.pug`, {
+            sceneId,
+            attributes: existingAttributes,
+            availableForms,
+        });
+    }
+
+    async getSelectionForms(sceneId?: string, range?: string) {
+        if (!sceneId) {
+            throw new Error(`invalid scene id '${sceneId}'`);
+        }
+
+        const { from, to } = parseRange(range);
+        if (from === to) {
+            return 'No content';
+        }
+
+        const selection = await this.scenes.getTextSelection(sceneId, from, to);
+        if (!selection) {
+            return undefined;
+        }
+
+        const availableForms = await this.annotations.getAnnotationForms();
+        return renderFile(`${TEMPLATES_PATH}/selectionText.pug`, {
+            sceneId,
+            range,
+            selection,
+            availableForms,
+        });
     }
 }

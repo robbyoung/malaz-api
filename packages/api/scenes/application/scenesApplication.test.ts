@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { IScenesRepository, ScenesApplication } from '..';
 import { SceneType } from '../../types';
-import { IFormsApplication } from '../../forms';
 
 function createMockRepository(sceneText: string): IScenesRepository {
     return {
@@ -25,10 +24,7 @@ describe('scenesApplication.stripDialogue()', () => {
         const padding = '---arbitraryPadding---';
         const paddedText = `${padding}${text}${padding}`;
 
-        const application = new ScenesApplication(
-            createMockRepository(paddedText),
-            {} as IFormsApplication
-        );
+        const application = new ScenesApplication(createMockRepository(paddedText));
 
         const ranges = await application.stripDialogue(
             'anId',
