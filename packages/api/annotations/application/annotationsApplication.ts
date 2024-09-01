@@ -1,18 +1,21 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IScenesApplication } from '../../scenes';
+import { ISessionsApplication } from '../../sessions';
 import { FormFieldType, SceneAttributes, Annotation, Range, FormType, Form } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
         private repository: IAnnotationsRepository,
-        private scenes: IScenesApplication
+        private scenes: IScenesApplication,
+        private sessions: ISessionsApplication
     ) {}
 
     async processAnnotation(
         formId: string,
         sceneId: string,
         kvps: KeyValuePairs,
+        sessionId: string,
         range?: Range
     ): Promise<void> {
         const annotationForms = await this.getAnnotationForms();
@@ -50,7 +53,6 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         } else if (formId === 'dialogue') {
             const dialogueRanges = await this.scenes.stripDialogue(sceneId, range.from, range.to);
             for (let dialogueRange of dialogueRanges) {
-                console.dir(dialogueRange);
                 await this.repository.saveAnnotation(
                     formId,
                     sceneId,
@@ -72,6 +74,24 @@ export class AnnotationsApplication implements IAnnotationsApplication {
                 range.to
             );
         }
+
+        await this.sessions.saveLastAnnotation(sessionId, formId, sanitisedKvps);
+    }
+
+    async repeatAnnotation(sceneId: string, range: Range, sessionId: string) {
+        const lastAnnotation = await this.sessions.getLastAnnotation(sessionId);
+
+        if (!lastAnnotation) {
+            throw 'no form found to repeat';
+        }
+
+        await this.processAnnotation(
+            lastAnnotation.formId,
+            sceneId,
+            lastAnnotation.kvps,
+            sessionId,
+            range
+        );
     }
 
     async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
@@ -140,6 +160,16 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     async getAnnotationForms(): Promise<Form[]> {
         return forms.filter((form) => form.type === FormType.Annotation);
+    }
+
+    async getLastForm(sessionId: string): Promise<Form | undefined> {
+        const lastAnnotation = await this.sessions.getLastAnnotation(sessionId);
+
+        if (!lastAnnotation) {
+            return undefined;
+        }
+
+        return forms.find((f) => f.id === lastAnnotation.formId);
     }
 }
 

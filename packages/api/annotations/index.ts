@@ -24,8 +24,10 @@ export interface IAnnotationsApplication {
         formId: string,
         sceneId: string,
         kvps: KeyValuePairs,
+        sessionId: string,
         range?: Range
     ): Promise<void>;
+    repeatAnnotation(sceneId: string, range: Range, sessionId: string): Promise<void>;
     getAnnotationsForScene(sceneId: string): Promise<Annotation[]>;
     getAnnotation(id: string): Promise<Annotation | undefined>;
     deleteAnnotation(id: string): Promise<void>;
@@ -34,6 +36,7 @@ export interface IAnnotationsApplication {
     searchCharacters(searchTerm: string): Promise<string[]>;
     getFormById(id: string): Promise<Form | undefined>;
     getSceneForms(): Promise<Form[]>;
+    getLastForm(sessionId: string): Promise<Form | undefined>;
     getAnnotationForms(): Promise<Form[]>;
 }
 

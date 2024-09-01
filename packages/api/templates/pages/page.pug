@@ -8,5 +8,5 @@ html(lang="en" style="overflow-y: scroll")
     title MalazAPI
     style
         include ./style.css
-    body
+    body(hx-headers=`{"Malaz-Session": "${sessionId}" }`)
         block content
