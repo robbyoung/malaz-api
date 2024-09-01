@@ -26,17 +26,18 @@ import { getSessionIdFromRequest } from './util/getSessionFromRequest';
 
 const PAGE_TEMPLATES_PATH = './templates/pages';
 
+const sessionsRepository: ISessionsRepository = new MongoSessionsRepository();
+const sessionsApplication: ISessionsApplication = new SessionsApplication(sessionsRepository);
+
 const scenesRepository: IScenesRepository = new JsonScenesRepository();
 const scenesApplication: IScenesApplication = new ScenesApplication(scenesRepository);
 
 const annotationsRepository: IAnnotationsRepository = new MongoAnnotationsRepository();
 const annotationsApplication: IAnnotationsApplication = new AnnotationsApplication(
     annotationsRepository,
-    scenesApplication
+    scenesApplication,
+    sessionsApplication
 );
-
-const sessionsRepository: ISessionsRepository = new MongoSessionsRepository();
-const sessionsApplication: ISessionsApplication = new SessionsApplication(sessionsRepository);
 
 const annotationsApi = new AnnotationsApi(annotationsApplication, scenesApplication);
 
@@ -97,7 +98,7 @@ app.get('/forms/:id', async (req, res) => {
 });
 
 app.post('/forms', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.post(req.body));
+    respondWithHtmx(res, await annotationsApi.post(req.body, getSessionIdFromRequest(req)));
 });
 
 app.get('/annotations/search', async (req, res) => {

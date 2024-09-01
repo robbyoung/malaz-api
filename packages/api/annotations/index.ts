@@ -24,6 +24,7 @@ export interface IAnnotationsApplication {
         formId: string,
         sceneId: string,
         kvps: KeyValuePairs,
+        sessionId: string,
         range?: Range
     ): Promise<void>;
     getAnnotationsForScene(sceneId: string): Promise<Annotation[]>;

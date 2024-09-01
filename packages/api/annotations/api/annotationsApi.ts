@@ -32,7 +32,7 @@ export class AnnotationsApi {
         });
     }
 
-    async post(rawFormData: any) {
+    async post(rawFormData: any, sessionId: string) {
         const params = new URLSearchParams(rawFormData);
         const formId = params.get('formId');
         const sceneId = params.get('sceneId');
@@ -57,7 +57,10 @@ export class AnnotationsApi {
             .map((entry) => ({ key: entry[0], value: entry[1] }));
 
         try {
-            await this.annotations.processAnnotation(formId, sceneId, kvps, { from, to });
+            await this.annotations.processAnnotation(formId, sceneId, kvps, sessionId, {
+                from,
+                to,
+            });
         } catch (e) {
             if (e instanceof Error) {
                 return renderFile(`${TEMPLATES_PATH}/components/error.pug`, { message: e.message });

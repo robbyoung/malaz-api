@@ -19,7 +19,7 @@ export class MongoSessionsRepository implements ISessionsRepository {
         await client
             .db()
             .collection<Session>(annotationsCollectionName)
-            .updateOne(query, session, { upsert: true });
+            .updateOne(query, { $set: session }, { upsert: true });
 
         client.close();
     }

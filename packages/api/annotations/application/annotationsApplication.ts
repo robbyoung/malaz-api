@@ -1,18 +1,21 @@
 import { IAnnotationsApplication, IAnnotationsRepository } from '..';
 import { IScenesApplication } from '../../scenes';
+import { ISessionsApplication } from '../../sessions';
 import { FormFieldType, SceneAttributes, Annotation, Range, FormType, Form } from '../../types';
 import { KeyValuePairs } from '../../util/dictionaries';
 
 export class AnnotationsApplication implements IAnnotationsApplication {
     constructor(
         private repository: IAnnotationsRepository,
-        private scenes: IScenesApplication
+        private scenes: IScenesApplication,
+        private sessions: ISessionsApplication
     ) {}
 
     async processAnnotation(
         formId: string,
         sceneId: string,
         kvps: KeyValuePairs,
+        sessionId: string,
         range?: Range
     ): Promise<void> {
         const annotationForms = await this.getAnnotationForms();
@@ -71,6 +74,8 @@ export class AnnotationsApplication implements IAnnotationsApplication {
                 range.to
             );
         }
+
+        await this.sessions.saveLastAnnotation(sessionId, formId, sanitisedKvps);
     }
 
     async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
