@@ -181,6 +181,10 @@ html {
   gap: 10px;
 }
 
+.last-form {
+  width: 100%;
+}
+
 select option:disabled {
   display: none;
 }

@@ -1,6 +1,6 @@
 import { BunRequest } from 'bunrest/src/server/request';
 
-const SESSION_HEADER = 'Malaz-Session';
+const SESSION_HEADER = 'malaz-session';
 
 export function getSessionIdFromRequest(req: BunRequest): string {
     return req.headers && req.headers[SESSION_HEADER] ? req.headers[SESSION_HEADER] : generateId();

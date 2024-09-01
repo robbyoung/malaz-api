@@ -78,6 +78,22 @@ export class AnnotationsApplication implements IAnnotationsApplication {
         await this.sessions.saveLastAnnotation(sessionId, formId, sanitisedKvps);
     }
 
+    async repeatAnnotation(sceneId: string, range: Range, sessionId: string) {
+        const lastAnnotation = await this.sessions.getLastAnnotation(sessionId);
+
+        if (!lastAnnotation) {
+            throw 'no form found to repeat';
+        }
+
+        await this.processAnnotation(
+            lastAnnotation.formId,
+            sceneId,
+            lastAnnotation.kvps,
+            sessionId,
+            range
+        );
+    }
+
     async getAnnotationsForScene(sceneId: string): Promise<Annotation[]> {
         const annotations = await this.repository.getAnnotationsForScene(sceneId);
         return annotations.filter((a) => a.from !== -1 && a.to !== -1);
@@ -144,6 +160,16 @@ export class AnnotationsApplication implements IAnnotationsApplication {
 
     async getAnnotationForms(): Promise<Form[]> {
         return forms.filter((form) => form.type === FormType.Annotation);
+    }
+
+    async getLastForm(sessionId: string): Promise<Form | undefined> {
+        const lastAnnotation = await this.sessions.getLastAnnotation(sessionId);
+
+        if (!lastAnnotation) {
+            return undefined;
+        }
+
+        return forms.find((f) => f.id === lastAnnotation.formId);
     }
 }
 

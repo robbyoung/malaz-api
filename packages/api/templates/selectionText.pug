@@ -15,5 +15,16 @@ div#selection
                     hx-swap="outerHTML"
                     hx-trigger="mouseup"
                 ) #{form.name}
+            if lastForm
+                div.last-form
+                    button(
+                        type="button"
+                        class=`button small annotation-${lastForm.id}`
+                        hx-post=`/forms/repeat`
+                        hx-vars=`sceneId:'${sceneId}',range:'${range}'`
+                        hx-target="#selection"
+                        hx-swap="outerHTML"
+                        hx-trigger="mouseup"
+                    ) #{lastForm.name} (Resubmit)
     else
         p No selection

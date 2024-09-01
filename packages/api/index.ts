@@ -79,15 +79,19 @@ app.get('/scenes/:id/nav', async (req, res) => {
     respondWithHtmx(res, await scenesApi.getNav(req.params?.id));
 });
 
-app.get('/forms/scene', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.getSceneForms(req.query?.sceneId));
-});
-
 app.get('/forms/selection', async (req, res) => {
     respondWithHtmx(
         res,
-        await annotationsApi.getSelectionForms(req.query?.sceneId, req.query?.range)
+        await annotationsApi.getSelectionForms(
+            getSessionIdFromRequest(req),
+            req.query?.sceneId,
+            req.query?.range
+        )
     );
+});
+
+app.get('/forms/scene', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.getSceneForms(req.query?.sceneId));
 });
 
 app.get('/forms/:id', async (req, res) => {
@@ -99,6 +103,10 @@ app.get('/forms/:id', async (req, res) => {
 
 app.post('/forms', async (req, res) => {
     respondWithHtmx(res, await annotationsApi.post(req.body, getSessionIdFromRequest(req)));
+});
+
+app.post('/forms/repeat', async (req, res) => {
+    respondWithHtmx(res, await annotationsApi.repost(req.body, getSessionIdFromRequest(req)));
 });
 
 app.get('/annotations/search', async (req, res) => {
