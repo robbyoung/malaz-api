@@ -1,5 +1,10 @@
-mixin sceneText(sceneId, chunks, oob)
-    div#text-container(hx-swap-oob=oob)
+mixin sceneText(sceneId, chunks)
+    div#text-container(
+        hx-get=`/scenes/${sceneId}/text`
+        hx-trigger="refresh from:body"
+        hx-target="this"
+        hx-swap="outerHTML"
+    )
         p(
             hx-get="/forms/selection"
             hx-vars=`sceneId:"${sceneId}",range:(parseInt(window.getSelection().baseNode.parentElement.attributes["select-from"].value)+window.getSelection().baseOffset)+'-'+(parseInt(window.getSelection().extentNode.parentElement.attributes["select-from"].value)+window.getSelection().extentOffset)`
