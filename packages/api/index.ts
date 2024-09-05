@@ -45,6 +45,9 @@ const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
 
 const app = server();
 
+// const refreshTextTrigger = "{'refresh':{'target' : '#text-container'}}";
+const refreshTextTrigger = 'refresh';
+
 app.get('/', async (_, res) => {
     res.redirect('/books/GTM', 301);
 });
@@ -102,11 +105,19 @@ app.get('/forms/:id', async (req, res) => {
 });
 
 app.post('/forms', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.post(req.body, getSessionIdFromRequest(req)));
+    respondWithHtmx(
+        res,
+        await annotationsApi.post(req.body, getSessionIdFromRequest(req)),
+        refreshTextTrigger
+    );
 });
 
 app.post('/forms/repeat', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.repost(req.body, getSessionIdFromRequest(req)));
+    respondWithHtmx(
+        res,
+        await annotationsApi.repost(req.body, getSessionIdFromRequest(req)),
+        refreshTextTrigger
+    );
 });
 
 app.get('/annotations/search', async (req, res) => {
@@ -118,7 +129,7 @@ app.get('/annotations/:id', async (req, res) => {
 });
 
 app.delete('/annotations/:id', async (req, res) => {
-    respondWithHtmx(res, await annotationsApi.delete(req.params?.id));
+    respondWithHtmx(res, await annotationsApi.delete(req.params?.id), refreshTextTrigger);
 });
 
 app.get('/favicon.ico', (_, res) => {
@@ -129,7 +140,11 @@ app.listen(3000, () => {
     console.log('Listening on port 3000');
 });
 
-function respondWithHtmx(res: BunResponse, htmx?: string) {
+function respondWithHtmx(res: BunResponse, htmx?: string, trigger?: string) {
+    if (trigger) {
+        res.setHeader('hx-trigger', trigger);
+    }
+
     if (!htmx) {
         res.status(404).send('Not found');
     } else if (htmx === 'No content') {
