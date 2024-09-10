@@ -1,9 +1,12 @@
+include ./icons/icon.pug
+
 div#scene-nav
     if previousSceneId
-        a(
-            href="/scenes/" + previousSceneId
-            class="button ochre" 
-        ) Previous
+        div
+            a(
+                href="/scenes/" + previousSceneId
+                class="button ochre" 
+            ) Previous
     else
         div
 
@@ -17,9 +20,11 @@ div#scene-nav
     ) #{title}
 
     if nextSceneId
-        a(
-            href="/scenes/" + nextSceneId
-            class="button ochre" 
-        ) Next
+        div
+            a(
+                href="/scenes/" + nextSceneId
+                class="button ochre" 
+            ) Next
+            +icon(name="arrow-right")
     else
         div

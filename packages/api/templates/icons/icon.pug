@@ -1,0 +1,9 @@
+mixin icon
+    -
+        var name = attributes['name']
+
+    case name
+        when 'arrow-left'
+            include circle-arrow-left-solid    
+        when 'arrow-right'
+            include circle-arrow-right-solid
