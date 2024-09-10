@@ -39,7 +39,7 @@ const annotationsApplication: IAnnotationsApplication = new AnnotationsApplicati
     sessionsApplication
 );
 
-const annotationsApi = new AnnotationsApi(annotationsApplication, scenesApplication);
+const annotationsApi = new AnnotationsApi(annotationsApplication);
 
 const scenesApi = new ScenesApi(scenesApplication, annotationsApplication);
 

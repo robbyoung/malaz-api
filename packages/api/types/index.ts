@@ -73,7 +73,6 @@ export interface Form {
 export interface FormField {
     name: string;
     required: boolean;
-    populateFromText?: boolean;
     type: FormFieldType;
 }
 

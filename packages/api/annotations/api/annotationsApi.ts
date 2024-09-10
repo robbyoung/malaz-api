@@ -7,10 +7,7 @@ import { parseOptionalRange, parseRange } from '../../util/range';
 const TEMPLATES_PATH = './templates';
 
 export class AnnotationsApi {
-    constructor(
-        private annotations: IAnnotationsApplication,
-        private scenes: IScenesApplication
-    ) {}
+    constructor(private annotations: IAnnotationsApplication) {}
 
     async get(annotationId?: string): Promise<string | undefined> {
         if (!annotationId) {
@@ -140,23 +137,11 @@ export class AnnotationsApi {
             return undefined;
         }
 
-        let text: string | undefined = undefined;
-        if (from && to) {
-            text = await this.scenes.getTextSelection(sceneId, from, to);
-
-            if (!text) {
-                throw new Error('Text location invalid');
-            }
-
-            text = text?.trim();
-        }
-
         const charactersInScene = await this.annotations.getCharactersInScene(sceneId);
 
         return renderFile(`${TEMPLATES_PATH}/form.pug`, {
             form,
             sceneId,
-            text,
             charactersInScene,
             from,
             to,
@@ -187,17 +172,12 @@ export class AnnotationsApi {
             return 'No content';
         }
 
-        const selection = await this.scenes.getTextSelection(sceneId, from, to);
-        if (!selection) {
-            return undefined;
-        }
-
         const availableForms = await this.annotations.getAnnotationForms();
         const lastForm = await this.annotations.getLastForm(sessionId);
         return renderFile(`${TEMPLATES_PATH}/selectionText.pug`, {
             sceneId,
             range,
-            selection,
+            selection: true,
             availableForms,
             lastForm,
         });
